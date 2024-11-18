@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Start Page</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+    <body>
+        <h1>Hello Hacker!</h1>
+<!--        <form action="http://localhost:8080/PAS/Param?name=" method="POST">-->
+<!--            <label for="param1">Parametr 1:</label>-->
+<!--            <input type="text" id="param1" name="param1" />-->
+<!--            <input type="submit" value="Wyślij" />-->
+<!--        </form>-->
+        <form id="myForm" method="POST" onsubmit="updateAction()">
+            <label for="param1">Parametr 1:</label>
+            <input type="text" id="param1" name="param1" />
+            <input type="submit" value="Wyślij" />
+        </form>
+
+        <script>
+            function updateAction() {
+                // Pobranie wartości param1
+                var param1Value = document.getElementById('param1').value;
+
+                // Ustawienie dynamicznego URL z wartością param1 jako zmienną w query string
+                document.getElementById('myForm').action = 'http://localhost:8080/PAS/Param?name=' + encodeURIComponent(param1Value);
+            }
+        </script>
+    </body>
+</html>
