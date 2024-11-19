@@ -29,8 +29,8 @@ public final class ClientManager {
         clientsRepository.add(client);
     }
 
-    public void registerClient(String firstName, String surname, String emailAddress, ClientType clientType) {
-        Client client = new Client(firstName, surname, emailAddress, clientType);
+    public void registerClient(String firstName, String surname, String username, String emailAddress, ClientType clientType) {
+        Client client = new Client(firstName, surname, username, emailAddress, clientType);
         registerExistingClient(client);
     }
 

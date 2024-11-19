@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 @Repository
 public class ClientRepository extends AbstractMongoRepository {
@@ -40,9 +41,12 @@ public class ClientRepository extends AbstractMongoRepository {
             {
                 $jsonSchema: {
                     "bsonType": "object",
-                    "required": [ "_id", "clientType", "currentRents", "emailAddress", "firstName", "surname" ],
+                    "required": [ "_id", "active", "clientType", "currentRents", "emailAddress", "firstName", "surname", "username" ],
                     "properties": {
                         "_id" : {
+                        }
+                        "active" : {
+                            "bsonType": "bool"
                         }
                         "clientType" : {
                             "bsonType": "object"
@@ -71,6 +75,9 @@ public class ClientRepository extends AbstractMongoRepository {
                             "bsonType": "string"
                         }
                         "surname" : {
+                            "bsonType": "string"
+                        }
+                        "username" : {
                             "bsonType": "string"
                         }
                     }
@@ -170,5 +177,14 @@ public class ClientRepository extends AbstractMongoRepository {
         return clients.find(filter).first();
     }
 
+    public Client getClientByUsername(String username) {
+        Bson filter = Filters.eq("username", username);
+        return clients.find(filter).first();
+    }
+
+    public List<Client> getClientsByUsername(String username) {
+        Bson filter = Filters.regex("username", ".*" + Pattern.quote(username) + ".*", "i"); // "i" for case-insensitive search
+        return clients.find(filter).into(new ArrayList<>());
+    }
 
 }
