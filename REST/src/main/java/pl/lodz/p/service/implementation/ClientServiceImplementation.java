@@ -11,17 +11,16 @@ import java.util.List;
 @AllArgsConstructor
 public class ClientServiceImplementation implements pl.lodz.p.service.ClientService {
 
-    private ClientRepository clientRepository;
+    private ClientRepository repo;
 
     @Override
     public Client createClient(Client client) {
-        clientRepository.add(client);
+        repo.add(client);
         return client;
     }
 
     @Override
     public List<Client> getAllClients() {
-        return clientRepository.getClients();
+        return repo.getClients();
     }
-
 }

@@ -7,6 +7,7 @@ import com.mongodb.client.MongoIterable;
 import com.mongodb.client.model.*;
 import org.bson.Document;
 import org.bson.conversions.Bson;
+import org.springframework.stereotype.Repository;
 import pl.lodz.p.model.MongoUUID;
 import pl.lodz.p.model.VMachine;
 
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+@Repository
 public class VMachineRepository extends AbstractMongoRepository {
     private final String collectionName = "vMachines";
     private final MongoCollection<VMachine> vMachines;

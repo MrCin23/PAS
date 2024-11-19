@@ -7,6 +7,7 @@ import com.mongodb.client.MongoIterable;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
 import org.bson.conversions.Bson;
+import org.springframework.stereotype.Repository;
 import pl.lodz.p.model.*;
 
 import java.time.LocalDateTime;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+@Repository
 public class RentRepository extends AbstractMongoRepository {
     private final MongoCollection<Rent> rents;
     private final MongoCollection<VMachine> vMachines;
