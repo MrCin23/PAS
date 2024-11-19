@@ -2,7 +2,6 @@ package pl.lodz.p.service.implementation;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import pl.lodz.p.model.Client;
 import pl.lodz.p.model.VMachine;
 import pl.lodz.p.repository.VMachineRepository;
 import pl.lodz.p.service.VMachineService;

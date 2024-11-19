@@ -10,7 +10,7 @@ import java.util.UUID;
 
 @Getter
 @Setter
-public abstract class VMachine extends AbstractEntityMgd {
+public class VMachine extends AbstractEntityMgd {
 
     @BsonProperty("CPUNumber")
     private int CPUNumber;

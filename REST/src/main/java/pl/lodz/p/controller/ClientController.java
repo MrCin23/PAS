@@ -1,5 +1,6 @@
 package pl.lodz.p.controller;
 
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -8,6 +9,7 @@ import pl.lodz.p.service.implementation.ClientServiceImplementation;
 
 import java.util.List;
 
+@AllArgsConstructor
 @RestController
 @RequestMapping("/api/client")
 public class ClientController {
