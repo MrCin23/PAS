@@ -80,4 +80,10 @@ public class RentController {
         return rentService.getVMachineArchivedRents(uuid);
     }
 
+    @DeleteMapping("/{uuid}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteRent(@PathVariable("uuid") UUID uuid) {
+        rentService.removeRent(uuid);
+    }
+
 }

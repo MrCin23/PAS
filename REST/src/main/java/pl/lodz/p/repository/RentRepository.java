@@ -165,4 +165,30 @@ public class RentRepository extends AbstractMongoRepository {
     public List<Rent> findByNegation(String field, Object value) {
         return rents.find(Filters.ne(field, value)).into(new ArrayList<>());
     }
+
+    public void remove(MongoUUID uuid) {
+        ClientSession session = getMongoClient().startSession();
+        Client client;
+        try {
+            Bson idFilter = Filters.eq("_id", uuid.getUuid());
+            Bson activeFilter = Filters.eq("endTime", null);
+            Bson filter = Filters.and(idFilter, activeFilter);
+            Rent rentToDelete = rents.find(filter).first();
+            if (rentToDelete != null) {
+                Bson clientUpdate = Updates.inc("currentRents", -1);
+                Bson vMachineUpdate = Updates.inc("isRented", -1);
+                clients.updateOne(session, Filters.eq("_id", rentToDelete.getClient().getEntityId().getUuid()), clientUpdate);
+                vMachines.updateOne(session, Filters.eq("_id", rentToDelete.getVMachine().getEntityId().getUuid().toString()), vMachineUpdate);
+                rents.deleteOne(filter);
+            } else {
+                throw new RuntimeException("Rent do not exist");
+            }
+        }
+        catch (MongoCommandException ex) {
+            session.abortTransaction();
+        }
+        finally {
+            session.close();
+        }
+    }
 }

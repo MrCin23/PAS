@@ -30,4 +30,6 @@ public interface IRentService {
     List<Rent> getVMachineArchivedRents(UUID uuid);
 
     void endRent(UUID uuid, LocalDateTime endDate);
+
+    void removeRent(UUID uuid);
 }
