@@ -55,4 +55,29 @@ public class RentController {
     public void endRent(@PathVariable("uuid") UUID uuid, @RequestBody EndRentDTO endTimeDTO) {
         rentService.endRent(uuid, endTimeDTO.getEndTime());
     }
+
+    @GetMapping("/active/client/{uuid}")
+    @ResponseStatus(HttpStatus.OK)
+    List<Rent> getClientActiveRents(@PathVariable("uuid") UUID uuid){
+        return rentService.getClientActiveRents(uuid);
+    }
+
+    @GetMapping("/archived/client/{uuid}")
+    @ResponseStatus(HttpStatus.OK)
+    List<Rent> getClientArchivedRents(@PathVariable("uuid") UUID uuid){
+        return rentService.getClientArchivedRents(uuid);
+    }
+
+    @GetMapping("/active/vmachine/{uuid}")
+    @ResponseStatus(HttpStatus.OK)
+    Rent getVMachineActiveRent(@PathVariable("uuid") UUID uuid){
+        return rentService.getVMachineActiveRent(uuid);
+    }
+
+    @GetMapping("/archived/vmachine/{uuid}")
+    @ResponseStatus(HttpStatus.OK)
+    List<Rent> getVMachineArchivedRents(@PathVariable("uuid") UUID uuid){
+        return rentService.getVMachineArchivedRents(uuid);
+    }
+
 }

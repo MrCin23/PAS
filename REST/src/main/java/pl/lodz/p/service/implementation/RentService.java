@@ -74,23 +74,39 @@ public class RentService implements IRentService {
     }
 
     @Override
-    public List<Rent> getClientActiveRents() {
-        return List.of();
+    public List<Rent> getClientActiveRents(UUID uuid) {
+        List<Rent> activeRents = repo.getClientRents(new MongoUUID(uuid),true);
+        if(activeRents == null || activeRents.isEmpty()) {
+            throw new RuntimeException("Client with UUID:" + uuid + " does not have active rents");
+        }
+        return activeRents;
     }
 
     @Override
-    public List<Rent> getClientArchivedRents() {
-        return List.of();
+    public List<Rent> getClientArchivedRents(UUID uuid) {
+        List<Rent> archivedRents = repo.getClientRents(new MongoUUID(uuid),false);
+        if(archivedRents == null || archivedRents.isEmpty()) {
+            throw new RuntimeException("Client with UUID:" + uuid + " does not have archived rents");
+        }
+        return archivedRents;
     }
 
     @Override
-    public Rent getVMachineActiveRent() {
-        return null;
+    public Rent getVMachineActiveRent(UUID uuid) {
+        Rent activeRent = repo.getVMachineRents(new MongoUUID(uuid),true).getFirst();
+        if(activeRent == null) {
+            throw new RuntimeException("VMachine with UUID:" + uuid + " is not currently rented");
+        }
+        return activeRent;
     }
 
     @Override
-    public List<Rent> getVMachineArchivedRents() {
-        return List.of();
+    public List<Rent> getVMachineArchivedRents(UUID uuid) {
+        List<Rent> archivedRents = repo.getVMachineRents(new MongoUUID(uuid),false);
+        if(archivedRents == null || archivedRents.isEmpty()) {
+            throw new RuntimeException("VMachine with UUID:" + uuid + " does not have archived rents");
+        }
+        return archivedRents;
     }
 
     @Override

@@ -21,13 +21,13 @@ public interface IRentService {
 
     Rent getRent(UUID id);
 
-    List<Rent> getClientActiveRents();
+    List<Rent> getClientActiveRents(UUID uuid);
 
-    List<Rent> getClientArchivedRents();
+    List<Rent> getClientArchivedRents(UUID uuid);
 
-    Rent getVMachineActiveRent();
+    Rent getVMachineActiveRent(UUID uuid);
 
-    List<Rent> getVMachineArchivedRents();
+    List<Rent> getVMachineArchivedRents(UUID uuid);
 
     void endRent(UUID uuid, LocalDateTime endDate);
 }

@@ -57,6 +57,10 @@ public class RentRepository extends AbstractMongoRepository {
                 rents.updateOne(session, filter1, update1);
             }
 
+            if(endTime.isBefore(rent.getBeginTime())){
+                throw new RuntimeException("Rent cannot be ended before it has even begun! Aborting transaction");
+            }
+
             Bson filter = Filters.eq("_id", rent.getVMachine().getEntityId().getUuid().toString());
             Bson update = Updates.inc("isRented", -1);
             vMachines.updateOne(session, filter, update);
@@ -113,13 +117,36 @@ public class RentRepository extends AbstractMongoRepository {
     }
 
     public long size() {
-        List<Rent> chuj = rents.find().into(new ArrayList<>());
-        return chuj.size();
+        return rents.find().into(new ArrayList<>()).size();
     }
 
     public List<Rent> getRents(boolean active) {
         return rents.find().into(new ArrayList<>());
-        //TODO
+    }
+
+    public List<Rent> getClientRents(MongoUUID clientId, boolean active) {
+        Bson filter1 = Filters.eq("client._id", clientId.getUuid());
+        Bson filter2;
+        if(active){
+            filter2 = Filters.eq("endTime", null);
+        } else {
+            filter2 = Filters.ne("endTime", null);
+        }
+        Bson filter3 = Filters.and(filter1, filter2);
+        return rents.find(filter3).into(new ArrayList<>());
+    }
+
+    public List<Rent> getVMachineRents(MongoUUID vmId, boolean active) {
+        Bson filter1 = Filters.eq("vMachine._id", vmId.getUuid().toString());
+        Bson filter2;
+        if(active){
+            filter2 = Filters.eq("endTime", null);
+        } else {
+            filter2 = Filters.ne("endTime", null);
+        }
+        Bson filter3 = Filters.and(filter1, filter2);
+
+        return rents.find(filter3).into(new ArrayList<>());
     }
 
     public List<Rent> getRents() {

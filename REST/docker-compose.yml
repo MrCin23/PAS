@@ -51,7 +51,7 @@ services:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=adminpassword
       - MONGO_INITDB_DATABASE=vmrental
-    command: --config /etc/mongod.conf --port 27019 --replSet replica_set_single
+    command: --config /etc/mongod.conf --port 27019
     healthcheck:
       test: [ "CMD","mongosh","--port", "27019", "--eval", "db.adminCommand('ping')" ]
       interval: 10s
@@ -76,7 +76,7 @@ services:
       '      
       rsconf = 
       {
-        _id: "replica_set_single",
+        _id: "rs0",
         version: 1,
         members: [
           { _id: 0, host : "mongodb1:27017" },
