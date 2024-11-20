@@ -12,10 +12,8 @@ import java.util.UUID;
 
 @Getter
 @Setter
-
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
-        include = JsonTypeInfo.As.PROPERTY,
         property = "_clazz"
 )
 @JsonSubTypes({
@@ -30,8 +28,6 @@ public abstract class ClientType extends AbstractEntityMgd {
 
     @BsonProperty("name")
     protected String name;
-
-
 
     @BsonCreator
     public ClientType(@BsonProperty("_id") MongoUUID uuid,

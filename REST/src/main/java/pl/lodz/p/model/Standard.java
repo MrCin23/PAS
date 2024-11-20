@@ -8,8 +8,6 @@ public class Standard extends ClientType{
         super(new MongoUUID(UUID.randomUUID()), 3, "Standard");
     }
 
-
-
     @Override
     public String toString() {
         return "Standard" + this.getClass().getSimpleName();

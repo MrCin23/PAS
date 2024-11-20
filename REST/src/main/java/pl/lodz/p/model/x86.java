@@ -4,10 +4,12 @@ package pl.lodz.p.model;
 import lombok.Getter;
 import lombok.Setter;
 import org.bson.codecs.pojo.annotations.BsonCreator;
+import org.bson.codecs.pojo.annotations.BsonDiscriminator;
 import org.bson.codecs.pojo.annotations.BsonProperty;
 
 @Getter
 @Setter
+@BsonDiscriminator(value="x86", key="_clazz")
 public class x86 extends VMachine {
     @BsonProperty("CPUManufacturer")
     private String CPUManufacturer;

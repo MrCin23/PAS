@@ -1,9 +1,10 @@
 package pl.lodz.p.model;
 
 import org.bson.codecs.pojo.annotations.BsonCreator;
+import org.bson.codecs.pojo.annotations.BsonDiscriminator;
 import org.bson.codecs.pojo.annotations.BsonProperty;
 
-
+@BsonDiscriminator(value="applearch", key="_clazz")
 public class AppleArch extends VMachine{
     public AppleArch(int CPUNumber, String ramSize) {
         super(CPUNumber, ramSize, 0);

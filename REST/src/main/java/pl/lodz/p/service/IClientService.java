@@ -1,13 +1,12 @@
 package pl.lodz.p.service;
 
 import pl.lodz.p.model.Client;
-import pl.lodz.p.model.MongoUUID;
 
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public interface ClientService {
+public interface IClientService {
     Client createClient(Client client);
 
     List<Client> getAllClients();
@@ -20,7 +19,7 @@ public interface ClientService {
 
     void deactivateClient(UUID uuid);
 
-    void deleteClient(UUID uuid);
+    //void deleteClient(UUID uuid);
 
     Client getClientByUsername(String username);
 

@@ -1,6 +1,8 @@
 package pl.lodz.p.model;
 
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.Getter;
 import lombok.Setter;
 import org.bson.codecs.pojo.annotations.BsonCreator;
@@ -10,6 +12,14 @@ import java.util.UUID;
 
 @Getter
 @Setter
+@JsonTypeInfo(
+        use = JsonTypeInfo.Id.NAME,
+        property = "_clazz"
+)
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = AppleArch.class, name = "applearch"),
+        @JsonSubTypes.Type(value = x86.class, name = "x86")
+})
 public class VMachine extends AbstractEntityMgd {
 
     @BsonProperty("CPUNumber")
@@ -51,6 +61,16 @@ public class VMachine extends AbstractEntityMgd {
 
     public float getActualRentalPrice() {
         return 0;
+    }
+
+    @Override
+    public String toString() {
+        return "VMachine{" +
+                "CPUNumber=" + CPUNumber +
+                ", ramSize='" + ramSize + '\'' +
+                ", isRented=" + isRented +
+                ", actualRentalPrice=" + actualRentalPrice +
+                '}';
     }
 };
 

@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.lodz.p.model.Client;
-import pl.lodz.p.service.implementation.ClientServiceImplementation;
+import pl.lodz.p.service.implementation.ClientService;
 
 import java.util.List;
 import java.util.Map;
@@ -16,18 +16,18 @@ import java.util.UUID;
 @RequestMapping("/api/client")
 public class ClientController {
 
-    private ClientServiceImplementation clientServiceImplementation;
+    private ClientService clientServiceImplementation;
 
     @PostMapping
-    public ResponseEntity<Client> createClient(@RequestBody Client client) {
-        Client savedClient = clientServiceImplementation.createClient(client);
-        return new ResponseEntity<>(savedClient, HttpStatus.CREATED);
+    @ResponseStatus(HttpStatus.CREATED)
+    public Client createClient(@RequestBody Client client) {
+        return clientServiceImplementation.createClient(client);
     }
 
     @GetMapping
-    public ResponseEntity<List<Client>> getAllClients() {
-        List<Client> clients = clientServiceImplementation.getAllClients();
-        return new ResponseEntity<>(clients, HttpStatus.OK);
+    @ResponseStatus(HttpStatus.OK)
+    public List<Client> getAllClients() {
+        return clientServiceImplementation.getAllClients();
     }
 
     @GetMapping("/{uuid}")
@@ -71,7 +71,4 @@ public class ClientController {
 //    public void deleteUser(@PathVariable("uuid") UUID uuid) {
 //        clientServiceImplementation.deleteClient(uuid);
 //    }
-
-
-
 }

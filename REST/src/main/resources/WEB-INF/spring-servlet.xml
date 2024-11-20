@@ -21,4 +21,7 @@
         <property name="prefix" value="/WEB-INF/jsp/" />
         <property name="suffix" value=".jsp" />
     </bean>
+    <bean id="restTemplate" class="org.springframework.web.client.RestTemplate" />
+    <!--<bean id="jacksonDatatype" class="com.fasterxml.jackson.datatype.jsr310.JavaTimeModule"/>-->
+    <!--<bean id="vMachineManager" class="pl.lodz.p.manager.VMachineManager" />-->
 </beans>

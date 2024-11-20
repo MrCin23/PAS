@@ -8,9 +8,9 @@ import java.time.LocalDateTime;
 
 public class Main {
 
-//    private static VMachineManager vMachineManager = VMachineManager.getInstance();
+    private static VMachineManager vMachineManager = VMachineManager.getInstance();
     private static final ClientManager clientManager = ClientManager.getInstance();
-//    private static RentManager rentManager = RentManager.getInstance();
+    private static RentManager rentManager = RentManager.getInstance();
 //    private static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
@@ -18,10 +18,11 @@ public class Main {
 ////        System.out.println(clientManager.getAllClientsReport());
 //        vMachineManager.registerAppleArch(8, "16GB");
 //////        vMachineManager.registerX86(16, "32GB", "AMD");
-        Client client = new Client("Mateusz", "Smoliński", "Smoli", "mateusz.smolinski@p.lodz.pl", new Standard());
-        clientManager.registerExistingClient(client);
+//        Client client = new Client("Mateusz", "Smoliński", "Smoli", "mateusz.smolinski@p.lodz.pl", new Standard());
+//        clientManager.registerExistingClient(client);
 //        System.out.println(clientManager.getAllClientsReport());
 //        VMachine vMachine = new x86(16, "64GB", "Intel");
+//        VMachine vMachine = new AppleArch(16, "64GB");
 //        vMachineManager.registerExistingVMachine(vMachine);
 //        Rent rent = new Rent(client, vMachine, LocalDateTime.now());
 //        rentManager.registerExistingRent(rent);
@@ -37,6 +38,7 @@ public class Main {
 //        vMachineManager.registerExistingVMachine(vMachine);
 //        rent = new Rent(client, vMachine, null);
 //        rentManager.registerExistingRent(rent);
+        System.out.println(rentManager.getAllRentsReport());
         System.out.println("hej");
 //        System.out.println(rentManager.getAllRentsReport());
 //        rentManager.endRent(rent.getEntityId(),LocalDateTime.of(2024,11,16,14,45));
