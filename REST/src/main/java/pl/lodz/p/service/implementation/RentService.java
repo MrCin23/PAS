@@ -114,6 +114,11 @@ public class RentService implements IRentService {
         repo.endRent(new MongoUUID(uuid), endDate);
     }
 
+    @Override
+    public void removeRent(UUID uuid) {
+        repo.remove(new MongoUUID(uuid));
+    }
+
     //private helper methods
     private Client getClientById(UUID clientId) {
         String url = "http://localhost:8080/REST/api/client/" + clientId;
