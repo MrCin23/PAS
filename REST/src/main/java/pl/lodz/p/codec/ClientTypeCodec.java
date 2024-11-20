@@ -8,6 +8,7 @@ import org.bson.codecs.EncoderContext;
 import org.bson.codecs.configuration.CodecRegistry;
 import pl.lodz.p.model.Admin;
 import pl.lodz.p.model.ClientType;
+import pl.lodz.p.model.Moderator;
 import pl.lodz.p.model.Standard;
 
 public class ClientTypeCodec implements Codec<ClientType> {
@@ -30,6 +31,8 @@ public class ClientTypeCodec implements Codec<ClientType> {
         }
         else if(type.equals("admin")) {
             return new Admin();
+        }else if(type.equals("moderator")) {
+            return new Moderator();
         }
         else {
             throw new RuntimeException("Unsupported type: " + type);

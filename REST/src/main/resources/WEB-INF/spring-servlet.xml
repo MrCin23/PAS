@@ -22,6 +22,13 @@
         <property name="suffix" value=".jsp" />
     </bean>
     <bean id="restTemplate" class="org.springframework.web.client.RestTemplate" />
+    <bean id="vMachineManager" class="pl.lodz.p.manager.VMachineManager" />
+    <bean id="clientManager" class="pl.lodz.p.manager.ClientManager" />
+    <bean id="rentManager" class="pl.lodz.p.manager.RentManager" />
+    <bean id="dataInitializer" class="pl.lodz.p.DataInitializer" init-method="init">
+        <property name="clientMan" ref="clientManager"/>
+        <property name="rentMan" ref="rentManager"/>
+        <property name="vmMan" ref="vMachineManager"/>
+    </bean>
     <!--<bean id="jacksonDatatype" class="com.fasterxml.jackson.datatype.jsr310.JavaTimeModule"/>-->
-    <!--<bean id="vMachineManager" class="pl.lodz.p.manager.VMachineManager" />-->
 </beans>
