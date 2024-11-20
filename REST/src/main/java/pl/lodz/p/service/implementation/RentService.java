@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import pl.lodz.p.dto.RentDTO;
+import pl.lodz.p.model.MongoUUID;
 import pl.lodz.p.model.Rent;
 import pl.lodz.p.model.Client;
 import pl.lodz.p.model.VMachine;
@@ -38,22 +39,38 @@ public class RentService implements IRentService {
 
     @Override
     public List<Rent> getAllRents() {
-        return repo.getRents();
+        List<Rent> rents = repo.getRents();
+        if(rents == null || rents.isEmpty()) {
+            throw new RuntimeException("Rents not found");
+        }
+        return rents;
     }
 
     @Override
     public List<Rent> getActiveRents() {
-        return List.of();
+        List<Rent> activeRents = repo.findBy("endTime", null);
+        if(activeRents == null || activeRents.isEmpty()) {
+            throw new RuntimeException("Active rents not found");
+        }
+        return activeRents;
     }
 
     @Override
     public List<Rent> getArchivedRents() {
-        return List.of();
+        List<Rent> archivedRents = repo.findByNegation("endTime", null);
+        if(archivedRents == null || archivedRents.isEmpty()) {
+            throw new RuntimeException("Archived rents not found");
+        }
+        return archivedRents;
     }
 
     @Override
-    public Rent getRent(UUID id) {
-        return null;
+    public Rent getRent(UUID uuid) {
+        Rent rent = repo.getRentByID(new MongoUUID(uuid));
+        if(rent == null) {
+            throw new RuntimeException("Rent with UUID:" + uuid + " not found");
+        }
+        return rent;
     }
 
     @Override
@@ -74,6 +91,11 @@ public class RentService implements IRentService {
     @Override
     public List<Rent> getVMachineArchivedRents() {
         return List.of();
+    }
+
+    @Override
+    public void endRent(UUID uuid, LocalDateTime endDate) {
+        repo.endRent(new MongoUUID(uuid), endDate);
     }
 
     //private helper methods

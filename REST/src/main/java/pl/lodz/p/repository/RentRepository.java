@@ -90,6 +90,10 @@ public class RentRepository extends AbstractMongoRepository {
             if(client == null){
                 throw new Exception("");
             }
+            if(!client.isActive()){
+                throw new RuntimeException("Client is not active");
+                //TODO zmiana żeby przy tych dwóch wyjątkach nastąpiło wyrzucenie tego wyjątku
+            }
             Bson filter = Filters.eq("_id", rent.getVMachine().getEntityId().getUuid().toString());
             Bson update = Updates.inc("isRented", 1);
             vMachines.updateOne(session, filter, update);
@@ -125,5 +129,13 @@ public class RentRepository extends AbstractMongoRepository {
     public Rent getRentByID(MongoUUID uuid) {
         Bson filter = Filters.eq("_id", uuid.getUuid());
         return rents.find(filter).first();
+    }
+
+    public List<Rent> findBy(String field, Object value) {
+        return rents.find(Filters.eq(field, value)).into(new ArrayList<>());
+    }
+
+    public List<Rent> findByNegation(String field, Object value) {
+        return rents.find(Filters.ne(field, value)).into(new ArrayList<>());
     }
 }

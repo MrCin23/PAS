@@ -28,4 +28,6 @@ public interface IRentService {
     Rent getVMachineActiveRent();
 
     List<Rent> getVMachineArchivedRents();
+
+    void endRent(UUID uuid, LocalDateTime endDate);
 }
