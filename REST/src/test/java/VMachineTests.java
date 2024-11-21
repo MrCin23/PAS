@@ -22,8 +22,8 @@ public class VMachineTests {
         RestAssured.baseURI = "http://localhost";
         RestAssured.port = 8080;
         RestAssured.basePath = "/REST/api/vmachine";
-        dataInitializer.dropAndCreateVMachine();
-        dataInitializer.initVM();
+//        dataInitializer.dropAndCreateVMachine();
+//        dataInitializer.initVM();
     }
 
     @AfterEach
