@@ -147,7 +147,21 @@ public class ClientRepository extends AbstractMongoRepository {
     }
 
     public void add(Client client) {
-        clients.insertOne(client);
+        ClientSession session = getMongoClient().startSession();
+        try {
+            session.startTransaction();
+            Bson filter = Filters.eq("username", client.getUsername());
+            Client pom = clients.find(session, filter).first();
+            if(pom != null) {
+                throw new RuntimeException("This username is already used");
+            }
+            clients.insertOne(client);
+            session.commitTransaction();
+        } catch (MongoCommandException ex) {
+            session.abortTransaction();
+        } finally {
+            session.close();
+        }
     }
 
     public void remove(Client client) {

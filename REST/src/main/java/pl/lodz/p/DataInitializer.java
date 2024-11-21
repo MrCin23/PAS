@@ -14,7 +14,7 @@ import java.util.List;
 @Getter
 @Setter
 public class DataInitializer {
-    private ClientManager clientMan;
+    private ClientManager clientMan = ClientManager.getInstance();
     private RentManager rentMan;
     private VMachineManager vmMan;
     List<Client> clients = new ArrayList<>();
@@ -26,7 +26,7 @@ public class DataInitializer {
         initRent();
     }
 
-    private void initClient(){
+    public void initClient(){
         clients.add(new Client("Bart", "Fox", "Idontexist", "BFox@tul.com", new Admin()));
         clients.add(new Client("Michael", "Corrugated", "DON_IAS", "MCorrugated@ias.pas.p.lodz.pl", new Admin()));
         clients.add(new Client("Matthew", "Tar", "MTar", "MTar@TarVSCorrugated.com", new Admin()));
@@ -39,7 +39,7 @@ public class DataInitializer {
         clientMan.registerExistingClient(clients.get(4));
     }
 
-    private void initVM(){
+    public void initVM(){
         vms.add(new AppleArch(4, "4GB"));
         vms.add(new AppleArch(24, "128GB"));
         vms.add(new x86(8, "8GB", "AMD"));
@@ -52,7 +52,7 @@ public class DataInitializer {
         vmMan.registerExistingVMachine(vms.get(4));
     }
 
-    private void initRent(){
+    public void initRent(){
         rents.add(new Rent(clients.get(0), vms.get(0), LocalDateTime.of(2024,11,21,21,37)));
         rents.add(new Rent(clients.get(0), vms.get(2), LocalDateTime.of(2024,10,26,21,37)));
         rents.add(new Rent(clients.get(3), vms.get(3), LocalDateTime.of(2023,10,26,21,37)));

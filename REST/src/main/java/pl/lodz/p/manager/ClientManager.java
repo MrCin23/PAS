@@ -1,6 +1,7 @@
 package pl.lodz.p.manager;
 
 
+import lombok.Getter;
 import pl.lodz.p.model.Client;
 import pl.lodz.p.model.ClientType;
 import pl.lodz.p.model.MongoUUID;
@@ -9,6 +10,7 @@ import pl.lodz.p.repository.ClientRepository;
 import java.util.List;
 import java.util.Map;
 
+@Getter
 //ClientManager jako Singleton
 public final class ClientManager {
     private static ClientManager instance;
