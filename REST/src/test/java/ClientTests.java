@@ -21,7 +21,6 @@ import java.util.UUID;
 import static org.hamcrest.Matchers.*;
 
 public class ClientTests {
-//    public static final ClientRepository mongoRepo = new ClientRepository();
     public static DataInitializer dataInitializer = new DataInitializer();
 
     @BeforeAll
@@ -29,45 +28,18 @@ public class ClientTests {
         RestAssured.baseURI = "http://localhost";
         RestAssured.port = 8080;
         RestAssured.basePath = "/REST/api/client";
-        //-----------------------------------------
-        MongoIterable<String> list = dataInitializer.getClientMan().getClientsRepository().getDatabase().listCollectionNames();
-        for (String name : list) {
-            if (name.equals("clients")) {
-                dataInitializer.getClientMan().getClientsRepository().getDatabase().getCollection(name).drop();
-                break;
-            }
-        }
-        dataInitializer.getClientMan().getClientsRepository().getDatabase().createCollection("clients");
-//        mongoRepo.getDatabase().createCollection("clients", createCollectionOptions);
-        //TODO przerobić na takie
+        dataInitializer.dropAndCreateClient();
         dataInitializer.initClient();
     }
 
     @AfterEach
     public void dropCollection() {
-        MongoIterable<String> list = dataInitializer.getClientMan().getClientsRepository().getDatabase().listCollectionNames();
-        for (String name : list) {
-            if (name.equals("clients")) {
-                dataInitializer.getClientMan().getClientsRepository().getDatabase().getCollection(name).drop();
-                break;
-            }
-        }
-        dataInitializer.getClientMan().getClientsRepository().getDatabase().createCollection("clients");
-//        mongoRepo.getDatabase().createCollection("clients", createCollectionOptions);
-        //TODO przerobić na takie
+        dataInitializer.dropAndCreateClient();
         dataInitializer.initClient();
     }
 
     @Test
     public void testCreateClient() throws JsonProcessingException {
-//        Map<String, Object> payload = new HashMap<>();
-//        payload.put("firstName", "John");
-//        payload.put("surname", "Doe");
-//        payload.put("username", "johndoe");
-//        payload.put("emailAddress", "john.doe@example.com");
-//
-//        String payloadJson = new ObjectMapper().writeValueAsString(payload);
-
         String payloadJson = """
                 {
                   "firstName": "John",
@@ -343,5 +315,4 @@ public class ClientTests {
                 .body("size()", greaterThan(0))
                 .body("username", everyItem(equalTo(username)));
     }
-
 }

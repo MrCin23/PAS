@@ -15,15 +15,37 @@ import java.util.List;
 @Setter
 public class DataInitializer {
     private ClientManager clientMan = ClientManager.getInstance();
-    private RentManager rentMan;
-    private VMachineManager vmMan;
+    private RentManager rentMan = RentManager.getInstance();
+    private VMachineManager vmMan = VMachineManager.getInstance();
     List<Client> clients = new ArrayList<>();
     List<Rent> rents = new ArrayList<>();
     List<VMachine> vms = new ArrayList<>();
     public void init(){
+        clients = new ArrayList<>();
+        rents = new ArrayList<>();
+        vms = new ArrayList<>();
         initClient();
         initVM();
         initRent();
+    }
+
+    public void dropAndCreateClient(){
+        clientMan.getClientsRepository().getDatabase().getCollection("clients").drop();
+        clientMan.getClientsRepository().getDatabase().createCollection("clients");
+    }
+
+    public void dropAndCreateVMachine(){
+        vmMan.getVMachinesRepository().getDatabase().getCollection("vMachines").drop();
+        vmMan.getVMachinesRepository().getDatabase().createCollection("vMachines");
+    }
+
+    public void dropAndCreateRent(){
+        rentMan.getRentRepository().getDatabase().getCollection("rents").drop();
+        rentMan.getRentRepository().getDatabase().getCollection("clients").drop();
+        rentMan.getRentRepository().getDatabase().getCollection("vMachines").drop();
+        rentMan.getRentRepository().getDatabase().createCollection("vMachines");
+        rentMan.getRentRepository().getDatabase().createCollection("clients");
+        rentMan.getRentRepository().getDatabase().createCollection("rents");
     }
 
     public void initClient(){

@@ -1,6 +1,7 @@
 package pl.lodz.p.manager;
 
 
+import lombok.Getter;
 import pl.lodz.p.model.AppleArch;
 import pl.lodz.p.model.MongoUUID;
 import pl.lodz.p.model.VMachine;
@@ -10,6 +11,7 @@ import pl.lodz.p.repository.VMachineRepository;
 import java.util.Map;
 
 //Manager jako Singleton
+@Getter
 public final class VMachineManager {
 
     private static VMachineManager instance;

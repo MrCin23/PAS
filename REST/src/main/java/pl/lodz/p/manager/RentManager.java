@@ -1,5 +1,6 @@
 package pl.lodz.p.manager;
 
+import lombok.Getter;
 import pl.lodz.p.model.Client;
 import pl.lodz.p.model.MongoUUID;
 import pl.lodz.p.model.Rent;
@@ -9,6 +10,7 @@ import pl.lodz.p.repository.RentRepository;
 import java.time.LocalDateTime;
 
 //RentManager jako Singleton
+@Getter
 public final class RentManager {
     private static RentManager instance;
     private final RentRepository rentRepository;
