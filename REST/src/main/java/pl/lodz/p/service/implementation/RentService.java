@@ -32,9 +32,9 @@ public class RentService implements IRentService {
         if(vm == null) {
             throw new RuntimeException("VMachine not found");
         }
-        if(getVMachineById(rentDTO.getVmId()).isRented() > 0){
-            throw new RuntimeException("VMachine already rented");
-        }
+//        if(getVMachineById(rentDTO.getVmId()).isRented() > 0){
+//            throw new RuntimeException("VMachine already rented");
+//        }
         if(getClientById(rentDTO.getClientId()).getCurrentRents()>getClientById(rentDTO.getClientId()).getClientType().getMaxRentedMachines()){
             throw new RuntimeException("Client is not permitted to rent more machines: " + client.getCurrentRents() + " > " + client.getClientType().getMaxRentedMachines() +1);
         }

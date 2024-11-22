@@ -165,8 +165,7 @@ public class VMachineTests {
                     "_clazz": "applearch",
                     "entityId": {
                         "uuid": "7ab44a0b-8347-41cb-a64a-452666d0494a"
-                    },
-                    "ramSize": "4GB"
+                    }
                 }""";
 
         RestAssured.given()
