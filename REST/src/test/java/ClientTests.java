@@ -1,23 +1,17 @@
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoIterable;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import io.restassured.response.Response;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import pl.lodz.p.DataInitializer;
-import pl.lodz.p.model.AbstractEntityMgd;
-import pl.lodz.p.model.Client;
-import pl.lodz.p.repository.AbstractMongoRepository;
-import pl.lodz.p.repository.ClientRepository;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
 public class ClientTests {
@@ -314,5 +308,144 @@ public class ClientTests {
                 .statusCode(200)
                 .body("size()", greaterThan(0))
                 .body("username", everyItem(equalTo(username)));
+    }
+
+    @Test
+    public void testIncorrectCreateClient(){
+        String payloadJson = """
+                {
+                  "firstName": "John",
+                  "surname": "Doe",
+                  "username": "johndoe",
+                  "emailAddress": "john.doe@example.com",
+                }""";
+
+        RestAssured.given()
+                .contentType(ContentType.JSON)
+                .body(payloadJson)
+                .when()
+                .post()
+                .then()
+                .statusCode(400);
+    }
+
+    @Test
+    public void testDuplicateUUIDRejection() {
+        String payloadJson = """
+                {
+                    "entityId": {
+                        "uuid": "2abc9e5d-3d2f-42e7-b90b-e7c61f662da3"
+                    },
+                    "firstName": "John",
+                    "surname": "Doe",
+                    "username": "johndoe",
+                    "emailAddress": "john.doe@example.com",
+                    "clientType": {
+                        "_clazz": "standard",
+                        "entityId": {
+                            "uuid": "f8a34079-809e-459b-b76f-f25a02c064c6"
+                        },
+                        "maxRentedMachines": 5,
+                        "name": "Standard"
+                    },
+                    "currentRents": 0,
+                    "active": true
+                }""";
+
+        RestAssured.given()
+                .contentType(ContentType.JSON)
+                .body(payloadJson)
+                .when()
+                .post()
+                .then()
+                .statusCode(201)
+                .body("firstName", equalTo("John"))
+                .body("surname", equalTo("Doe"))
+                .body("username", equalTo("johndoe"))
+                .body("emailAddress", equalTo("john.doe@example.com"));
+
+        payloadJson = """
+                {
+                    "entityId": {
+                        "uuid": "2abc9e5d-3d2f-42e7-b90b-e7c61f662da3"
+                    },
+                    "firstName": "John",
+                    "surname": "Doe",
+                    "username": "johndoe",
+                    "emailAddress": "john.doe@example.com",
+                    "clientType": {
+                        "_clazz": "standard",
+                        "entityId": {
+                            "uuid": "f8a34079-809e-459b-b76f-f25a02c064c6"
+                        },
+                        "maxRentedMachines": 5,
+                        "name": "Standard"
+                    },
+                    "currentRents": 0,
+                    "active": true
+                }""";
+        Response response = RestAssured.given()
+                .contentType(ContentType.JSON)
+                .body(payloadJson)
+                .when()
+                .post();
+        response.then().statusCode(500);
+
+        String responseBody = response.getBody().asString();
+        assertThat(responseBody, containsString("Client with id 2abc9e5d-3d2f-42e7-b90b-e7c61f662da3 already exists"));
+    }
+
+    @Test
+    public void testDuplicateUsernameRejection() {
+        String payloadJson = """
+                {
+                    "firstName": "John",
+                    "surname": "Doe",
+                    "username": "johndoe",
+                    "emailAddress": "john.doe@example.com",
+                    "clientType": {
+                        "_clazz": "standard",
+                        "maxRentedMachines": 5,
+                        "name": "Standard"
+                    },
+                    "currentRents": 0,
+                    "active": true
+                }""";
+
+        RestAssured.given()
+                .contentType(ContentType.JSON)
+                .body(payloadJson)
+                .when()
+                .post()
+                .then()
+                .statusCode(201)
+                .body("firstName", equalTo("John"))
+                .body("surname", equalTo("Doe"))
+                .body("username", equalTo("johndoe"))
+                .body("emailAddress", equalTo("john.doe@example.com"));
+
+        payloadJson = """
+                {
+                    "firstName": "John",
+                    "surname": "Doe",
+                    "username": "johndoe",
+                    "emailAddress": "john.doe@example.com",
+                    "clientType": {
+                        "_clazz": "standard",
+                        "maxRentedMachines": 5,
+                        "name": "Standard"
+                    },
+                    "currentRents": 0,
+                    "active": true
+                }""";
+        Response response = RestAssured.given()
+                .contentType(ContentType.JSON)
+                .body(payloadJson)
+                .when()
+                .post();
+        response.then().statusCode(500);
+
+        String responseBody = response.getBody().asString();
+        assertThat(responseBody, containsString("Request processing failed: java.lang.RuntimeException: This username is already used"));
     }
 }

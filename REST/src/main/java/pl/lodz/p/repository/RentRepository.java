@@ -8,12 +8,14 @@ import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
 import org.bson.conversions.Bson;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.client.RestTemplate;
 import pl.lodz.p.model.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Repository
 public class RentRepository extends AbstractMongoRepository {
@@ -36,9 +38,6 @@ public class RentRepository extends AbstractMongoRepository {
         this.vMachines = this.getDatabase().getCollection("vMachines", VMachine.class);
         this.clients = this.getDatabase().getCollection("clients", Client.class);
     }
-
-    //-------------METHODS---------------------------------------
-    //TODO dorobić metody z diagramu
 
     public void endRent(MongoUUID uuid, LocalDateTime endTime){
         ClientSession session = getMongoClient().startSession();
@@ -86,17 +85,17 @@ public class RentRepository extends AbstractMongoRepository {
         Client client;
         try {
             session.startTransaction();
+//            VMachine vm = getVMachineById(rent.getVMachine().getEntityId().getUuid());
+//            if(vm.isRented()>0){
+//                throw new RuntimeException("I really shouldnt have to do this");
+//            }
             Bson clientFilter = Filters.eq("_id", rent.getClient().getEntityId().getUuid());
             Bson updateClientFilter = Updates.inc("currentRents", 1);
             clients.updateOne(session, clientFilter, updateClientFilter);
             Bson currentRentsFilter = Filters.lt("currentRents", rent.getClient().getClientType().getMaxRentedMachines());
             client = clients.find(Filters.and(clientFilter, currentRentsFilter)).first();
-            if(client == null){
-                throw new Exception("");
-            }
-            if(!client.isActive()){
-                throw new RuntimeException("Client is not active");
-                //TODO zmiana żeby przy tych dwóch wyjątkach nastąpiło wyrzucenie tego wyjątku
+            if(client == null || !client.isActive()){
+                throw new RuntimeException("Client doesnt exist or is not active");
             }
             Bson filter = Filters.eq("_id", rent.getVMachine().getEntityId().getUuid().toString());
             Bson update = Updates.inc("isRented", 1);
@@ -191,4 +190,14 @@ public class RentRepository extends AbstractMongoRepository {
             session.close();
         }
     }
+//
+//    private VMachine getVMachineById(UUID vMachineId) {
+//        RestTemplate restTemplate = new RestTemplate();
+//        String url = "http://localhost:8080/REST/api/vmachine/" + vMachineId;
+//        try {
+//            return restTemplate.getForObject(url, VMachine.class);
+//        } catch (Exception e) {
+//            throw new RuntimeException("Request GET http://localhost:8080/REST/api/vmachine/" + vMachineId + " failed: " + e);
+//        }
+//    }
 }

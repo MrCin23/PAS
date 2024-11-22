@@ -19,13 +19,12 @@
             </url>
         </license>
     </licenses>
-
     <reporting>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-project-info-reports-plugin</artifactId>
-                <version>3.4.5</version>
+                <version>3.6.2</version>
             </plugin>
             <plugin>
                 <groupId>org.jacoco</groupId>
@@ -66,7 +65,7 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.13.0</version>
                 <configuration>
-                    <source>21</source> <!-- lub inna wersja Javy -->
+                    <source>21</source>
                     <target>21</target>
                     <compilerArgs>
                         <arg>-parameters</arg>
@@ -252,8 +251,4 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
-
-
-
 </project>
