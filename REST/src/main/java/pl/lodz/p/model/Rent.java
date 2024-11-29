@@ -1,5 +1,6 @@
 package pl.lodz.p.model;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import org.bson.codecs.pojo.annotations.BsonCreator;
@@ -14,9 +15,11 @@ import java.util.UUID;
 @Getter
 public class Rent extends AbstractEntityMgd {
     @BsonProperty("client")
+    @NotNull(message = "Client cannot be null for rent to exist")
     private Client client;
     @Getter
     @BsonProperty("vMachine")
+    @NotNull(message = "VM cannot be null for rent to exist")
     private VMachine vMachine;
     @Getter
     @BsonProperty("beginTime")

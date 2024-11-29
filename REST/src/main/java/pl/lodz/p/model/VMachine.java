@@ -3,6 +3,7 @@ package pl.lodz.p.model;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import org.bson.codecs.pojo.annotations.BsonCreator;
@@ -23,8 +24,10 @@ import java.util.UUID;
 public class VMachine extends AbstractEntityMgd {
 
     @BsonProperty("CPUNumber")
+    @NotNull(message = "CPU number cannot be null")
     private int CPUNumber;
     @BsonProperty("ramSize")
+    @NotNull(message = "CPU number cannot be null")
     private String ramSize;
     @BsonProperty("isRented")
     private int isRented;

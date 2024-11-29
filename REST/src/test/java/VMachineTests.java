@@ -157,4 +157,23 @@ public class VMachineTests {
                 .then()
                 .statusCode(204);
     }
+
+    @Test
+    public void testIncorrectCreateVM(){
+        String payloadJson = """
+                {
+                    "_clazz": "applearch",
+                    "entityId": {
+                        "uuid": "7ab44a0b-8347-41cb-a64a-452666d0494a"
+                    }
+                }""";
+
+        RestAssured.given()
+                .contentType(ContentType.JSON)
+                .body(payloadJson)
+                .when()
+                .post()
+                .then()
+                .statusCode(500);
+    }
 }

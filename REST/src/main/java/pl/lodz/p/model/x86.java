@@ -1,6 +1,7 @@
 package pl.lodz.p.model;
 
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import org.bson.codecs.pojo.annotations.BsonCreator;
@@ -12,6 +13,7 @@ import org.bson.codecs.pojo.annotations.BsonProperty;
 @BsonDiscriminator(value="x86", key="_clazz")
 public class x86 extends VMachine {
     @BsonProperty("CPUManufacturer")
+    @NotNull(message = "CPU manufacturer cannot be null")
     private String CPUManufacturer;
 
     public x86(int CPUNumber, String ramSize, String CPUManufacturer) {

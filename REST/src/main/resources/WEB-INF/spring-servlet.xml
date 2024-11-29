@@ -10,7 +10,7 @@
         http://www.springframework.org/schema/mvc/spring-mvc.xsd
         http://www.springframework.org/schema/context
         http://www.springframework.org/schema/context/spring-context.xsd">
-    <mvc:annotation-driven />
+
     <context:component-scan
             base-package="pl.lodz.p" />
     <mvc:default-servlet-handler />
@@ -21,6 +21,10 @@
         <property name="prefix" value="/WEB-INF/jsp/" />
         <property name="suffix" value=".jsp" />
     </bean>
+    <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"/>
+    <bean class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer"/>
+    <!--<bean id="postValidator" class="org.springframework.validation.beanvalidation.MethodValidationPostProcessor"/>-->
+    <mvc:annotation-driven validator="validator" />
     <bean id="restTemplate" class="org.springframework.web.client.RestTemplate" />
     <bean id="vMachineManager" class="pl.lodz.p.manager.VMachineManager" />
     <bean id="clientManager" class="pl.lodz.p.manager.ClientManager" />

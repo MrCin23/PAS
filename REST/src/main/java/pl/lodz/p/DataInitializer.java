@@ -67,11 +67,13 @@ public class DataInitializer {
         vms.add(new x86(8, "8GB", "AMD"));
         vms.add(new x86(16, "32GB", "Intel"));
         vms.add(new x86(128, "256GB", "Other"));
+        vms.add(new x86(128, "256GB", "Other"));
         vmMan.registerExistingVMachine(vms.get(0));
         vmMan.registerExistingVMachine(vms.get(1));
         vmMan.registerExistingVMachine(vms.get(2));
         vmMan.registerExistingVMachine(vms.get(3));
         vmMan.registerExistingVMachine(vms.get(4));
+        vmMan.registerExistingVMachine(vms.get(5));
     }
 
     public void initRent(){

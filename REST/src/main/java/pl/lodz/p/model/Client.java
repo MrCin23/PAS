@@ -1,6 +1,7 @@
 package pl.lodz.p.model;
 
 
+import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,12 +18,20 @@ import java.util.UUID;
 @NoArgsConstructor
 public class Client extends AbstractEntityMgd {
     @BsonProperty("firstName")
+    @NotBlank(message = "First name cannot be blank")
+    @Size(min = 2, max = 32)
     private String firstName;
     @BsonProperty("surname")
+    @NotBlank(message = "First name cannot be blank")
+    @Size(min = 2, max = 32)
     private String surname;
     @BsonProperty("username")
+    @NotBlank(message = "Username cannot be blank")
+    @Size(min = 4, max = 20)
     private String username;
     @BsonProperty("emailAddress")
+    @NotBlank(message = "Email cannot be blank")
+    @Email(message = "Email address has to be valid")
     private String emailAddress;
     @BsonProperty("clientType")
     private ClientType clientType;
