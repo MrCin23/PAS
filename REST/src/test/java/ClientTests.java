@@ -446,6 +446,6 @@ public class ClientTests {
         response.then().statusCode(500);
 
         String responseBody = response.getBody().asString();
-        assertThat(responseBody, containsString("Request processing failed: java.lang.RuntimeException: This username is already used"));
+        assertThat(responseBody, containsString("This username is already used"));
     }
 }

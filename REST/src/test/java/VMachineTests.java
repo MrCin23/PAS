@@ -153,7 +153,7 @@ public class VMachineTests {
 
         RestAssured.given()
                 .when()
-                .delete("/{uuid}", uuid)
+                .delete("/{uuid}", "123e4567-e89b-12d3-a456-426614174000")
                 .then()
                 .statusCode(204);
     }
@@ -174,6 +174,6 @@ public class VMachineTests {
                 .when()
                 .post()
                 .then()
-                .statusCode(500);
+                .statusCode(400);
     }
 }

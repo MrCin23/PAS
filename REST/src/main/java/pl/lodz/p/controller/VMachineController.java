@@ -84,7 +84,7 @@ public class VMachineController {
 
     @DeleteMapping("/{uuid}")//not tested
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public ResponseEntity<Object> deleteVMachine(@PathVariable("uuid") UuidDTO uuid, BindingResult bindingResult) {
+    public ResponseEntity<Object> deleteVMachine(@PathVariable("uuid") UuidDTO uuid) {
         try {
             try {
                 vMachineService.deleteVMachine(uuid.uuid());
