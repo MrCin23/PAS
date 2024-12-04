@@ -4,17 +4,13 @@ import com.mongodb.client.model.IndexOptions;
 import lombok.Getter;
 import lombok.Setter;
 import org.bson.Document;
-import org.springframework.web.client.RestTemplate;
 import pl.lodz.p.manager.ClientManager;
 import pl.lodz.p.manager.RentManager;
 import pl.lodz.p.manager.VMachineManager;
 import pl.lodz.p.model.*;
-import pl.lodz.p.repository.ClientRepository;
-import pl.lodz.p.repository.RentRepository;
-import pl.lodz.p.repository.VMachineRepository;
-import pl.lodz.p.service.implementation.ClientService;
-import pl.lodz.p.service.implementation.RentService;
-import pl.lodz.p.service.implementation.VMachineService;
+import pl.lodz.p.model.user.Premium;
+import pl.lodz.p.model.user.Client;
+import pl.lodz.p.model.user.Standard;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -62,10 +58,10 @@ public class DataInitializer {
     }
 
     public void initClient(){
-        clients.add(new Client("Bart", "Fox", "Idontexist", "BFox@tul.com", new Admin()));
-        clients.add(new Client("Michael", "Corrugated", "DON_IAS", "MCorrugated@ias.pas.p.lodz.pl", new Admin()));
-        clients.add(new Client("Matthew", "Tar", "MTar", "MTar@TarVSCorrugated.com", new Admin()));
-        clients.add(new Client("Martin", "Bricky", "Brickman", "IntelEnjoyer@whatisonpage4035.com", new Moderator()));
+        clients.add(new Client("Bart", "Fox", "Idontexist", "BFox@tul.com", new Premium()));
+        clients.add(new Client("Michael", "Corrugated", "DON_IAS", "MCorrugated@ias.pas.p.lodz.pl", new Premium()));
+        clients.add(new Client("Matthew", "Tar", "MTar", "MTar@TarVSCorrugated.com", new Premium()));
+        clients.add(new Client("Martin", "Bricky", "Brickman", "IntelEnjoyer@whatisonpage4035.com", new Standard()));
         clients.add(new Client("Juan", "Escobar", "JEscobar", "JEscobar@colombianSnow.com", new Standard()));
         clientMan.registerExistingClient(clients.get(0));
         clientMan.registerExistingClient(clients.get(1));

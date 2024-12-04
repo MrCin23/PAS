@@ -2,7 +2,7 @@ package pl.lodz.p.service.implementation;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import pl.lodz.p.model.Client;
+import pl.lodz.p.model.user.Client;
 import pl.lodz.p.model.MongoUUID;
 import pl.lodz.p.repository.ClientRepository;
 import pl.lodz.p.service.IClientService;

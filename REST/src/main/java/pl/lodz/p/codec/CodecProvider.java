@@ -2,7 +2,7 @@ package pl.lodz.p.codec;
 
 import org.bson.codecs.Codec;
 import org.bson.codecs.configuration.CodecRegistry;
-import pl.lodz.p.model.ClientType;
+import pl.lodz.p.model.user.ClientType;
 import pl.lodz.p.model.MongoUUID;
 import pl.lodz.p.model.VMachine;
 

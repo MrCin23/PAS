@@ -2,8 +2,8 @@ package pl.lodz.p.manager;
 
 
 import lombok.Getter;
-import pl.lodz.p.model.Client;
-import pl.lodz.p.model.ClientType;
+import pl.lodz.p.model.user.Client;
+import pl.lodz.p.model.user.ClientType;
 import pl.lodz.p.model.MongoUUID;
 import pl.lodz.p.repository.ClientRepository;
 

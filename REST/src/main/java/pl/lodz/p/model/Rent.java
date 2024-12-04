@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.bson.codecs.pojo.annotations.BsonCreator;
 import org.bson.codecs.pojo.annotations.BsonProperty;
+import pl.lodz.p.model.user.Client;
 
 import java.time.Duration;
 import java.time.LocalDateTime;

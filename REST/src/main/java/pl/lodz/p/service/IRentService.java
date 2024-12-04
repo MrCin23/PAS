@@ -1,9 +1,7 @@
 package pl.lodz.p.service;
 
 import pl.lodz.p.dto.RentDTO;
-import pl.lodz.p.model.Client;
 import pl.lodz.p.model.Rent;
-import pl.lodz.p.model.VMachine;
 
 import java.time.LocalDateTime;
 import java.util.List;

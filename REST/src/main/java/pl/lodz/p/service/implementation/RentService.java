@@ -6,7 +6,7 @@ import org.springframework.web.client.RestTemplate;
 import pl.lodz.p.dto.RentDTO;
 import pl.lodz.p.model.MongoUUID;
 import pl.lodz.p.model.Rent;
-import pl.lodz.p.model.Client;
+import pl.lodz.p.model.user.Client;
 import pl.lodz.p.model.VMachine;
 import pl.lodz.p.repository.RentRepository;
 import pl.lodz.p.service.IRentService;

@@ -14,6 +14,8 @@ import org.bson.codecs.pojo.Conventions;
 import org.bson.codecs.pojo.PojoCodecProvider;
 import pl.lodz.p.codec.CodecProvider;
 import pl.lodz.p.model.*;
+import pl.lodz.p.model.user.Premium;
+import pl.lodz.p.model.user.Standard;
 
 @Getter
 public abstract class AbstractMongoRepository implements AutoCloseable {
@@ -29,7 +31,7 @@ private final ConnectionString connectionString = new ConnectionString(
 //                    .conventions(List.of(Conventions.ANNOTATION_CONVENTION)).build());
     private final CodecRegistry pojoCodecRegistry = CodecRegistries.fromProviders(
             PojoCodecProvider.builder().automatic(true)
-                    .register(Admin.class).register(Standard.class).register(x86.class).register(AppleArch.class)
+                    .register(Premium.class).register(Standard.class).register(x86.class).register(AppleArch.class)
                     .conventions(Conventions.DEFAULT_CONVENTIONS).build());
     private MongoClient mongoClient;
     private MongoDatabase database;
