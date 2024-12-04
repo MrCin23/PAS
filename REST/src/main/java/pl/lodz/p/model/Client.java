@@ -6,9 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.bson.codecs.pojo.annotations.BsonCreator;
-import org.bson.codecs.pojo.annotations.BsonId;
 import org.bson.codecs.pojo.annotations.BsonProperty;
-import org.bson.types.ObjectId;
+//import org.springframework.data.mongodb.core.mapping.Document;
+
 
 import java.util.UUID;
 
@@ -16,6 +16,7 @@ import java.util.UUID;
 @Setter
 @Getter
 @NoArgsConstructor
+//@Document(collection = "clients")
 public class Client extends AbstractEntityMgd {
     @BsonProperty("firstName")
     @NotBlank(message = "First name cannot be blank")
@@ -25,9 +26,10 @@ public class Client extends AbstractEntityMgd {
     @NotBlank(message = "First name cannot be blank")
     @Size(min = 2, max = 32)
     private String surname;
-    @BsonProperty("username")
     @NotBlank(message = "Username cannot be blank")
     @Size(min = 4, max = 20)
+//    @Indexed(unique = true) //It don't works. Fix it
+    @BsonProperty("username")
     private String username;
     @BsonProperty("emailAddress")
     @NotBlank(message = "Email cannot be blank")

@@ -2,10 +2,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import pl.lodz.p.DataInitializer;
+import pl.lodz.p.repository.ClientRepository;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,20 +16,21 @@ import static org.hamcrest.Matchers.*;
 public class ClientTests {
     public static DataInitializer dataInitializer = new DataInitializer();
 
-    @BeforeAll
-    public static void init() {
+    @BeforeEach
+//    public static void init() {
+    public void initCollection() {
         RestAssured.baseURI = "http://localhost";
         RestAssured.port = 8080;
         RestAssured.basePath = "/REST/api/client";
-//        dataInitializer.dropAndCreateClient();
-//        dataInitializer.initClient();
-    }
-
-    @AfterEach
-    public void dropCollection() {
         dataInitializer.dropAndCreateClient();
         dataInitializer.initClient();
     }
+
+//    @AfterEach
+//    public void dropCollection() {
+//        dataInitializer.dropAndCreateClient();
+//        dataInitializer.initClient();
+//    }
 
     @Test
     public void testCreateClient() throws JsonProcessingException {
@@ -389,12 +389,13 @@ public class ClientTests {
                 .body(payloadJson)
                 .when()
                 .post();
-        response.then().statusCode(500);
+        response.then().statusCode(409);
 
         String responseBody = response.getBody().asString();
         assertThat(responseBody, containsString("Client with id 2abc9e5d-3d2f-42e7-b90b-e7c61f662da3 already exists"));
     }
 
+    @Order(1)
     @Test
     public void testDuplicateUsernameRejection() {
         String payloadJson = """
@@ -424,28 +425,15 @@ public class ClientTests {
                 .body("username", equalTo("johndoe"))
                 .body("emailAddress", equalTo("john.doe@example.com"));
 
-        payloadJson = """
-                {
-                    "firstName": "John",
-                    "surname": "Doe",
-                    "username": "johndoe",
-                    "emailAddress": "john.doe@example.com",
-                    "clientType": {
-                        "_clazz": "standard",
-                        "maxRentedMachines": 5,
-                        "name": "Standard"
-                    },
-                    "currentRents": 0,
-                    "active": true
-                }""";
+
         Response response = RestAssured.given()
                 .contentType(ContentType.JSON)
                 .body(payloadJson)
                 .when()
                 .post();
-        response.then().statusCode(500);
+        response.then().statusCode(409);
 
         String responseBody = response.getBody().asString();
-        assertThat(responseBody, containsString("This username is already used"));
+        assertThat(responseBody, containsString("Client with username johndoe already exists! Error code: com.mongodb.MongoWriteException: Write operation error on server mongodb1:27017. Write error: WriteError{code=11000, message='E11000 duplicate key error collection: vmrental.clients index: username_1 dup key: { username: \"johndoe\" }', details={}}."));
     }
 }

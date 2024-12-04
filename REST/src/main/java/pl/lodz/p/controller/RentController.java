@@ -27,10 +27,13 @@ public class RentController {
     @PostMapping//not tested
     public ResponseEntity<Object> createRent(@Valid @RequestBody RentDTO rentDTO, BindingResult bindingResult) {
         try {
-            if(bindingResult.hasErrors()) {
+            Rent pom = rentService.createRent(rentDTO);
+            if (bindingResult.hasErrors()) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(bindingResult.getAllErrors());
             }
-            return ResponseEntity.status(HttpStatus.CREATED).body(rentService.createRent(rentDTO));
+            return ResponseEntity.status(HttpStatus.CREATED).body(pom);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e);
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
         }

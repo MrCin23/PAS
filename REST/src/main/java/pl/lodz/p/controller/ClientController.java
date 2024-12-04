@@ -13,7 +13,6 @@ import pl.lodz.p.service.implementation.ClientService;
 
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 @AllArgsConstructor
 @RestController
@@ -31,7 +30,7 @@ public class ClientController {
             }
             return ResponseEntity.status(HttpStatus.CREATED).body(clientServiceImplementation.createClient(client));
         } catch (Exception ex) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Client with username " + client.getUsername() + " already exists! Error code: " + ex);
         }
     }
 
@@ -44,7 +43,7 @@ public class ClientController {
             } catch (RuntimeException ex) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No clients found");
             }
-            return ResponseEntity.ok(clients);
+            return ResponseEntity.status(HttpStatus.OK).body(clients);
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
         }
@@ -59,7 +58,7 @@ public class ClientController {
             } catch (RuntimeException ex) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No client found");
             }
-            return ResponseEntity.ok(client);
+            return ResponseEntity.status(HttpStatus.OK).body(client);
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
         }
@@ -72,7 +71,7 @@ public class ClientController {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(bindingResult.getAllErrors());
             }
             clientServiceImplementation.updateClient(uuid.uuid(), fieldsToUpdate);
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Client with uuid " + uuid.uuid() + " has been updated");
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
         }
@@ -86,7 +85,7 @@ public class ClientController {
             } catch (RuntimeException ex) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No client found");
             }
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Client with uuid " + uuid.uuid() + " has been deactivated");
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
         }
@@ -100,7 +99,7 @@ public class ClientController {
             } catch (RuntimeException ex) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No client found");
             }
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Client with uuid " + uuid.uuid() + " has been activated");
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
         }
@@ -113,9 +112,9 @@ public class ClientController {
             try {
                 client = clientServiceImplementation.getClientByUsername(username);
             } catch (RuntimeException ex) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No client found");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No client found");
             }
-            return ResponseEntity.ok(client);
+            return ResponseEntity.status(HttpStatus.OK).body(client);
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
         }
@@ -128,9 +127,9 @@ public class ClientController {
             try {
                 clients = clientServiceImplementation.getClientsByUsername(username);
             } catch (RuntimeException ex) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No clients matching");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No clients matching");
             }
-            return ResponseEntity.ok(clients);
+            return ResponseEntity.status(HttpStatus.OK).body(clients);
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
         }

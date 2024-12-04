@@ -1,11 +1,20 @@
 package pl.lodz.p;
 
+import com.mongodb.client.model.IndexOptions;
 import lombok.Getter;
 import lombok.Setter;
+import org.bson.Document;
+import org.springframework.web.client.RestTemplate;
 import pl.lodz.p.manager.ClientManager;
 import pl.lodz.p.manager.RentManager;
 import pl.lodz.p.manager.VMachineManager;
 import pl.lodz.p.model.*;
+import pl.lodz.p.repository.ClientRepository;
+import pl.lodz.p.repository.RentRepository;
+import pl.lodz.p.repository.VMachineRepository;
+import pl.lodz.p.service.implementation.ClientService;
+import pl.lodz.p.service.implementation.RentService;
+import pl.lodz.p.service.implementation.VMachineService;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -32,6 +41,10 @@ public class DataInitializer {
     public void dropAndCreateClient(){
         clientMan.getClientsRepository().getDatabase().getCollection("clients").drop();
         clientMan.getClientsRepository().getDatabase().createCollection("clients");
+        clientMan.getClientsRepository().getDatabase().getCollection("clients").createIndex(
+                new Document("username", 1),
+                new IndexOptions().unique(true)
+        );
     }
 
     public void dropAndCreateVMachine(){
@@ -60,6 +73,7 @@ public class DataInitializer {
         clientMan.registerExistingClient(clients.get(3));
         clientMan.registerExistingClient(clients.get(4));
     }
+
 
     public void initVM(){
         vms.add(new AppleArch(4, "4GB"));

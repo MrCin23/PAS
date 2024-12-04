@@ -1,5 +1,6 @@
 package pl.lodz.p.repository;
 
+import com.mongodb.DuplicateKeyException;
 import com.mongodb.MongoCommandException;
 import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoCollection;
@@ -85,10 +86,15 @@ public class ClientRepository extends AbstractMongoRepository {
             }
         """))//.validator(Filters.and(currentRentsType, currentRentsMin, currentRentsMax))
                 .validationAction (ValidationAction.ERROR);
+
         CreateCollectionOptions createCollectionOptions = new CreateCollectionOptions() .validationOptions (validationOptions);
         this.getDatabase().createCollection(collectionName, createCollectionOptions);
 
         this.clients = this.getDatabase().getCollection(collectionName, Client.class);
+        this.getDatabase().getCollection("clients").createIndex(
+                new Document("username", 1),
+                new IndexOptions().unique(true)
+        );
     }
 
     //-------------METHODS---------------------------------------
@@ -150,13 +156,16 @@ public class ClientRepository extends AbstractMongoRepository {
         ClientSession session = getMongoClient().startSession();
         try {
             session.startTransaction();
-            Bson filter = Filters.eq("username", client.getUsername());
-            Client pom = clients.find(session, filter).first();
-            if(pom != null) {
-                throw new RuntimeException("This username is already used");
-            }
+//            Bson filter = Filters.eq("username", client.getUsername());
+//            Client pom = clients.find(session, filter).first();
+//            if(pom != null) {
+//                throw new RuntimeException("This username is already used");
+//            }
             clients.insertOne(client);
             session.commitTransaction();
+        } catch (DuplicateKeyException ex) {
+            session.abortTransaction();
+            throw new RuntimeException("This username is already used");
         } catch (MongoCommandException ex) {
             session.abortTransaction();
         } finally {
@@ -170,15 +179,7 @@ public class ClientRepository extends AbstractMongoRepository {
     }
 
     public long size() {
-//        try (Session session = sessionFactory.openSession()) {
-//            Transaction transaction = session.beginTransaction();
-//            Long count = (Long) session.createQuery("SELECT COUNT(c) FROM Client c").uniqueResult();
-//            transaction.commit();
-//            return count;
-//        } catch (Exception e) {
-//            throw new RuntimeException(e);
-//        }
-        return 0;
+        return clients.find().into(new ArrayList<Object>()).size();
     }
 
     public List<Client> getClients() {

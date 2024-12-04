@@ -203,7 +203,7 @@ public class RentTests {
                 .body(payloadJson4)
                 .when()
                 .post("/api/rent");
-        response2.then().statusCode(500);
+        response2.then().statusCode(409);
 
 //        String responseBody2 = response2.getBody().asString();
 //        assertThat(responseBody2, containsString("Request processing failed: java. lang. RuntimeException: VMachine already rented"));
