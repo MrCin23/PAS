@@ -3,12 +3,12 @@
 <head>
   <link href="/style.css" rel="stylesheet">
   <meta charset="UTF-8">
-  <title>List of Rents</title>
+  <title th:text="#{ListOfRents}"></title>
 </head>
 <body>
 <div th:replace="~{panels/header :: header}"></div>
 <div th:replace="~{panels/sidebar :: sidebar}"></div>
-<h1>List of Rents</h1>
+<h1 th:text="#{ListOfRents}"></h1>
 
 <div th:if="${message}">
   <p th:text="${message}"></p>
@@ -17,12 +17,12 @@
 <table style="border: 1px; text-align: center">
   <thead>
   <tr>
-    <th>ID</th>
-    <th>Usernme</th>
-    <th>VMachine Info</th>
-    <th>Rent Cost</th>
-    <th>Delete VMachine</th>
-    <th>Details</th>
+    <th th:text="#{uuid}"></th>
+    <th th:text="#{Username}"></th>
+    <th th:text="#{VMachineInfo}"></th>
+    <th th:text="#{RentCost}"></th>
+    <th th:text="#{DeleteVMachine}"></th>
+    <th th:text="#{Details}"></th>
   </tr>
   </thead>
   <tbody>
@@ -33,12 +33,12 @@
     <td th:text="${rent.rentCost}"></td>
     <td>
       <form th:action="@{rent/endRent/{id}(id=${rent.entityId.uuid})}" method="GET">
-        <button type="submit">End Rent</button>
+        <button type="submit" th:text="#{EndRent}"></button>
       </form>
     </td>
     <td>
       <form th:action="@{rent/{id}(id=${rent.entityId.uuid})}" method="GET">
-        <button type="submit">More Info</button>
+        <button type="submit" th:text="#{MoreInfo}"></button>
       </form>
     </td>
   </tr>
