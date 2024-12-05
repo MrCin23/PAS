@@ -37,7 +37,7 @@
 
         <td>
             <form th:action="@{client/{id}(id=${client.entityId.uuid})}" method="GET">
-                <button type="submit">More Info</button>
+                <button type="submit" th:text="#{MoreInfo}">More Info</button>
             </form>
         </td>
     </tr>

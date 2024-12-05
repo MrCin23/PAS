@@ -16,3 +16,8 @@ footer {
     width: 100%;
     position: relative;
 }
+
+.error{
+    color:red;
+    font-size:0.9em;
+}

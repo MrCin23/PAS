@@ -1,9 +1,206 @@
+<!--<!DOCTYPE html>-->
+<!--<html xmlns:th="http://www.thymeleaf.org" lang="pl">-->
+<!--<head>-->
+<!--    <link href="/style.css" rel="stylesheet">-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title th:text="#{RegisterClient}"></title>-->
+<!--    <script>-->
+<!--        document.addEventListener("DOMContentLoaded", function () {-->
+<!--            const form = document.querySelector("form");-->
+<!--            const fields = {-->
+<!--                firstName: {-->
+<!--                    input: document.getElementById("firstName"),-->
+<!--                    validate: (value) => value.length >= 2 && value.length <= 32,-->
+<!--                    errorMessage: "First name must be between 2 and 32 characters."-->
+<!--                },-->
+<!--                surname: {-->
+<!--                    input: document.getElementById("surname"),-->
+<!--                    validate: (value) => value.length >= 2 && value.length <= 32,-->
+<!--                    errorMessage: "Surname must be between 2 and 32 characters."-->
+<!--                },-->
+<!--                username: {-->
+<!--                    input: document.getElementById("username"),-->
+<!--                    validate: (value) => value.length >= 4 && value.length <= 20,-->
+<!--                    errorMessage: "Username must be between 4 and 20 characters."-->
+<!--                },-->
+<!--                emailAddress: {-->
+<!--                    input: document.getElementById("emailAddress"),-->
+<!--                    validate: (value) => /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value),-->
+<!--                    errorMessage: "Please enter a valid email address."-->
+<!--                }-->
+<!--            };-->
+
+<!--            function showError(input, message) {-->
+<!--                let error = input.nextElementSibling;-->
+<!--                if (!error || !error.classList.contains("error")) {-->
+<!--                    error = document.createElement("div");-->
+<!--                    error.classList.add("error");-->
+<!--                    input.parentNode.insertBefore(error, input.nextSibling);-->
+<!--                }-->
+<!--                error.textContent = message;-->
+<!--            }-->
+
+<!--            function clearError(input) {-->
+<!--                const error = input.nextElementSibling;-->
+<!--                if (error && error.classList.contains("error")) {-->
+<!--                    error.remove();-->
+<!--                }-->
+<!--            }-->
+
+<!--            Object.values(fields).forEach(({ input, validate, errorMessage }) => {-->
+<!--                input.addEventListener("input", () => {-->
+<!--                    if (validate(input.value)) {-->
+<!--                        clearError(input);-->
+<!--                    } else {-->
+<!--                        showError(input, errorMessage);-->
+<!--                    }-->
+<!--                });-->
+<!--            });-->
+
+<!--            form.addEventListener("submit", function (event) {-->
+<!--                let valid = true;-->
+
+<!--                Object.values(fields).forEach(({ input, validate, errorMessage }) => {-->
+<!--                    if (!validate(input.value)) {-->
+<!--                        showError(input, errorMessage);-->
+<!--                        valid = false;-->
+<!--                    } else {-->
+<!--                        clearError(input);-->
+<!--                    }-->
+<!--                });-->
+
+<!--                if (!valid) {-->
+<!--                    event.preventDefault();-->
+<!--                }-->
+<!--            });-->
+<!--        });-->
+<!--    </script>-->
+<!--</head>-->
+<!--<body>-->
+<!--<div th:replace="~{panels/header :: header}"></div>-->
+<!--<div th:replace="~{panels/sidebar :: sidebar}"></div>-->
+<!--<h1 th:text="#{CreateNewClient}"></h1>-->
+
+<!--&lt;!&ndash;<form th:action="@{/client/register}" method="POST" th:object="${client}">&ndash;&gt;-->
+<!--&lt;!&ndash;    <label for="firstName" th:text="#{FirstName}"></label>&ndash;&gt;-->
+<!--&lt;!&ndash;    <input type="text" id="firstName" th:field="*{firstName}" name="firstName"&ndash;&gt;-->
+<!--&lt;!&ndash;           placeholder="Enter First Name" required minlength="2" maxlength="32">&ndash;&gt;-->
+<!--&lt;!&ndash;    <br><br>&ndash;&gt;-->
+
+<!--&lt;!&ndash;    <label for="surname" th:text="#{Surname}"></label>&ndash;&gt;-->
+<!--&lt;!&ndash;    <input type="text" id="surname" th:field="*{surname}" name="surname"&ndash;&gt;-->
+<!--&lt;!&ndash;           placeholder="Enter Surname" required minlength="2" maxlength="32">&ndash;&gt;-->
+<!--&lt;!&ndash;    <br><br>&ndash;&gt;-->
+
+<!--&lt;!&ndash;    <label for="username" th:text="#{Username}"></label>&ndash;&gt;-->
+<!--&lt;!&ndash;    <input type="text" id="username" th:field="*{username}" name="username"&ndash;&gt;-->
+<!--&lt;!&ndash;           placeholder="Enter Username" required minlength="4" maxlength="20">&ndash;&gt;-->
+<!--&lt;!&ndash;    <br><br>&ndash;&gt;-->
+
+<!--&lt;!&ndash;    <label for="emailAddress" th:text="#{EmailAddress}"></label>&ndash;&gt;-->
+<!--&lt;!&ndash;    <input type="email" id="emailAddress" th:field="*{emailAddress}" name="emailAddress"&ndash;&gt;-->
+<!--&lt;!&ndash;           placeholder="Enter Email Address" required pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}">&ndash;&gt;-->
+<!--&lt;!&ndash;    <br><br>&ndash;&gt;-->
+
+<!--&lt;!&ndash;    <button type="submit" th:text="#{CreateClient}"></button>&ndash;&gt;-->
+<!--&lt;!&ndash;</form>&ndash;&gt;-->
+<!--<form th:action="@{/client/register}" method="POST" th:object="${client}">-->
+<!--    <label for="firstName" th:text="#{FirstName}"></label>-->
+<!--    <input type="text" id="firstName" th:field="*{firstName}" name="firstName"-->
+<!--           placeholder="Enter First Name">-->
+<!--    <br><br>-->
+
+<!--    <label for="surname" th:text="#{Surname}"></label>-->
+<!--    <input type="text" id="surname" th:field="*{surname}" name="surname"-->
+<!--           placeholder="Enter Surname">-->
+<!--    <br><br>-->
+
+<!--    <label for="username" th:text="#{Username}"></label>-->
+<!--    <input type="text" id="username" th:field="*{username}" name="username"-->
+<!--           placeholder="Enter Username">-->
+<!--    <br><br>-->
+
+<!--    <label for="emailAddress" th:text="#{EmailAddress}"></label>-->
+<!--    <input type="email" id="emailAddress" th:field="*{emailAddress}" name="emailAddress"-->
+<!--           placeholder="Enter Email Address">-->
+<!--    <br><br>-->
+
+<!--    <button type="submit" th:text="#{CreateClient}"></button>-->
+<!--</form>-->
+<!--<div th:replace="~{panels/footer :: footer}"></div>-->
+<!--</body>-->
+<!--</html>-->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="pl">
 <head>
     <link href="/style.css" rel="stylesheet">
     <meta charset="UTF-8">
     <title th:text="#{RegisterClient}"></title>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const form = document.querySelector("form");
+
+            // Dynamically collect fields with their validation and messages
+            const fields = Array.from(form.querySelectorAll("input")).reduce((acc, input) => {
+                const key = input.getAttribute("id");
+                acc[key] = {
+                    input,
+                    validate: (value) => {
+                        const minLength = parseInt(input.getAttribute("data-min-length"), 10) || 0;
+                        const maxLength = parseInt(input.getAttribute("data-max-length"), 10) || Infinity;
+                        const pattern = new RegExp(input.getAttribute("data-pattern") || ".*");
+                        return value.length >= minLength && value.length <= maxLength && pattern.test(value);
+                    },
+                    errorMessage: input.getAttribute("data-error-message")
+                };
+                return acc;
+            }, {});
+
+            function showError(input, message) {
+                let error = input.nextElementSibling;
+                if (!error || !error.classList.contains("error")) {
+                    error = document.createElement("div");
+                    error.classList.add("error");
+                    input.parentNode.insertBefore(error, input.nextSibling);
+                }
+                error.textContent = message;
+            }
+
+            function clearError(input) {
+                const error = input.nextElementSibling;
+                if (error && error.classList.contains("error")) {
+                    error.remove();
+                }
+            }
+
+            Object.values(fields).forEach(({ input, validate, errorMessage }) => {
+                input.addEventListener("input", () => {
+                    if (validate(input.value)) {
+                        clearError(input);
+                    } else {
+                        showError(input, errorMessage);
+                    }
+                });
+            });
+
+            form.addEventListener("submit", function (event) {
+                let valid = true;
+
+                Object.values(fields).forEach(({ input, validate, errorMessage }) => {
+                    if (!validate(input.value)) {
+                        showError(input, errorMessage);
+                        valid = false;
+                    } else {
+                        clearError(input);
+                    }
+                });
+
+                if (!valid) {
+                    event.preventDefault();
+                }
+            });
+        });
+    </script>
 </head>
 <body>
 <div th:replace="~{panels/header :: header}"></div>
@@ -13,26 +210,31 @@
 <form th:action="@{/client/register}" method="POST" th:object="${client}">
     <label for="firstName" th:text="#{FirstName}"></label>
     <input type="text" id="firstName" th:field="*{firstName}" name="firstName"
-           placeholder="Enter First Name" required minlength="2" maxlength="32">
+           th:placeholder="#{placeholder.firstname}"
+           th:attr="data-min-length=2, data-max-length=32, data-error-message=#{error.firstName}">
     <br><br>
 
     <label for="surname" th:text="#{Surname}"></label>
     <input type="text" id="surname" th:field="*{surname}" name="surname"
-           placeholder="Enter Surname" required minlength="2" maxlength="32">
+           th:placeholder="#{placeholder.surname}"
+           th:attr="data-min-length=2, data-max-length=32, data-error-message=#{error.surname}">
     <br><br>
 
     <label for="username" th:text="#{Username}"></label>
     <input type="text" id="username" th:field="*{username}" name="username"
-           placeholder="Enter Username" required minlength="4" maxlength="20">
+           th:placeholder="#{placeholder.username}"
+           th:attr="data-min-length=4, data-max-length=20, data-error-message=#{error.username}">
     <br><br>
 
     <label for="emailAddress" th:text="#{EmailAddress}"></label>
     <input type="email" id="emailAddress" th:field="*{emailAddress}" name="emailAddress"
-           placeholder="Enter Email Address" required pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}">
+           th:placeholder="#{placeholder.email}"
+           th:attr="data-pattern='[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}', data-error-message=#{error.email}">
     <br><br>
 
     <button type="submit" th:text="#{CreateClient}"></button>
 </form>
+
 <div th:replace="~{panels/footer :: footer}"></div>
 </body>
 </html>
