@@ -51,6 +51,22 @@ public class ClientController {
         return "redirect:/client/" + c.getEntityId().toString();
 //        return "redirect:/client";
     }
+
+//TODO
+//    @GetMapping("/login")
+//    public String login(Model model) {
+//        model.addAttribute("client", new ClientDTO());
+//        return "login";
+//    }
+//
+//    @GetMapping("/login/{username}")
+//    public String userPanel(Model model, @PathVariable("username") String username) {
+//        model.addAttribute("client", clientService.getClientByUsername(username));//TODO
+//        return "login";
+//    }
+
+
+
 //
 //    @GetMapping("/{uuid}/edit")
 //    public String showEditForm(@PathVariable("uuid") UUID uuid, Model model) {

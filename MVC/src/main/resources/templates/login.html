@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Log In as Client</title>
+</head>
+<body>
+<h1>Log In as Client</h1>
+
+<form th:action="@{/client/login/{username}(username=${client.username})}" method="GET">
+
+  <label for="username">Username:</label>
+  <input type="text" id="username" th:text="{username}" name="username" placeholder="Enter Username" required><br><br>
+
+  <button type="submit">Log In</button>
+</form>
+
+
+</body>
+</html>

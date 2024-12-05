@@ -19,7 +19,7 @@ public interface IClientService {
 //
 //    void deactivateClient(UUID uuid);
 //
-//    Client getClientByUsername(String username);
-//
+    Client getClientByUsername(String username);
+
 //    List<Client> getClientsByUsername(String username);
 }
