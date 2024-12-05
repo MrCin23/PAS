@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pl">
+<head>
+  <link href="/style.css" rel="stylesheet">
+  <meta charset="UTF-8">
+  <title>Create Rent</title>
+</head>
+<body>
+<div th:replace="~{panels/header :: header}"></div>
+<div th:replace="~{panels/sidebar :: sidebar}"></div>
+<h1>Create Rent</h1>
+
+<div th:if="${message}">
+  <p th:text="${message}"></p>
+</div>
+
+<form th:action="@{/rent/create}" method="POST">
+  <table style="border: 1px; text-align: center; width: 100%;">
+    <thead>
+    <tr>
+      <th>UUID</th>
+      <th>FirstName</th>
+      <th>Surname</th>
+      <th>Username</th>
+      <th>EmailAddress</th>
+      <th>ClientType</th>
+      <th>Role</th>
+      <th>Active</th>
+      <th>CurrentRents</th>
+      <th>Details</th>
+      <th>Choose</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="client : ${clients}">
+      <td th:text="${client.entityId.uuid}"></td>
+      <td th:text="${client.firstName}"></td>
+      <td th:text="${client.surname}"></td>
+      <td th:text="${client.username}"></td>
+      <td th:text="${client.emailAddress}"></td>
+      <td th:text="${client.clientType.name}"></td>
+      <td th:text="${client.role}"></td>
+      <td th:text="${client.active}"></td>
+      <td th:text="${client.currentRents}"></td>
+      <td>
+        <form th:action="@{client/{id}(id=${client.entityId.uuid})}" method="GET">
+          <button type="submit">More Info</button>
+        </form>
+      </td>
+      <td>
+        <label>
+          <input type="radio" name="selectedClient" th:field="*{rent.clientId}" th:value="${client.entityId.uuid}">
+        </label>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <table style="border: 1px; text-align: center; width: 100%;">
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>CPU Number</th>
+      <th>RAM Size</th>
+      <th>Actual Rental Price</th>
+      <th>Rented</th>
+      <th>Delete VMachine</th>
+      <th>Details</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="vm : ${vms}">
+      <td th:text="${vm.entityId.uuid}"></td>
+      <td th:text="${vm.cpunumber}"></td>
+      <td th:text="${vm.ramSize}"></td>
+      <td th:text="${vm.actualRentalPrice}"></td>
+      <td th:text="${vm.isRented}"></td>
+      <td>
+        <form th:action="@{/delete/{id}(id=${vm.entityId})}" method="POST">
+          <button type="submit">Delete</button>
+        </form>
+      </td>
+      <td>
+        <form th:action="@{vmachine/{id}(id=${vm.entityId.uuid})}" method="GET">
+          <button type="submit">More Info</button>
+        </form>
+      </td>
+      <td>
+        <label>
+          <input type="radio" name="selectedVM" th:field="*{rent.vmId}" th:value="${vm.entityId.uuid}">
+        </label>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <button type="submit">Submit Selection</button>
+</form>
+<div th:replace="~{panels/footer :: footer}"></div>
+</body>
+</html>
