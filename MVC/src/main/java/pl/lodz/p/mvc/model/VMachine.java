@@ -1,13 +1,10 @@
-package pl.lodz.p.model;
+package pl.lodz.p.mvc.model;
 
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-import org.bson.codecs.pojo.annotations.BsonCreator;
-import org.bson.codecs.pojo.annotations.BsonProperty;
 
 import java.util.UUID;
 
@@ -22,16 +19,9 @@ import java.util.UUID;
         @JsonSubTypes.Type(value = x86.class, name = "x86")
 })
 public class VMachine extends AbstractEntityMgd {
-
-    @BsonProperty("CPUNumber")
-    @NotNull(message = "CPU number cannot be null")
     private int CPUNumber;
-    @BsonProperty("ramSize")
-    @NotNull(message = "CPU number cannot be null")
     private String ramSize;
-    @BsonProperty("isRented")
     private int isRented;
-    @BsonProperty("actualRentalPrice")
     protected float actualRentalPrice;
 
     public VMachine(int CPUNumber, String ramSize, int isRented) {
@@ -45,9 +35,9 @@ public class VMachine extends AbstractEntityMgd {
         super(new MongoUUID(UUID.randomUUID()));
     }
 
-    @BsonCreator
-    public VMachine(@BsonProperty("_id") MongoUUID uuid, @BsonProperty("CPUNumber") int CPUNumber,
-                    @BsonProperty("ramSize") String ramSize, @BsonProperty("isRented") int isRented) {
+
+    public VMachine(MongoUUID uuid, int CPUNumber,
+                    String ramSize, int isRented) {
         super(uuid);
         this.CPUNumber = CPUNumber;
         this.ramSize = ramSize;

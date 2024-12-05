@@ -1,10 +1,7 @@
-package pl.lodz.p.model;
+package pl.lodz.p.mvc.model;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-import org.bson.codecs.pojo.annotations.BsonCreator;
-import org.bson.codecs.pojo.annotations.BsonProperty;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -14,21 +11,10 @@ import java.util.UUID;
 @Setter
 @Getter
 public class Rent extends AbstractEntityMgd {
-    @BsonProperty("client")
-    @NotNull(message = "Client cannot be null for rent to exist")
     private Client client;
-    @Getter
-    @BsonProperty("vMachine")
-    @NotNull(message = "VM cannot be null for rent to exist")
     private VMachine vMachine;
-    @Getter
-    @BsonProperty("beginTime")
     private LocalDateTime beginTime;
-    @Getter
-    @BsonProperty("endTime")
     private LocalDateTime endTime;
-    @Getter
-    @BsonProperty("rentCost")
     private double rentCost;
 
     public Rent() {
@@ -47,9 +33,8 @@ public class Rent extends AbstractEntityMgd {
         }
     }
 
-    @BsonCreator
-    public Rent(@BsonProperty("_id") MongoUUID uuid,@BsonProperty("client") Client client, @BsonProperty("vMachine") VMachine vMachine,
-                @BsonProperty("beginTime") LocalDateTime beginTime, @BsonProperty("endTime") LocalDateTime endTime, @BsonProperty("rentCost") double rentCost) {
+    public Rent(MongoUUID uuid, Client client, VMachine vMachine,
+                LocalDateTime beginTime, LocalDateTime endTime, double rentCost) {
         super(uuid);
         this.client = client;
         this.vMachine = vMachine;
@@ -60,7 +45,7 @@ public class Rent extends AbstractEntityMgd {
 
     //Methods
     public void beginRent(LocalDateTime beginTime) {
-        if(this.beginTime == null && getVMachine().isRented()==0){
+        if(this.beginTime == null && this.getVMachine().isRented()==0){
             this.setBeginTime(Objects.requireNonNullElseGet(beginTime, LocalDateTime::now));
             vMachine.setIsRented(vMachine.getIsRented()+1);
         }

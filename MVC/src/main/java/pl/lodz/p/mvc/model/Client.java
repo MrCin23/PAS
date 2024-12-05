@@ -1,12 +1,9 @@
-package pl.lodz.p.model;
+package pl.lodz.p.mvc.model;
 
 
-import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.bson.codecs.pojo.annotations.BsonCreator;
-import org.bson.codecs.pojo.annotations.BsonProperty;
 
 import java.util.UUID;
 
@@ -16,28 +13,12 @@ import java.util.UUID;
 @NoArgsConstructor
 //@Document(collection = "clients")
 public class Client extends AbstractEntityMgd {
-    @BsonProperty("firstName")
-    @NotBlank(message = "First name cannot be blank")
-    @Size(min = 2, max = 32)
     private String firstName;
-    @BsonProperty("surname")
-    @NotBlank(message = "First name cannot be blank")
-    @Size(min = 2, max = 32)
     private String surname;
-    @NotBlank(message = "Username cannot be blank")
-    @Size(min = 4, max = 20)
-//    @Indexed(unique = true) //It don't works. Fix it
-    @BsonProperty("username")
     private String username;
-    @BsonProperty("emailAddress")
-    @NotBlank(message = "Email cannot be blank")
-    @Email(message = "Email address has to be valid")
     private String emailAddress;
-    @BsonProperty("clientType")
     private ClientType clientType;
-    @BsonProperty("currentRents")
     private int currentRents;
-    @BsonProperty("active")
     private boolean active;
 
     @Override
@@ -64,10 +45,10 @@ public class Client extends AbstractEntityMgd {
         this.active = true;
     }
 
-    @BsonCreator
-    public Client(@BsonProperty("_id") MongoUUID clientID, @BsonProperty("firstName") String firstName, @BsonProperty("username") String username,
-                  @BsonProperty("surname") String surname, @BsonProperty("emailAddress") String emailAddress,
-                  @BsonProperty("clientType") ClientType clientType, @BsonProperty("currentRents") int currentRents, @BsonProperty("active") boolean active) {
+
+    public Client(MongoUUID clientID, String firstName, String username,
+                  String surname, String emailAddress,
+                  ClientType clientType, int currentRents, boolean active) {
 
         super(clientID);
         this.firstName = firstName;

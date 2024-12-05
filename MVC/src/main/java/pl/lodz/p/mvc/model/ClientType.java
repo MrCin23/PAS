@@ -1,11 +1,9 @@
-package pl.lodz.p.model;
+package pl.lodz.p.mvc.model;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.Getter;
 import lombok.Setter;
-import org.bson.codecs.pojo.annotations.BsonCreator;
-import org.bson.codecs.pojo.annotations.BsonProperty;
 
 @Getter
 @Setter
@@ -20,22 +18,19 @@ import org.bson.codecs.pojo.annotations.BsonProperty;
 })
 public abstract class ClientType extends AbstractEntityMgd {
 
-    @BsonProperty("maxRentedMachines")
     protected int maxRentedMachines;
-
-    @BsonProperty("name")
     protected String name;
 
-    @BsonCreator
-    public ClientType(@BsonProperty("_id") MongoUUID uuid,
-                      @BsonProperty("maxRentedMachines") int maxRentedMachines,
-                      @BsonProperty("name") String name){
+    public ClientType(MongoUUID uuid,
+                      int maxRentedMachines,
+                      String name){
         super(uuid);
         this.maxRentedMachines = maxRentedMachines;
         this.name = name;
     }
 
     public String toString() {
+//        return "";
         return "Class: " + this.getClass().getSimpleName() + " " + this.getMaxRentedMachines() + " " + this.getName();
     }
 }

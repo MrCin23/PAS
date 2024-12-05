@@ -1,7 +1,6 @@
 package pl.lodz.p.service;
 
 import pl.lodz.p.model.VMachine;
-import pl.lodz.p.model.VMachine;
 
 import java.util.List;
 import java.util.Map;

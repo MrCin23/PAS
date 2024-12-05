@@ -1,10 +1,8 @@
-package pl.lodz.p.model;
+package pl.lodz.p.mvc.model;
 
-import org.bson.codecs.pojo.annotations.BsonDiscriminator;
 
 import java.util.UUID;
 
-@BsonDiscriminator(value="admin", key="_clazz")
 public class Admin extends ClientType{
 
 

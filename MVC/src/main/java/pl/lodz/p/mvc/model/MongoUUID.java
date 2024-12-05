@@ -1,4 +1,4 @@
-package pl.lodz.p.model;
+package pl.lodz.p.mvc.model;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

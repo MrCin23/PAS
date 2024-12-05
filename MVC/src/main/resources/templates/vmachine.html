@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>VMachine</title>
+</head>
+<body>
+<h1>VMachine</h1>
+
+<div th:if="${message}">
+  <p th:text="${message}"></p>
+</div>
+
+<table style="border: 1px; text-align: center">
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>CPU Number</th>
+    <th>RAM Size</th>
+    <th>Actual Rental Price</th>
+<!--    <th>Delete VMachine</th>-->
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+    <td th:text="${vm.entityId.uuid}"></td>
+    <td th:text="${vm.getCPUNumber()}"></td>
+    <td th:text="${vm.ramSize}"></td>
+    <td th:text="${vm.actualRentalPrice}"></td>
+    <td>
+      <form th:action="@{/delete/{id}(id=${vm.entityId})}" method="POST">
+        <button type="submit">Delete</button>
+      </form>
+    </td>
+  </tr>
+  </tbody>
+</table>
+
+</body>
+</html>
