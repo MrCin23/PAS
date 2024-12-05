@@ -25,18 +25,21 @@ public class ClientController {
     @GetMapping
     public String getAllClients(Model model) {
         model.addAttribute("clients", clientService.getAllClients());
+        model.addAttribute("currentPage", "/client");
         return "clients";
     }
 
     @GetMapping("/{uuid}")
     public String getVMachine(@PathVariable("uuid") UUID uuid, Model model) {
         model.addAttribute("client", clientService.getClient(uuid));
+        model.addAttribute("currentPage", "/client/" + uuid);
         return "client";
     }
 
     @GetMapping("/register")
     public String register(Model model) {
         model.addAttribute("client", new ClientDTO());
+        model.addAttribute("currentPage", "/client/register");// /<a href="..">/client</a> ??
         return "registerClient";
     }
 
@@ -45,11 +48,10 @@ public class ClientController {
         if (bindingResult.hasErrors()) {
             return "registerClient";
         }
-
         Client c = new Client(client.getFirstName(),client.getSurname(),client.getUsername(),client.getEmailAddress(),new Standard());
         clientService.createClient(c);
+        model.addAttribute("currentPage", "/client/" + c.getEntityId().toString());
         return "redirect:/client/" + c.getEntityId().toString();
-//        return "redirect:/client";
     }
 
 //TODO

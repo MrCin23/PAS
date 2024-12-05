@@ -23,13 +23,15 @@ public class VMachineController {
     @GetMapping
     public String getAllVMachines(Model model) {
         model.addAttribute("vms", vMachineService.getAllVMachines());
+        model.addAttribute("currentPage", "/vmachine");
         return "vmachines";
     }
 
     @GetMapping("/{uuid}")
     public String getVMachine(@PathVariable("uuid") UUID uuid, Model model) {
         model.addAttribute("vm", vMachineService.getVMachine(uuid));
-        return "vmachine"; // Widok vmachine.jsp
+        model.addAttribute("currentPage", "/vmachine/" + uuid);
+        return "vmachine";
     }
 //
 //    @GetMapping("/add")

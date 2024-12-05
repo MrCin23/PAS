@@ -1,9 +1,13 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="pl">
 <head>
+  <link href="/style.css" rel="stylesheet">
+  <meta charset="UTF-8">
   <title>List of Rents</title>
 </head>
 <body>
+<div th:replace="~{panels/header :: header}"></div>
+<div th:replace="~{panels/sidebar :: sidebar}"></div>
 <h1>List of Rents</h1>
 
 <div th:if="${message}">
@@ -40,6 +44,6 @@
   </tr>
   </tbody>
 </table>
-
+<div th:replace="~{panels/footer :: footer}"></div>
 </body>
 </html>

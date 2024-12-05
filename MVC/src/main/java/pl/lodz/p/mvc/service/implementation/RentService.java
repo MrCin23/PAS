@@ -6,6 +6,8 @@ import org.springframework.web.client.RestTemplate;
 import pl.lodz.p.mvc.dto.EndRentDTO;
 import pl.lodz.p.mvc.dto.RentDTO;
 import pl.lodz.p.mvc.model.Rent;
+import pl.lodz.p.mvc.model.VMachine;
+import pl.lodz.p.mvc.model.user.Client;
 import pl.lodz.p.mvc.service.IRentService;
 
 import java.time.LocalDateTime;
@@ -16,22 +18,22 @@ import java.util.UUID;
 @NoArgsConstructor
 public class RentService implements IRentService {
     private final RestTemplate restTemplate = new RestTemplate();
-    static String API_URL = "http://localhost:8081/REST/api/rent";
+    static String API_URL = "http://localhost:8081/REST/api/";
 
     @Override
     public Rent createRent(RentDTO rentDTO) {
-        //TODO
-        return null;
+        rentDTO.setStartTime(LocalDateTime.now());
+        return restTemplate.postForObject(API_URL + "rent", rentDTO, Rent.class);
     }
 
     @Override
     public List<Rent> getAllRents() {
-        return restTemplate.getForObject(API_URL, List.class);
+        return restTemplate.getForObject(API_URL + "rent", List.class);
     }
 
     @Override
     public Rent getRent(UUID id) {
-        return restTemplate.getForObject(API_URL + "/" + id, Rent.class);
+        return restTemplate.getForObject(API_URL + "rent/" + id, Rent.class);
     }
 
     @Override
@@ -72,11 +74,21 @@ public class RentService implements IRentService {
 
     @Override
     public void endRent(UUID uuid, EndRentDTO endRentDTO) {
-        restTemplate.put(API_URL + "/end/" + uuid, endRentDTO);
+        restTemplate.put(API_URL + "rent/end/" + uuid, endRentDTO);
     }
 
     @Override
     public void removeRent(UUID uuid) {
 
+    }
+
+    @Override
+    public List<Client> getAllClientsHelper() {
+        return restTemplate.getForObject(API_URL + "client", List.class);
+    }
+
+    @Override
+    public List<VMachine> getAllVMachinesHelper() {
+        return restTemplate.getForObject(API_URL + "vmachine", List.class);
     }
 }

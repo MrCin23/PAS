@@ -127,20 +127,20 @@ public class RentService implements IRentService {
 
     //private helper methods
     private Client getClientById(UUID clientId) {
-        String url = "http://localhost:8080/REST/api/client/" + clientId;
+        String url = "http://localhost:8081/REST/api/client/" + clientId;
         try {
             return restTemplate.getForObject(url, Client.class);
         } catch (Exception e) {
-            throw new RuntimeException("Request GET http://localhost:8080/REST/api/client/" + clientId + " failed: " + e);
+            throw new RuntimeException("Request GET http://localhost:8081/REST/api/client/" + clientId + " failed: " + e);
         }
     }
 
     private VMachine getVMachineById(UUID vMachineId) {
-        String url = "http://localhost:8080/REST/api/vmachine/" + vMachineId;
+        String url = "http://localhost:8081/REST/api/vmachine/" + vMachineId;
         try {
             return restTemplate.getForObject(url, VMachine.class);
         } catch (Exception e) {
-            throw new RuntimeException("Request GET http://localhost:8080/REST/api/vmachine/" + vMachineId + " failed: " + e);
+            throw new RuntimeException("Request GET http://localhost:8081/REST/api/vmachine/" + vMachineId + " failed: " + e);
         }
     }
 }

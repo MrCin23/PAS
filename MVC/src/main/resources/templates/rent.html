@@ -1,10 +1,14 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="pl">
 <head>
-  <title>List of VMachines</title>
+  <link href="/style.css" rel="stylesheet">
+  <meta charset="UTF-8">
+  <title>Rent</title>
 </head>
 <body>
-<h1>List of VMachines</h1>
+<div th:replace="~{panels/header :: header}"></div>
+<div th:replace="~{panels/sidebar :: sidebar}"></div>
+<h1>Rent</h1>
 
 <div th:if="${message}">
   <p th:text="${message}"></p>
@@ -65,6 +69,6 @@
   </tbody>
 <!--  TODO więcej informacji-->
 </table>
-
+<div th:replace="~{panels/footer :: footer}"></div>
 </body>
 </html>

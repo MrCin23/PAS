@@ -3,6 +3,8 @@ package pl.lodz.p.mvc.service;
 import pl.lodz.p.mvc.dto.EndRentDTO;
 import pl.lodz.p.mvc.dto.RentDTO;
 import pl.lodz.p.mvc.model.Rent;
+import pl.lodz.p.mvc.model.VMachine;
+import pl.lodz.p.mvc.model.user.Client;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -32,4 +34,8 @@ public interface IRentService {
     void endRent(UUID uuid, EndRentDTO endRentDTO);
 
     void removeRent(UUID uuid);
+
+    List<Client> getAllClientsHelper();
+
+    List<VMachine> getAllVMachinesHelper();
 }
