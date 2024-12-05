@@ -28,7 +28,12 @@ public class ClientController {
             if(bindingResult.hasErrors()) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(bindingResult.getAllErrors());
             }
+            try {
+
             return ResponseEntity.status(HttpStatus.CREATED).body(clientServiceImplementation.createClient(client));
+            } catch (Exception e) {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+            }
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Client with username " + client.getUsername() + " already exists! Error code: " + ex);
         }

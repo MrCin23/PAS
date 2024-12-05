@@ -19,8 +19,7 @@ public class ClientService implements IClientService {
 
     @Override
     public Client createClient(Client client) {
-        //todo
-        return null;
+        return restTemplate.postForObject(API_URL, client, Client.class);
     }
     @Override
     public List<Client> getAllClients() {

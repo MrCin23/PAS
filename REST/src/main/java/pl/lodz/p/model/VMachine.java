@@ -3,6 +3,8 @@ package pl.lodz.p.model;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,9 +27,10 @@ public class VMachine extends AbstractEntityMgd {
 
     @BsonProperty("CPUNumber")
     @NotNull(message = "CPU number cannot be null")
+    @Min(1)
     private int CPUNumber;
     @BsonProperty("ramSize")
-    @NotNull(message = "CPU number cannot be null")
+    @NotBlank(message = "CPU number cannot be blank")
     private String ramSize;
     @BsonProperty("isRented")
     private int isRented;

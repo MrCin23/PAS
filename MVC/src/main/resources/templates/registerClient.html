@@ -6,7 +6,7 @@
 <body>
 <h1>Create New Client</h1>
 
-<form th:action="@{/register}" method="POST", th:object="${client}">
+<form th:action="@{/client/register}" method="POST", th:object="${client}">
 
     <label for="firstName">First Name:</label>
     <input type="text" id="firstName" th:field="*{firstName}" name="firstName" placeholder="Enter First Name" required><br><br>

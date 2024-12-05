@@ -49,6 +49,7 @@ public class ClientController {
         Client c = new Client(client.getFirstName(),client.getSurname(),client.getUsername(),client.getEmailAddress(),new Standard());
         clientService.createClient(c);
         return "redirect:/client/" + c.getEntityId().toString();
+//        return "redirect:/client";
     }
 //
 //    @GetMapping("/{uuid}/edit")
