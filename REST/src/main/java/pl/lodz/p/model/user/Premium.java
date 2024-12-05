@@ -1,14 +1,15 @@
-package pl.lodz.p.model;
+package pl.lodz.p.model.user;
 
 import org.bson.codecs.pojo.annotations.BsonDiscriminator;
+import pl.lodz.p.model.MongoUUID;
 
 import java.util.UUID;
 
 @BsonDiscriminator(value="admin", key="_clazz")
-public class Admin extends ClientType{
+public class Premium extends ClientType {
 
 
-    public Admin() {
+    public Premium() {
         super(new MongoUUID(UUID.randomUUID()), 10, "Admin");
     }
 

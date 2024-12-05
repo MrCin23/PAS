@@ -1,4 +1,6 @@
-package pl.lodz.p.model;
+package pl.lodz.p.model.user;
+
+import pl.lodz.p.model.MongoUUID;
 
 import java.util.UUID;
 

@@ -6,10 +6,9 @@ import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
 import org.bson.codecs.configuration.CodecRegistry;
-import pl.lodz.p.model.Admin;
-import pl.lodz.p.model.ClientType;
-import pl.lodz.p.model.Moderator;
-import pl.lodz.p.model.Standard;
+import pl.lodz.p.model.user.Premium;
+import pl.lodz.p.model.user.ClientType;
+import pl.lodz.p.model.user.Standard;
 
 public class ClientTypeCodec implements Codec<ClientType> {
     private final CodecRegistry codecRegistry;
@@ -29,10 +28,8 @@ public class ClientTypeCodec implements Codec<ClientType> {
         if(type.equals("standard")) {
             return new Standard();
         }
-        else if(type.equals("admin")) {
-            return new Admin();
-        }else if(type.equals("moderator")) {
-            return new Moderator();
+        else if(type.equals("premium")) {
+            return new Premium();
         }
         else {
             throw new RuntimeException("Unsupported type: " + type);

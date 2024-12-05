@@ -9,7 +9,7 @@ import com.mongodb.client.model.*;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.springframework.stereotype.Repository;
-import pl.lodz.p.model.Client;
+import pl.lodz.p.model.user.Client;
 import pl.lodz.p.model.MongoUUID;
 
 import java.util.ArrayList;
@@ -183,7 +183,6 @@ public class ClientRepository extends AbstractMongoRepository {
     }
 
     public List<Client> getClients() {
-
         return clients.find().into(new ArrayList<>());
     }
 

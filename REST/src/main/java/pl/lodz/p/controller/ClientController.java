@@ -8,7 +8,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import pl.lodz.p.dto.UuidDTO;
-import pl.lodz.p.model.Client;
+import pl.lodz.p.model.user.Client;
 import pl.lodz.p.service.implementation.ClientService;
 
 import java.util.List;

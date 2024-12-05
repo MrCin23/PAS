@@ -8,14 +8,13 @@ import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
 import org.bson.conversions.Bson;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.client.RestTemplate;
 import pl.lodz.p.model.*;
+import pl.lodz.p.model.user.Client;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 @Repository
 public class RentRepository extends AbstractMongoRepository {

@@ -1,6 +1,6 @@
 package pl.lodz.p.service;
 
-import pl.lodz.p.model.Client;
+import pl.lodz.p.model.user.Client;
 
 import java.util.List;
 import java.util.Map;

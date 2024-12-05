@@ -1,18 +1,13 @@
-package pl.lodz.p.model;
+package pl.lodz.p.model.user;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.bson.codecs.pojo.annotations.BsonCreator;
 import org.bson.codecs.pojo.annotations.BsonProperty;
-
-import java.util.UUID;
+import pl.lodz.p.model.AbstractEntityMgd;
+import pl.lodz.p.model.MongoUUID;
 
 @Getter
 @Setter
@@ -22,8 +17,7 @@ import java.util.UUID;
 )
 @JsonSubTypes({
         @JsonSubTypes.Type(value = Standard.class, name = "standard"),
-        @JsonSubTypes.Type(value = Admin.class, name = "admin"),
-        @JsonSubTypes.Type(value = Moderator.class, name = "moderator")
+        @JsonSubTypes.Type(value = Premium.class, name = "admin")
 })
 public abstract class ClientType extends AbstractEntityMgd {
 
