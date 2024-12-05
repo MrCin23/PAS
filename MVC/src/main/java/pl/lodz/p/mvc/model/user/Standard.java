@@ -1,4 +1,6 @@
-package pl.lodz.p.mvc.model;
+package pl.lodz.p.mvc.model.user;
+
+import pl.lodz.p.mvc.model.MongoUUID;
 
 import java.util.UUID;
 

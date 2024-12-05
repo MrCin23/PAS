@@ -1,6 +1,8 @@
 package pl.lodz.p.mvc.model;
 
-
+import org.bson.codecs.pojo.annotations.BsonCreator;
+import org.bson.codecs.pojo.annotations.BsonDiscriminator;
+import org.bson.codecs.pojo.annotations.BsonProperty;
 
 public class AppleArch extends VMachine{
     public AppleArch(int CPUNumber, String ramSize) {
@@ -12,8 +14,8 @@ public class AppleArch extends VMachine{
         super();
     }
 
-
-    public AppleArch(MongoUUID uuid, int CPUNumber, String ramSize, int isRented) {
+    public AppleArch(MongoUUID uuid, int CPUNumber, String ramSize,
+                     int isRented) {
         super(uuid, CPUNumber, ramSize, isRented);
 
         this.actualRentalPrice = getActualRentalPrice();

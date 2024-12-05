@@ -2,6 +2,7 @@ package pl.lodz.p.mvc.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import pl.lodz.p.mvc.model.user.Client;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -12,9 +13,13 @@ import java.util.UUID;
 @Getter
 public class Rent extends AbstractEntityMgd {
     private Client client;
+    @Getter
     private VMachine vMachine;
+    @Getter
     private LocalDateTime beginTime;
+    @Getter
     private LocalDateTime endTime;
+    @Getter
     private double rentCost;
 
     public Rent() {
@@ -33,7 +38,7 @@ public class Rent extends AbstractEntityMgd {
         }
     }
 
-    public Rent(MongoUUID uuid, Client client, VMachine vMachine,
+    public Rent(MongoUUID uuid,Client client, VMachine vMachine,
                 LocalDateTime beginTime, LocalDateTime endTime, double rentCost) {
         super(uuid);
         this.client = client;
@@ -45,7 +50,7 @@ public class Rent extends AbstractEntityMgd {
 
     //Methods
     public void beginRent(LocalDateTime beginTime) {
-        if(this.beginTime == null && this.getVMachine().isRented()==0){
+        if(this.beginTime == null && getVMachine().isRented()==0){
             this.setBeginTime(Objects.requireNonNullElseGet(beginTime, LocalDateTime::now));
             vMachine.setIsRented(vMachine.getIsRented()+1);
         }

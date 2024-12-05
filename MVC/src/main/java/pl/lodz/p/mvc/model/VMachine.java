@@ -19,6 +19,7 @@ import java.util.UUID;
         @JsonSubTypes.Type(value = x86.class, name = "x86")
 })
 public class VMachine extends AbstractEntityMgd {
+
     private int CPUNumber;
     private String ramSize;
     private int isRented;
@@ -34,7 +35,6 @@ public class VMachine extends AbstractEntityMgd {
     public VMachine() {
         super(new MongoUUID(UUID.randomUUID()));
     }
-
 
     public VMachine(MongoUUID uuid, int CPUNumber,
                     String ramSize, int isRented) {

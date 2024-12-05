@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Client</title>
+</head>
+<body>
+<h1>Client</h1>
+
+<div th:if="${message}">
+    <p th:text="${message}"></p>
+</div>
+
+<table style="border: 1px; text-align: center">
+    <thead>
+    <tr>
+        <th>UUID</th>
+<!--        <th>FirstName</th>-->
+<!--        <th>Surname</th>-->
+        <th>Username</th>
+        <th>EmailAddress</th>
+        <th>ClientType</th>
+        <th>Role</th>
+        <th>Active</th>
+<!--        <th>CurrentRents</th>-->
+        <th>Details</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="client : ${clients}">
+        <td th:text="${client.entityId.uuid}"></td>
+<!--        <td th:text="${client.firstName}"></td>-->
+<!--        <td th:text="${client.surname}"></td>-->
+        <td th:text="${client.username}"></td>
+        <td th:text="${client.emailAddress}"></td>
+        <td th:text="${client.clientType.name}"></td>
+        <td th:text="${client.role}"></td>
+        <td th:text="${client.active}"></td>
+<!--        <td th:text="${client.currentRents}"></td>-->
+
+<!--        <td>-->
+<!--            <form th:action="@{/delete/{id}(id=${client})}" method="POST">-->
+<!--                <button type="submit">Activate</button>-->
+<!--            </form>-->
+<!--        </td>-->
+        <td>
+            <form th:action="@{client/{id}(id=${client.entityId.uuid})}" method="GET">
+                <button type="submit">More Info</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>
