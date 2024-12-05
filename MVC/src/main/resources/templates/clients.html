@@ -3,12 +3,12 @@
 <head>
     <link href="/style.css" rel="stylesheet">
     <meta charset="UTF-8">
-    <title>List of Clients</title>
+    <title th:text="#{ListofClients}"></title>
 </head>
 <body>
 <div th:replace="~{panels/header :: header}"></div>
 <div th:replace="~{panels/sidebar :: sidebar}"></div>
-<h1>List of Clients</h1>
+<h1 th:text="#{ListofClients}"></h1>
 
 <div th:if="${message}">
     <p th:text="${message}"></p>

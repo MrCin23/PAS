@@ -3,12 +3,12 @@
 <head>
   <link href="/style.css" rel="stylesheet">
   <meta charset="UTF-8">
-  <title>Create Rent</title>
+  <title th:text="#{CreateRent}"></title>
 </head>
 <body>
 <div th:replace="~{panels/header :: header}"></div>
 <div th:replace="~{panels/sidebar :: sidebar}"></div>
-<h1>Create Rent</h1>
+<h1 th:text="#{CreateRent}"></h1>
 
 <div th:if="${message}">
   <p th:text="${message}"></p>
@@ -18,17 +18,17 @@
   <table style="border: 1px; text-align: center; width: 100%;">
     <thead>
     <tr>
-      <th>UUID</th>
-      <th>FirstName</th>
-      <th>Surname</th>
-      <th>Username</th>
-      <th>EmailAddress</th>
-      <th>ClientType</th>
-      <th>Role</th>
-      <th>Active</th>
-      <th>CurrentRents</th>
-      <th>Details</th>
-      <th>Choose</th>
+      <th th:text="#{uuid}"></th>
+      <th th:text="#{FirstName}"></th>
+      <th th:text="#{Surname}"></th>
+      <th th:text="#{Username}"></th>
+      <th th:text="#{EmailAddress}"></th>
+      <th th:text="#{ClientType}"></th>
+      <th th:text="#{Role}"></th>
+      <th th:text="#{Active}"></th>
+      <th th:text="#{CurrentRents}"></th>
+      <th th:text="#{Details}"></th>
+      <th th:text="#{Choose}"></th>
     </tr>
     </thead>
     <tbody>
@@ -44,7 +44,7 @@
       <td th:text="${client.currentRents}"></td>
       <td>
         <form th:action="@{client/{id}(id=${client.entityId.uuid})}" method="GET">
-          <button type="submit">More Info</button>
+          <button type="submit" th:text="#{MoreInfo}"></button>
         </form>
       </td>
       <td>
@@ -58,13 +58,13 @@
   <table style="border: 1px; text-align: center; width: 100%;">
     <thead>
     <tr>
-      <th>ID</th>
-      <th>CPU Number</th>
-      <th>RAM Size</th>
-      <th>Actual Rental Price</th>
-      <th>Rented</th>
-      <th>Delete VMachine</th>
-      <th>Details</th>
+      <th th:text="#{uuid}"></th>
+      <th th:text="#{CPUNumber}"></th>
+      <th th:text="#{RAMSize}"></th>
+      <th th:text="#{ActualRentalPrice}"></th>
+      <th th:text="#{Rented}"></th>
+      <th th:text="#{DeleteVMachine}"></th>
+      <th th:text="#{Details}"></th>
     </tr>
     </thead>
     <tbody>
@@ -76,12 +76,12 @@
       <td th:text="${vm.isRented}"></td>
       <td>
         <form th:action="@{/delete/{id}(id=${vm.entityId})}" method="POST">
-          <button type="submit">Delete</button>
+          <button type="submit" th:text="#{Delete}"></button>
         </form>
       </td>
       <td>
         <form th:action="@{vmachine/{id}(id=${vm.entityId.uuid})}" method="GET">
-          <button type="submit">More Info</button>
+          <button type="submit" th:text="#{MoreInfo}"></button>
         </form>
       </td>
       <td>
@@ -92,7 +92,7 @@
     </tr>
     </tbody>
   </table>
-  <button type="submit">Submit Selection</button>
+  <button type="submit" th:text="#{CreateRent}"></button>
 </form>
 <div th:replace="~{panels/footer :: footer}"></div>
 </body>
