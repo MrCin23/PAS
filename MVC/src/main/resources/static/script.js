@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     filterInput.addEventListener('input', async () => {
         const query = filterInput.value.trim(); // Pobierz wartość z pola filtrowania
         if(query === '') {
-            console.log("aa")
+            // console.log("aa")
             await fetch(`/client/find`)
                 .then(response => {
                     if (!response.ok) {
@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 .catch(error => console.error('Error fetching clients:', error));
         }
         else {
-            console.log("bb")
+            // console.log("bb")
             await fetch(`/client/find/${encodeURIComponent(query)}`)
                 .then(response => {
                     if (!response.ok) {
