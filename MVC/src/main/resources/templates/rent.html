@@ -8,14 +8,15 @@
 <body>
 <div th:replace="~{panels/header :: header}"></div>
 <div th:replace="~{panels/sidebar :: sidebar}"></div>
-<h1 th:text="#{Rent}"></h1>
+<div class="content">
+  <h1 th:text="#{Rent}"></h1>
 
-<div th:if="${message}">
-  <p th:text="${message}"></p>
-</div>
+  <div th:if="${message}">
+    <p th:text="${message}"></p>
+  </div>
 
-<table>
-  <tbody>
+  <table>
+    <tbody>
     <tr>
       <td th:text="#{uuid}"></td>
       <td th:text="${rent.getEntityId().getUuid().toString()}"></td>
@@ -36,9 +37,10 @@
       <td th:text="#{VMachineCPUNumber}"></td>
       <td th:text="${rent.getVMachine().getCPUNumber()}"></td>
     </tr>
-  </tbody>
-<!--  TODO więcej informacji-->
-</table>
+    </tbody>
+    <!--  TODO więcej informacji-->
+  </table>
+</div>
 <div th:replace="~{panels/footer :: footer}"></div>
 </body>
 </html>

@@ -8,16 +8,18 @@
 <body>
 <div th:replace="~{panels/header :: header}"></div>
 <div th:replace="~{panels/sidebar :: sidebar}"></div>
-<h1>Log In as Client</h1>
+<div class="content">
+  <h1>Log In as Client</h1>
 
-<form >
-<!--        th:action="@{/client/login/{username}(username=${client.username})}" method="GET">-->
+  <form >
+    <!--        th:action="@{/client/login/{username}(username=${client.username})}" method="GET">-->
 
-  <label for="username" th:text="#{Username}"></label>
-  <input type="text" id="username" th:text="${username}" name="username" placeholder="Enter Username" required><br><br>
+    <label for="username" th:text="#{Username}"></label>
+    <input type="text" id="username" th:text="${username}" name="username" placeholder="Enter Username" required><br><br>
 
-  <button type="submit" th:text="#{LogIn}"></button>
-</form>
+    <button type="submit" th:text="#{LogIn}"></button>
+  </form>
+</div>
 
 <div th:replace="~{panels/footer :: footer}"></div>
 </body>

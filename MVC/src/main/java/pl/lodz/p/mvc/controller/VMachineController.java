@@ -33,6 +33,12 @@ public class VMachineController {
         model.addAttribute("currentPage", "/vmachine/" + uuid);
         return "vmachine";
     }
+
+    @PostMapping("delete/{uuid}")
+    public String deleteVMachine(@PathVariable("uuid") UUID uuid) {
+        vMachineService.deleteVMachine(uuid);
+        return "redirect:/vmachine";
+    }
 //
 //    @GetMapping("/add")
 //    public String showAddForm(Model model) {

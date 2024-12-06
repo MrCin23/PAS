@@ -8,42 +8,50 @@
 <body>
 <div th:replace="~{panels/header :: header}"></div>
 <div th:replace="~{panels/sidebar :: sidebar}"></div>
-<h1 th:text="#{ListOfRents}"></h1>
+<div class="content">
+  <h1 th:text="#{ListOfRents}"></h1>
 
-<div th:if="${message}">
-  <p th:text="${message}"></p>
+  <div th:if="${message}">
+    <p th:text="${message}"></p>
+  </div>
+
+  <table style="border: 1px; text-align: center">
+    <thead>
+    <tr>
+      <th th:text="#{uuid}"></th>
+      <th th:text="#{Username}"></th>
+      <th th:text="#{VMachineInfo}"></th>
+      <th th:text="#{RentCost}"></th>
+      <th th:text="#{DeleteVMachine}"></th>
+      <th th:text="#{Details}"></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="rent : ${rents}">
+      <td th:text="${rent.entityId.uuid}"></td>
+      <td th:text="${rent.client.username}"></td>
+      <td th:text="${rent.vmachine}"></td>
+      <td th:text="${rent.rentCost}"></td>
+      <td>
+        <form th:action="@{rent/endRent/{id}(id=${rent.entityId.uuid})}" method="GET" onsubmit="return confirmAction()">
+          <button type="submit" th:text="#{EndRent}"></button>
+        </form>
+        <script>
+          function confirmAction() {
+            const sure = window.confirm('Are you sure?');
+            return sure;
+          }
+        </script>
+      </td>
+      <td>
+        <form th:action="@{rent/{id}(id=${rent.entityId.uuid})}" method="GET">
+          <button type="submit" th:text="#{MoreInfo}"></button>
+        </form>
+      </td>
+    </tr>
+    </tbody>
+  </table>
 </div>
-
-<table style="border: 1px; text-align: center">
-  <thead>
-  <tr>
-    <th th:text="#{uuid}"></th>
-    <th th:text="#{Username}"></th>
-    <th th:text="#{VMachineInfo}"></th>
-    <th th:text="#{RentCost}"></th>
-    <th th:text="#{DeleteVMachine}"></th>
-    <th th:text="#{Details}"></th>
-  </tr>
-  </thead>
-  <tbody>
-  <tr th:each="rent : ${rents}">
-    <td th:text="${rent.entityId.uuid}"></td>
-    <td th:text="${rent.client.username}"></td>
-    <td th:text="${rent.vmachine}"></td>
-    <td th:text="${rent.rentCost}"></td>
-    <td>
-      <form th:action="@{rent/endRent/{id}(id=${rent.entityId.uuid})}" method="GET">
-        <button type="submit" th:text="#{EndRent}"></button>
-      </form>
-    </td>
-    <td>
-      <form th:action="@{rent/{id}(id=${rent.entityId.uuid})}" method="GET">
-        <button type="submit" th:text="#{MoreInfo}"></button>
-      </form>
-    </td>
-  </tr>
-  </tbody>
-</table>
 <div th:replace="~{panels/footer :: footer}"></div>
 </body>
 </html>

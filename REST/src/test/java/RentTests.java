@@ -19,7 +19,7 @@ public class RentTests {
     @BeforeAll
     public static void init() {
         RestAssured.baseURI = "http://localhost";
-        RestAssured.port = 8080;
+        RestAssured.port = 8081;
         RestAssured.basePath = "/REST";
 //        dataInitializer.dropAndCreateRent();
 //        dataInitializer.init();

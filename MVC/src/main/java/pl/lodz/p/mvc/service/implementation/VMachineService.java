@@ -4,6 +4,7 @@ package pl.lodz.p.mvc.service.implementation;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import pl.lodz.p.mvc.dto.UuidDTO;
 import pl.lodz.p.mvc.model.VMachine;
 import pl.lodz.p.mvc.service.IVMachineService;
 
@@ -26,5 +27,11 @@ public class VMachineService implements IVMachineService {
     public VMachine getVMachine(UUID uuid) {
         return restTemplate.getForObject(API_URL + "/" + uuid.toString(), VMachine.class);
     }
+
+    @Override
+    public void deleteVMachine(UUID uuid) {
+        restTemplate.delete(API_URL + "/" + uuid.toString());
+    }
+
 }
 

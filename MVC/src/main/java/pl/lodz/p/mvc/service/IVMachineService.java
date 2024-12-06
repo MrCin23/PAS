@@ -14,5 +14,5 @@ public interface IVMachineService {
 
 //    void updateVMachine(UUID uuid, Map<String, Object> fieldsToUpdate);
 //
-//    void deleteVMachine(UUID uuid);
+    void deleteVMachine(UUID uuid);
 }

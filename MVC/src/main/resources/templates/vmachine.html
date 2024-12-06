@@ -8,36 +8,38 @@
 <body>
 <div th:replace="~{panels/header :: header}"></div>
 <div th:replace="~{panels/sidebar :: sidebar}"></div>
-<h1>VMachine</h1>
+<div class="content">
+  <h1>VMachine</h1>
 
-<div th:if="${message}">
-  <p th:text="${message}"></p>
+  <div th:if="${message}">
+    <p th:text="${message}"></p>
+  </div>
+
+  <table style="border: 1px; text-align: center">
+    <thead>
+    <tr>
+      <th th:text="#{uuid}"></th>
+      <th th:text="#{CPUNumber}"></th>
+      <th th:text="#{RAMSize}"></th>
+      <th th:text="#{ActualRentalPrice}"></th>
+
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+      <td th:text="${vm.entityId.uuid}"></td>
+      <td th:text="${vm.getCPUNumber()}"></td>
+      <td th:text="${vm.ramSize}"></td>
+      <td th:text="${vm.actualRentalPrice}"></td>
+      <td>
+        <form th:action="@{/delete/{id}(id=${vm.entityId})}" method="POST">
+          <button type="submit" th:text="#{Delete}"></button>
+        </form>
+      </td>
+    </tr>
+    </tbody>
+  </table>
 </div>
-
-<table style="border: 1px; text-align: center">
-  <thead>
-  <tr>
-    <th th:text="#{uuid}"></th>
-    <th th:text="#{CPUNumber}"></th>
-    <th th:text="#{RAMSize}"></th>
-    <th th:text="#{ActualRentalPrice}"></th>
-
-  </tr>
-  </thead>
-  <tbody>
-  <tr>
-    <td th:text="${vm.entityId.uuid}"></td>
-    <td th:text="${vm.getCPUNumber()}"></td>
-    <td th:text="${vm.ramSize}"></td>
-    <td th:text="${vm.actualRentalPrice}"></td>
-    <td>
-      <form th:action="@{/delete/{id}(id=${vm.entityId})}" method="POST">
-        <button type="submit" th:text="#{Delete}"></button>
-      </form>
-    </td>
-  </tr>
-  </tbody>
-</table>
 <div th:replace="~{panels/footer :: footer}"></div>
 </body>
 </html>

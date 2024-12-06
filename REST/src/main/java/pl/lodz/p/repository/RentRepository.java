@@ -192,11 +192,11 @@ public class RentRepository extends AbstractMongoRepository {
 //
 //    private VMachine getVMachineById(UUID vMachineId) {
 //        RestTemplate restTemplate = new RestTemplate();
-//        String url = "http://localhost:8080/REST/api/vmachine/" + vMachineId;
+//        String url = "http://localhost:8081/REST/api/vmachine/" + vMachineId;
 //        try {
 //            return restTemplate.getForObject(url, VMachine.class);
 //        } catch (Exception e) {
-//            throw new RuntimeException("Request GET http://localhost:8080/REST/api/vmachine/" + vMachineId + " failed: " + e);
+//            throw new RuntimeException("Request GET http://localhost:8081/REST/api/vmachine/" + vMachineId + " failed: " + e);
 //        }
 //    }
 }
