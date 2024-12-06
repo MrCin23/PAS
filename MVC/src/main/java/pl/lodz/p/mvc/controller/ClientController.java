@@ -1,7 +1,11 @@
 package pl.lodz.p.mvc.controller;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -12,6 +16,8 @@ import pl.lodz.p.mvc.model.user.Client;
 import pl.lodz.p.mvc.model.user.Standard;
 import pl.lodz.p.mvc.service.implementation.ClientService;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -52,6 +58,33 @@ public class ClientController {
         clientService.createClient(c);
         model.addAttribute("currentPage", "/client/" + c.getEntityId().toString());
         return "redirect:/client/" + c.getEntityId().toString();
+    }
+
+    @GetMapping("/find")
+    public ResponseEntity<List<Client>> filterUsersForce( Model model) {
+        List<Client> clients;
+        try {
+            clients = clientService.getAllClients();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.emptyList());
+        }
+        return ResponseEntity.ok(clients);
+    }
+
+    @GetMapping("/find/{username}")
+    public ResponseEntity<List<Client>> filterUsers(@PathVariable(value = "username", required = false) String username, Model model){
+        List<Client> clients;
+        try {
+            if(username == null || username.isEmpty()) {
+                clients = clientService.getAllClients();
+            }
+            else {
+                clients = clientService.getClientsByUsername(username);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.emptyList());
+        }
+        return ResponseEntity.ok(clients);
     }
 
 //TODO

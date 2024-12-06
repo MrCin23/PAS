@@ -21,5 +21,5 @@ public interface IClientService {
 //
     Client getClientByUsername(String username);
 
-//    List<Client> getClientsByUsername(String username);
+    List<Client> getClientsByUsername(String username);
 }

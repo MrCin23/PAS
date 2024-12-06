@@ -48,11 +48,11 @@ public class ClientService implements IClientService {
 //
     @Override
     public Client getClientByUsername(String username) {
-        return restTemplate.getForObject(API_URL + "/findClient/" + username, Client.class);
+        return null;
     }
-//
-//    @Override
-//    public List<Client> getClientsByUsername(String username) {
-//        return List.of();
-//    }
+
+    @Override
+    public List<Client> getClientsByUsername(String username) {
+        return restTemplate.getForObject(API_URL + "/findClients/" + username, List.class);
+    }
 }
