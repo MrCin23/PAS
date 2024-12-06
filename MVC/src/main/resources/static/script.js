@@ -1,23 +1,41 @@
 document.addEventListener('DOMContentLoaded', () => {
     const filterInput = document.getElementById('filter');
-    const clientList = document.getElementById('clients');
+    let clientList = document.querySelector('#clients tbody');
+    // console.log(clientList)
 
-    filterInput.addEventListener('input', () => {
+    filterInput.addEventListener('input', async () => {
         const query = filterInput.value.trim(); // Pobierz wartość z pola filtrowania
-        fetch(`/client/find/${encodeURIComponent(query)}`)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Failed to fetch clients');
-                }
-                return response.json();
-            })
-            .then(clients => updateClientList(clients))
-            .catch(error => console.error('Error fetching clients:', error));
+        if(query === '') {
+            console.log("aa")
+            await fetch(`/client/find`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch clients');
+                    }
+
+                    return response.json();
+                })
+                .then(clients => updateClientList(clients))
+                .catch(error => console.error('Error fetching clients:', error));
+        }
+        else {
+            console.log("bb")
+            await fetch(`/client/find/${encodeURIComponent(query)}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch clients');
+                    }
+                    // console.log(response.json())
+                    return response.json();
+                })
+                .then(clients => updateClientList(clients))
+                .catch(error => console.error('Error fetching clients:', error));
+        }
     });
 
     function updateClientList(clients) {
         clientList.innerHTML = ''; // Wyczyść istniejącą tabelę
-
+        // clientList = ''
         if (clients.length === 0) {
             const noResultRow = document.createElement('tr');
             const noResultCell = document.createElement('td');
@@ -29,8 +47,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         clients.forEach(client => {
-            const row = document.createElement('tr');
-            console.log(client)
+
+            let row = document.createElement('tr');
+            // console.log(client)
             row.innerHTML = `
                 <td>${client.entityId.uuid}</td>
                 <td>${client.username}</td>
@@ -44,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     </form>
                 </td>
             `;
-
+            // console.log(row)
             clientList.appendChild(row);
         });
     }
