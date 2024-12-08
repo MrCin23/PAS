@@ -11,8 +11,8 @@
 <div class="content">
   <h1 th:text="#{ListOfRents}"></h1>
 
-  <div th:if="${message}">
-    <p th:text="${message}"></p>
+  <div class="error" th:if="${error}">
+    <p th:text="${error}"></p>
   </div>
 
   <table style="border: 1px; text-align: center">

@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
 import pl.lodz.p.mvc.dto.ClientDTO;
 import pl.lodz.p.mvc.dto.EndRentDTO;
 import pl.lodz.p.mvc.dto.RentDTO;
@@ -27,9 +28,11 @@ public class RentController {
 
     @GetMapping
     public String getAllRents(Model model) {
+
         model.addAttribute("rents", rentService.getAllRents());
         model.addAttribute("currentPage", "/rent");
         return "rents";
+
     }
 
     @GetMapping("/{uuid}")
@@ -41,10 +44,17 @@ public class RentController {
 
     @GetMapping("endRent/{uuid}")
     public String endRent(@PathVariable("uuid") UUID uuid, Model model) {
-        rentService.endRent(uuid, new EndRentDTO(LocalDateTime.now()));
-        model.addAttribute("rents", rentService.getAllRents());
-        model.addAttribute("currentPage", "/rent/endRent/" + uuid);
-        return "redirect:/rent";
+        try {
+            rentService.endRent(uuid, new EndRentDTO(LocalDateTime.now()));
+            model.addAttribute("rents", rentService.getAllRents());
+            model.addAttribute("currentPage", "/rent/endRent/" + uuid);
+            return "redirect:/rent";
+        } catch (HttpClientErrorException e) {
+            model.addAttribute("rents", rentService.getAllRents());
+            model.addAttribute("currentPage", "/rent/endRent/" + uuid);
+            model.addAttribute("error", e.getResponseBodyAsString());
+            return "redirect:/rent"; //TODO zmienić
+        }
     }
 
     @GetMapping("/create")

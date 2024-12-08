@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
 import pl.lodz.p.mvc.service.implementation.VMachineService;
 
 import java.util.UUID;
@@ -35,9 +36,14 @@ public class VMachineController {
     }
 
     @PostMapping("delete/{uuid}")
-    public String deleteVMachine(@PathVariable("uuid") UUID uuid) {
-        vMachineService.deleteVMachine(uuid);
-        return "redirect:/vmachine";
+    public String deleteVMachine(@PathVariable("uuid") UUID uuid, Model model) {
+        try {
+            vMachineService.deleteVMachine(uuid);
+            return "redirect:/vmachine";
+        } catch (HttpClientErrorException e) {
+            model.addAttribute("error", e.getMessage());
+            return "redirect:/vmachine"; //TODO poprawić
+        }
     }
 //
 //    @GetMapping("/add")
