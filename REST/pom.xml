@@ -8,6 +8,18 @@
     <artifactId>REST</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>war</packaging>
+    <developers>
+        <developer>
+            <id>247790</id>
+            <name>Piotr Sokoliński</name>
+            <email>247790@edu.p.lodz.pl</email>
+        </developer>
+        <developer>
+            <id>247810</id>
+            <name>Marcin Targoński</name>
+            <email>247810@edu.p.lodz.pl</email>
+        </developer>
+    </developers>
     <licenses>
         <license>
             <!-- source: https://www.oracle.com/pl/java/technologies/javase/jdk-faqs.html-->
