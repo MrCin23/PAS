@@ -8,6 +8,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoIterable;
 import com.mongodb.client.model.*;
 import jakarta.inject.Inject;
+import lombok.Getter;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 //import io.quarkus.mongodb.panache.PanacheMongoRepository;
@@ -23,7 +24,7 @@ import java.util.Objects;
 import java.util.regex.Pattern;
 
 
-
+@Getter
 @ApplicationScoped
 public class ClientRepository extends AbstractMongoRepository {
 
