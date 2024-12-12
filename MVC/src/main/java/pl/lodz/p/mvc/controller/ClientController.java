@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
 import pl.lodz.p.mvc.dto.ClientDTO;
 import pl.lodz.p.mvc.model.user.Client;
 import pl.lodz.p.mvc.model.user.Standard;
@@ -51,13 +52,19 @@ public class ClientController {
 
     @PostMapping("/register")
     public String createClient(@ModelAttribute("client") ClientDTO client, BindingResult bindingResult, Model model) {
-        if (bindingResult.hasErrors()) {
+        try {
+            if (bindingResult.hasErrors()) {
+                return "registerClient";
+            }
+            Client c = new Client(client.getFirstName(),client.getSurname(),client.getUsername(),client.getEmailAddress(),new Standard());
+            clientService.createClient(c);
+            model.addAttribute("currentPage", "/client/" + c.getEntityId().toString());
+            return "redirect:/client/" + c.getEntityId().toString();
+        } catch (HttpClientErrorException e) {
+            model.addAttribute("currentPage", "/client/register");
+            model.addAttribute("error", e.getResponseBodyAsString());
             return "registerClient";
         }
-        Client c = new Client(client.getFirstName(),client.getSurname(),client.getUsername(),client.getEmailAddress(),new Standard());
-        clientService.createClient(c);
-        model.addAttribute("currentPage", "/client/" + c.getEntityId().toString());
-        return "redirect:/client/" + c.getEntityId().toString();
     }
 
     @GetMapping("/find")

@@ -75,6 +75,9 @@
 <div th:replace="~{panels/sidebar :: sidebar}"></div>
 <div class="content">
     <h1 th:text="#{CreateNewClient}"></h1>
+    <div class="error" th:if="${error}">
+        <p th:text="${error}"></p>
+    </div>
 
     <form th:action="@{/client/register}" method="POST" th:object="${client}">
         <label for="firstName" th:text="#{FirstName}"></label>
