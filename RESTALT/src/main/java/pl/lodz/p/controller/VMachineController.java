@@ -1,99 +1,97 @@
-//package pl.lodz.p.controller;
-//
-//import jakarta.validation.Valid;
-//import lombok.AllArgsConstructor;
-//import org.springframework.http.HttpStatus;
-//import org.springframework.http.ResponseEntity;
-//import org.springframework.validation.BindingResult;
-//import org.springframework.validation.annotation.Validated;
-//import org.springframework.web.bind.annotation.*;
-//import pl.lodz.p.dto.UuidDTO;
-//import pl.lodz.p.model.VMachine;
-//import pl.lodz.p.model.VMachine;
-//import pl.lodz.p.service.implementation.VMachineService;
-//
-//import java.util.List;
-//import java.util.Map;
-//import java.util.UUID;
-//
-//@AllArgsConstructor
-//@RestController
-//@RequestMapping("/api/vmachine")
-//@Validated
-//public class VMachineController {
-//
-//    private VMachineService vMachineService;
-//
-//    @PostMapping//not tested
-//    public ResponseEntity<Object> create(@Valid @RequestBody VMachine vm, BindingResult bindingResult) {
-//        try {
-//            if(bindingResult.hasErrors()) {
-//                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(bindingResult.getAllErrors());
-//            }
-//            return ResponseEntity.status(HttpStatus.CREATED).body(vMachineService.createVMachine(vm));
-//        } catch (Exception ex) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
-//        }
-//    }
-//
-//    @GetMapping//not tested
-//    public ResponseEntity<Object> getAll() {
-//        try {
-//            List<VMachine> vms;
-//            try {
-//                vms = vMachineService.getAllVMachines();
-//            } catch (RuntimeException ex) {
-//                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No vms found");
-//            }
-//            return ResponseEntity.status(HttpStatus.OK).body(vms);
-//        } catch (Exception ex) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
-//        }
-//
-//    }
-//
-//    @GetMapping("/{uuid}")//not tested
-//    public ResponseEntity<Object> getVMachine(@PathVariable("uuid") UuidDTO uuid) {
-//        try {
-//            VMachine vm;
-//            try {
-//                vm = vMachineService.getVMachine(uuid.uuid());
-//            } catch (RuntimeException ex) {
-//                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No vm found");
-//            }
-//            return ResponseEntity.status(HttpStatus.OK).body(vm);
-//        } catch (Exception ex) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
-//        }
-//
-//    }
-//
-//    @PutMapping("/{uuid}")//not tested
-//    public ResponseEntity<Object> updateVMachine(@PathVariable("uuid") UuidDTO uuid, @RequestBody Map<String, Object> fieldsToUpdate, BindingResult bindingResult) {
-//        try {
-//            if(bindingResult.hasErrors()) {
-//                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(bindingResult.getAllErrors());
-//            }
-//            vMachineService.updateVMachine(uuid.uuid(), fieldsToUpdate);//tried converting this to dto to validate, bad idea
-//            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-//        } catch (Exception ex) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
-//        }
-//
-//    }
-//
-//    @DeleteMapping("/{uuid}")//not tested
-//    @ResponseStatus(HttpStatus.NO_CONTENT)
-//    public ResponseEntity<Object> deleteVMachine(@PathVariable("uuid") UuidDTO uuid) {
-//        try {
-//            try {
-//                vMachineService.deleteVMachine(uuid.uuid());
-//            } catch (RuntimeException ex) {
-//                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No vm found");
-//            }
-//            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-//        } catch (Exception ex) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
-//        }
-//    }
-//}
+package pl.lodz.p.controller;
+
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.validation.Valid;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.Response;
+import lombok.AllArgsConstructor;
+import pl.lodz.p.dto.UuidDTO;
+import pl.lodz.p.model.VMachine;
+import pl.lodz.p.model.VMachine;
+import pl.lodz.p.service.implementation.VMachineService;
+
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+@AllArgsConstructor
+@ApplicationScoped
+@Path("/REST/api/vmachine")
+public class VMachineController {
+    @Inject
+    private VMachineService vMachineService;
+
+    @POST//not tested
+    public Response create(@Valid VMachine vm) {
+        try {
+            return Response.status(Response.Status.CREATED).entity(vMachineService.createVMachine(vm)).build();
+        } catch (RuntimeException ex) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
+        } catch (Exception ex) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+        }
+    }
+
+    @GET//not tested
+    public Response getAll() {
+        try {
+            List<VMachine> vms;
+            try {
+                vms = vMachineService.getAllVMachines();
+            } catch (RuntimeException ex) {
+                return Response.status(Response.Status.NOT_FOUND).entity("No vms found").build();
+            }
+            return Response.status(Response.Status.OK).entity(vms).build();
+        } catch (Exception ex) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+        }
+
+    }
+
+    @GET
+    @Path("/{uuid}")//not tested
+    public Response getVMachine(@PathParam("uuid") UuidDTO uuid) {
+        try {
+            VMachine vm;
+            try {
+                vm = vMachineService.getVMachine(uuid.uuid());
+            } catch (RuntimeException ex) {
+                return Response.status(Response.Status.NOT_FOUND).entity("No vm found").build();
+            }
+            return Response.status(Response.Status.OK).entity(vm).build();
+        } catch (Exception ex) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+        }
+
+    }
+
+    @PUT
+    @Path("/{uuid}")//not tested
+    public Response updateVMachine(@PathParam("uuid") UuidDTO uuid, Map<String, Object> fieldsToUpdate) {
+        try {
+            vMachineService.updateVMachine(uuid.uuid(), fieldsToUpdate);//tried converting this to dto to validate, bad idea
+            return Response.status(Response.Status.NO_CONTENT).build();
+        } catch (RuntimeException ex) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
+        } catch (Exception ex) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+        }
+
+    }
+
+    @DELETE
+    @Path("/{uuid}")//not tested
+    public Response deleteVMachine(@PathParam("uuid") UuidDTO uuid) {
+        try {
+            try {
+                vMachineService.deleteVMachine(uuid.uuid());
+            } catch (RuntimeException ex) {
+                return Response.status(Response.Status.BAD_REQUEST).entity("No vm found").build();
+            }
+            return Response.status(Response.Status.NO_CONTENT).build();
+        } catch (Exception ex) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+        }
+    }
+}

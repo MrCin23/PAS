@@ -40,12 +40,12 @@ public class DataInitializer {
     }
 
     public void dropAndCreateClient(){
-//        clientMan.getClientsRepository().getDatabase().getCollection("clients").drop();
-//        clientMan.getClientsRepository().getDatabase().createCollection("clients");
-//        clientMan.getClientsRepository().getDatabase().getCollection("clients").createIndex(
-//                new Document("username", 1),
-//                new IndexOptions().unique(true)
-//        );
+        clientMan.getClientsRepository().getDatabase().getCollection("clients").drop();
+        clientMan.getClientsRepository().getDatabase().createCollection("clients");
+        clientMan.getClientsRepository().getDatabase().getCollection("clients").createIndex(
+                new Document("username", 1),
+                new IndexOptions().unique(true)
+        );
     }
 
     public void dropAndCreateVMachine(){
