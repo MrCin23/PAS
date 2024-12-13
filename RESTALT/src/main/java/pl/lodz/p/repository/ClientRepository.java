@@ -8,6 +8,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoIterable;
 import com.mongodb.client.model.*;
 import jakarta.inject.Inject;
+import lombok.Getter;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 //import io.quarkus.mongodb.panache.PanacheMongoRepository;
@@ -23,25 +24,23 @@ import java.util.Objects;
 import java.util.regex.Pattern;
 
 
-
+@Getter
 @ApplicationScoped
-public class ClientRepository {
-    @Inject
-    MongoClient mongoClient;
+public class ClientRepository extends AbstractMongoRepository {
 
     private final String collectionName = "clients";
     private final MongoCollection<Client> clients;
 
 
     public ClientRepository() {
-
-        MongoIterable<String> list = mongoClient.getDatabase("vmrental").listCollectionNames();
-//        for (String name : list) {
-//            if (name.equals(collectionName)) {
-//                mongoClient.getDatabase("vmrental").getCollection(name).drop();
-//                break;
-//            }
-//        }
+        super.initDbConnection();
+        MongoIterable<String> list = this.getDatabase().listCollectionNames();
+        for (String name : list) {
+            if (name.equals(collectionName)) {
+                this.getDatabase().getCollection(name).drop();
+                break;
+            }
+        }
 //        Bson currentRentsType = Filters.type("currentRents", BsonType.INT32);
 //        Bson currentRentsMin  = Filters.gte("currentRents", 0);
 //        Bson currentRentsMax  = Filters.expr(Filters.lte("$currentRents", "$clientType.maxRentedMachines"));
@@ -97,20 +96,21 @@ public class ClientRepository {
                 .validationAction (ValidationAction.ERROR);
 
         CreateCollectionOptions createCollectionOptions = new CreateCollectionOptions() .validationOptions (validationOptions);
-        mongoClient.getDatabase("vmrental").createCollection(collectionName, createCollectionOptions);
+        this.getDatabase().createCollection(collectionName, createCollectionOptions);
 
-        this.clients = mongoClient.getDatabase("vmrental").getCollection(collectionName, Client.class);
-        mongoClient.getDatabase("vmrental").getCollection("clients").createIndex(
+        this.clients = this.getDatabase().getCollection(collectionName, Client.class);
+        this.getDatabase().getCollection("clients").createIndex(
                 new Document("username", 1),
                 new IndexOptions().unique(true)
         );
     }
 
+
     //-------------METHODS---------------------------------------
     //TODO dorobić metody z diagramu
 
     public void update(MongoUUID uuid, Map<String, Object> fieldsToUpdate) {
-        ClientSession session = mongoClient.startSession();
+        ClientSession session = getMongoClient().startSession();
         try {
             session.startTransaction();
             Bson filter = Filters.eq("_id", uuid.getUuid());
@@ -128,17 +128,21 @@ public class ClientRepository {
                     update = Updates.set(fieldName,fieldValue);
                 }
                 clients.updateOne(session, filter, update);
+
             }
             session.commitTransaction();
         } catch (MongoCommandException ex) {
             session.abortTransaction();
+        } catch (Exception ex) {
+            session.abortTransaction();
+            ex.printStackTrace();
         } finally {
             session.close();
         }
     }
 
     public void update(MongoUUID uuid, String field, Object value) {
-        ClientSession session = mongoClient.startSession();
+        ClientSession session = getMongoClient().startSession();
         try {
             session.startTransaction();
             Bson filter = Filters.eq("_id", uuid.getUuid());
@@ -153,6 +157,7 @@ public class ClientRepository {
                 update = Updates.set(field,value);
             }
             clients.updateOne(session, filter, update);
+            clients.updateOne(filter, update);
             session.commitTransaction();
         } catch (MongoCommandException ex) {
             session.abortTransaction();
@@ -162,7 +167,7 @@ public class ClientRepository {
     }
 
     public void add(Client client) {
-        ClientSession session = mongoClient.startSession();
+        ClientSession session = getMongoClient().startSession();
         try {
             session.startTransaction();
 //            Bson filter = Filters.eq("username", client.getUsername());

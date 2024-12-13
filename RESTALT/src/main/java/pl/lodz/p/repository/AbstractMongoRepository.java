@@ -6,12 +6,17 @@ import com.mongodb.MongoCredential;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
+import io.quarkus.runtime.StartupEvent;
+import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.event.Observes;
+import jakarta.inject.Inject;
 import lombok.Getter;
 import org.bson.UuidRepresentation;
 import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.Conventions;
 import org.bson.codecs.pojo.PojoCodecProvider;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import pl.lodz.p.codec.CodecProvider;
 import pl.lodz.p.model.*;
 import pl.lodz.p.model.user.Premium;
@@ -31,6 +36,7 @@ public abstract class AbstractMongoRepository implements AutoCloseable {
     private MongoDatabase database;
 
 
+    @PostConstruct
     protected void initDbConnection() {
         MongoClientSettings settings = MongoClientSettings.builder()
                 .credential(credential)
