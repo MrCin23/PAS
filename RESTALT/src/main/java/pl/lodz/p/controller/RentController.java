@@ -33,7 +33,7 @@ public class RentController {
             Rent pom = rentService.createRent(rentDTO);
             return Response.status(Response.Status.CREATED).entity(pom).build();
         } catch (RuntimeException e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+            return Response.status(Response.Status.CONFLICT).entity(e.getMessage()).build();
 //            return Response.status(Response.Status.CONFLICT).entity(e).build();
         } catch (Exception ex) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();

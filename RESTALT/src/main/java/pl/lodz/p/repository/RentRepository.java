@@ -256,7 +256,7 @@ public class RentRepository extends AbstractMongoRepository {
                     throw new RuntimeException("Client does not exist or is not active");
                 }
 
-                Bson vMachineFilter = Filters.eq("_id", rent.getVMachine().getEntityId().getUuid());
+                Bson vMachineFilter = Filters.eq("_id", rent.getVMachine().getEntityId().getUuid().toString());
                 Bson updateVMachineRented = Updates.inc("isRented", 1);
                 vMachines.updateOne(session, vMachineFilter, updateVMachineRented);
 
