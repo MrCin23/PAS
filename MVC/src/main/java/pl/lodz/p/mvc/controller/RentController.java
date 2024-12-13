@@ -7,6 +7,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import pl.lodz.p.mvc.dto.ClientDTO;
 import pl.lodz.p.mvc.dto.EndRentDTO;
 import pl.lodz.p.mvc.dto.RentDTO;
@@ -28,12 +29,11 @@ public class RentController {
 
     @GetMapping
     public String getAllRents(Model model) {
-
         model.addAttribute("rents", rentService.getAllRents());
         model.addAttribute("currentPage", "/rent");
         return "rents";
-
     }
+
 
     @GetMapping("/{uuid}")
     public String getRent(@PathVariable("uuid") UUID uuid, Model model) {
@@ -43,18 +43,15 @@ public class RentController {
     }
 
     @GetMapping("endRent/{uuid}")
-    public String endRent(@PathVariable("uuid") UUID uuid, Model model) {
+    public String endRent(@PathVariable("uuid") UUID uuid, Model model, RedirectAttributes redirectAttributes) {
         try {
             rentService.endRent(uuid, new EndRentDTO(LocalDateTime.now()));
-            model.addAttribute("rents", rentService.getAllRents());
-            model.addAttribute("currentPage", "/rent/endRent/" + uuid);
-            return "redirect:/rent";
         } catch (HttpClientErrorException e) {
-            model.addAttribute("rents", rentService.getAllRents());
-            model.addAttribute("currentPage", "/rent/endRent/" + uuid);
-            model.addAttribute("error", e.getResponseBodyAsString());
-            return "redirect:/rent"; //TODO zmienić
+            redirectAttributes.addFlashAttribute("error", e.getLocalizedMessage());
         }
+        model.addAttribute("rents", rentService.getAllRents());
+        model.addAttribute("currentPage", "/rent/endRent/" + uuid);
+        return "redirect:/rent";
     }
 
     @GetMapping("/create")
@@ -67,11 +64,26 @@ public class RentController {
     }
 
     @PostMapping("/create")
-    public String rentCreator(@ModelAttribute("rent") RentDTO rent, BindingResult bindingResult, Model model) {
+    public String rentCreator(@ModelAttribute("rent") RentDTO rent, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
+            model.addAttribute("rent", new RentDTO());
+            model.addAttribute("vms", rentService.getAllVMachinesHelper());
+            model.addAttribute("clients", rentService.getAllClientsHelper());
+            model.addAttribute("currentPage", "/rent/create");
+            model.addAttribute("error", bindingResult.getAllErrors());
             return "createRent";
         } else {
-            Rent r = rentService.createRent(rent);
+            Rent r;
+            try {
+                r = rentService.createRent(rent);
+            } catch (HttpClientErrorException e) {
+                model.addAttribute("rent", new RentDTO());
+                model.addAttribute("vms", rentService.getAllVMachinesHelper());
+                model.addAttribute("clients", rentService.getAllClientsHelper());
+                model.addAttribute("currentPage", "/rent/create");
+                model.addAttribute("error", e.getMessage());
+                return "createRent";
+            }
             model.addAttribute("currentPage", "/rent/" + r.getEntityId().getUuid());
             return "redirect:/rent/" + r.getEntityId().getUuid();
         }
