@@ -28,12 +28,10 @@ public class VMachineRepository extends AbstractMongoRepository {
     protected void initDbConnection() {
         super.initDbConnection();
 
-        // Drop existing collection (for development/testing purposes)
         if (this.getDatabase().listCollectionNames().into(new ArrayList<>()).contains(COLLECTION_NAME)) {
             this.getDatabase().getCollection(COLLECTION_NAME).drop();
         }
 
-        // Define validation schema
         ValidationOptions validationOptions = new ValidationOptions().validator(
                         Document.parse("""
             {
@@ -73,14 +71,8 @@ public class VMachineRepository extends AbstractMongoRepository {
             }
         """))
                 .validationAction (ValidationAction.ERROR);
-
-        // Create collection with validation
         this.getDatabase().createCollection(COLLECTION_NAME, new CreateCollectionOptions().validationOptions(validationOptions));
-
-        // Initialize collection with type
         this.vMachines = this.getCollection(COLLECTION_NAME, VMachine.class);
-
-//        // Create unique index on username
 //        this.vMachines.createIndex(new Document("username", 1), new IndexOptions().unique(true));
     }
 

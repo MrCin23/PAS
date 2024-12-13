@@ -232,7 +232,6 @@ public class RentRepository extends AbstractMongoRepository {
     protected void initDbConnection() {
         super.initDbConnection();
 
-        // Drop existing collection (for development/testing purposes)
         if (this.getDatabase().listCollectionNames().into(new ArrayList<>()).contains(COLLECTION_NAME)) {
             this.getDatabase().getCollection(COLLECTION_NAME).drop();
         }
@@ -247,7 +246,6 @@ public class RentRepository extends AbstractMongoRepository {
         try (ClientSession session = getMongoClient().startSession()) {
             session.startTransaction();
             try {
-                // Validate client
                 Bson clientFilter = Filters.eq("_id", rent.getClient().getEntityId().getUuid());
                 Bson updateClientRents = Updates.inc("currentRents", 1);
                 clients.updateOne(session, clientFilter, updateClientRents);
@@ -258,12 +256,10 @@ public class RentRepository extends AbstractMongoRepository {
                     throw new RuntimeException("Client does not exist or is not active");
                 }
 
-                // Validate VMachine
                 Bson vMachineFilter = Filters.eq("_id", rent.getVMachine().getEntityId().getUuid());
                 Bson updateVMachineRented = Updates.inc("isRented", 1);
                 vMachines.updateOne(session, vMachineFilter, updateVMachineRented);
 
-                // Insert rent
                 rents.insertOne(session, rent);
 
                 session.commitTransaction();

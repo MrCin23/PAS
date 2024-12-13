@@ -151,12 +151,15 @@ public class DataInitializer {
 
     @PostConstruct
     public void init() {
+        dropAndCreateRent();
+        dropAndCreateVMachine();
+        dropAndCreateClient();
         initClient();
         initVM();
         initRent();
     }
 
-        public void dropAndCreateClient(){
+    public void dropAndCreateClient(){
         clientService.getRepo().getDatabase().getCollection("clients").drop();
         clientService.getRepo().getDatabase().createCollection("clients");
         clientService.getRepo().getDatabase().getCollection("clients").createIndex(

@@ -29,11 +29,11 @@ public class ClientController {
             Client createdClient = clientServiceImplementation.createClient(client);
             return Response.status(Response.Status.CREATED).entity(createdClient).build();
         } catch (RuntimeException e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
-        } catch (Exception e) {
             return Response.status(Response.Status.CONFLICT)
                     .entity("Client with username " + client.getUsername() + " already exists! Error: " + e.getMessage())
                     .build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
     }
 

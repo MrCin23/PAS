@@ -1,8 +1,12 @@
 import com.fasterxml.jackson.core.JsonProcessingException;
+import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
 import pl.lodz.p.DataInitializer;
 import pl.lodz.p.repository.ClientRepository;
 
@@ -13,17 +17,20 @@ import java.util.UUID;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
+@QuarkusTest
+//@ArquillianTest
 public class ClientTests {
-    public static DataInitializer dataInitializer = new DataInitializer();
+    @Inject
+    DataInitializer dataInitializer;
 
     @BeforeEach
 //    public static void init() {
     public void initCollection() {
         RestAssured.baseURI = "http://localhost";
-        RestAssured.port = 8081;
+        RestAssured.port = 8080;
         RestAssured.basePath = "/REST/api/client";
         dataInitializer.dropAndCreateClient();
-        dataInitializer.initClient();
+//        dataInitializer.initClient();
     }
 
 //    @AfterEach
@@ -33,7 +40,7 @@ public class ClientTests {
 //    }
 
     @Test
-    public void testCreateClient() throws JsonProcessingException {
+    public void testCreateClient()  {
         String payloadJson = """
                 {
                   "firstName": "John",
