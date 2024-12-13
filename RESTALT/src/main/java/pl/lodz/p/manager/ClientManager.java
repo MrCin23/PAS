@@ -2,6 +2,7 @@ package pl.lodz.p.manager;
 
 
 import jakarta.inject.Inject;
+import jdk.jshell.spi.ExecutionControl;
 import lombok.Getter;
 import pl.lodz.p.model.user.Client;
 import pl.lodz.p.model.user.ClientType;
@@ -48,6 +49,7 @@ public final class ClientManager {
 
     public void update(MongoUUID uuid, String field, Object value) {
         clientsRepository.update(uuid, field, value);
+//        throw new RuntimeException("Not implemented yet");
     }
 
     //METHODS-----------------------------------
@@ -66,4 +68,5 @@ public final class ClientManager {
         return clientsRepository.getClients().size();
     }
 }
+
 

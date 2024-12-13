@@ -3,6 +3,7 @@ package pl.lodz.p.service.implementation;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import pl.lodz.p.dto.RentDTO;
 import pl.lodz.p.model.MongoUUID;
 import pl.lodz.p.model.Rent;
@@ -15,6 +16,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+@Getter
 @ApplicationScoped
 @AllArgsConstructor
 public class RentService implements IRentService {
@@ -45,6 +47,7 @@ public class RentService implements IRentService {
         repo.add(rent);
         return rent;
     }
+
 
     @Override
     public List<Rent> getAllRents() {

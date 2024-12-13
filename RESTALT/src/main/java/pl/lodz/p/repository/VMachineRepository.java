@@ -5,11 +5,13 @@ import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoIterable;
 import com.mongodb.client.model.*;
+import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import pl.lodz.p.model.MongoUUID;
 import pl.lodz.p.model.VMachine;
+import pl.lodz.p.model.user.Client;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,21 +20,22 @@ import java.util.Objects;
 
 @ApplicationScoped
 public class VMachineRepository extends AbstractMongoRepository {
-    private final String collectionName = "vMachines";
-    private final MongoCollection<VMachine> vMachines;
+    private static final String COLLECTION_NAME = "vMachines";
+    private MongoCollection<VMachine> vMachines;
 
-    public VMachineRepository() {
+    @PostConstruct
+    @Override
+    protected void initDbConnection() {
         super.initDbConnection();
-        MongoIterable<String> list = this.getDatabase().listCollectionNames();
-        for (String name : list) {
-            if (name.equals(collectionName)) {
-                this.getDatabase().getCollection(name).drop();
-                break;
-            }
+
+        // Drop existing collection (for development/testing purposes)
+        if (this.getDatabase().listCollectionNames().into(new ArrayList<>()).contains(COLLECTION_NAME)) {
+            this.getDatabase().getCollection(COLLECTION_NAME).drop();
         }
 
+        // Define validation schema
         ValidationOptions validationOptions = new ValidationOptions().validator(
-            Document.parse("""
+                        Document.parse("""
             {
                 $jsonSchema: {
                     "bsonType": "object",
@@ -69,12 +72,34 @@ public class VMachineRepository extends AbstractMongoRepository {
                 }
             }
         """))
-        .validationAction (ValidationAction.ERROR);
-        CreateCollectionOptions createCollectionOptions = new CreateCollectionOptions() .validationOptions (validationOptions);
-        this.getDatabase().createCollection(collectionName, createCollectionOptions);
+                .validationAction (ValidationAction.ERROR);
 
-        this.vMachines = this.getDatabase().getCollection(collectionName, VMachine.class);
+        // Create collection with validation
+        this.getDatabase().createCollection(COLLECTION_NAME, new CreateCollectionOptions().validationOptions(validationOptions));
+
+        // Initialize collection with type
+        this.vMachines = this.getCollection(COLLECTION_NAME, VMachine.class);
+
+//        // Create unique index on username
+//        this.vMachines.createIndex(new Document("username", 1), new IndexOptions().unique(true));
     }
+
+//    public VMachineRepository() {
+//        super.initDbConnection();
+//        MongoIterable<String> list = this.getDatabase().listCollectionNames();
+//        for (String name : list) {
+//            if (name.equals(collectionName)) {
+//                this.getDatabase().getCollection(name).drop();
+//                break;
+//            }
+//        }
+//
+//
+//        CreateCollectionOptions createCollectionOptions = new CreateCollectionOptions() .validationOptions (validationOptions);
+//        this.getDatabase().createCollection(collectionName, createCollectionOptions);
+//
+//        this.vMachines = this.getDatabase().getCollection(collectionName, VMachine.class);
+//    }
 
     //-------------METHODS---------------------------------------
     //TODO dorobić metody z diagramu

@@ -3,6 +3,7 @@ package pl.lodz.p.service.implementation;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import pl.lodz.p.model.MongoUUID;
 import pl.lodz.p.model.VMachine;
 import pl.lodz.p.repository.VMachineRepository;
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+@Getter
 @ApplicationScoped
 @AllArgsConstructor
 public class VMachineService implements IVMachineService {

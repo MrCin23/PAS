@@ -20,7 +20,7 @@ import java.util.UUID;
 
 @AllArgsConstructor
 @ApplicationScoped
-@Path("/api/rent")
+@Path("/REST/api/rent")
 public class RentController {
     @Inject
     RentService rentService;
