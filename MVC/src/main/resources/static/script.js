@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // console.log(clientList)
 
     filterInput.addEventListener('input', async () => {
-        const query = filterInput.value.trim(); // Pobierz wartość z pola filtrowania
+        const query = filterInput.value.trim();
         if(query === '') {
             // console.log("aa")
             await fetch(`/client/find`)
@@ -23,10 +23,11 @@ document.addEventListener('DOMContentLoaded', () => {
             await fetch(`/client/find/${encodeURIComponent(query)}`)
                 .then(response => {
                     if (!response.ok) {
-                        throw new Error('Failed to fetch clients');
+                        return 0;
+                        //throw new Error('Failed to fetch clients');
+                    } else {
+                        return response.json();
                     }
-                    // console.log(response.json())
-                    return response.json();
                 })
                 .then(clients => updateClientList(clients))
                 .catch(error => console.error('Error fetching clients:', error));
@@ -34,9 +35,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function updateClientList(clients) {
-        clientList.innerHTML = ''; // Wyczyść istniejącą tabelę
+        clientList.innerHTML = '';
         // clientList = ''
-        if (clients.length === 0) {
+        console.log(clients)
+        if (clients === 0) {
             const noResultRow = document.createElement('tr');
             const noResultCell = document.createElement('td');
             noResultCell.colSpan = 7;

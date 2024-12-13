@@ -7,6 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import pl.lodz.p.mvc.service.implementation.VMachineService;
 
 import java.util.UUID;
@@ -19,11 +20,13 @@ public class VMachineController {
 
     private final VMachineService vMachineService;
 
-
-
     @GetMapping
     public String getAllVMachines(Model model) {
-        model.addAttribute("vms", vMachineService.getAllVMachines());
+        try {
+            model.addAttribute("vms", vMachineService.getAllVMachines());
+        } catch (HttpClientErrorException e) {
+            model.addAttribute("error", e.getMessage());
+        }
         model.addAttribute("currentPage", "/vmachine");
         return "vmachines";
     }
@@ -36,14 +39,13 @@ public class VMachineController {
     }
 
     @PostMapping("delete/{uuid}")
-    public String deleteVMachine(@PathVariable("uuid") UUID uuid, Model model) {
+    public String deleteVMachine(@PathVariable("uuid") UUID uuid, RedirectAttributes redirectAttributes) {
         try {
             vMachineService.deleteVMachine(uuid);
-            return "redirect:/vmachine";
         } catch (HttpClientErrorException e) {
-            model.addAttribute("error", e.getMessage());
-            return "redirect:/vmachine"; //TODO poprawić
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
         }
+        return "redirect:/vmachine";
     }
 //
 //    @GetMapping("/add")

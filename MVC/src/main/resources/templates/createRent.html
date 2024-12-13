@@ -14,6 +14,9 @@
   <div th:if="${message}">
     <p th:text="${message}"></p>
   </div>
+  <div class="error" th:if="${error}">
+    <p th:text="${error}"></p>
+  </div>
 
   <form th:action="@{/rent/create}" method="POST" onsubmit="return confirmAction()">
     <table style="border: 1px; text-align: center; width: 100%;">

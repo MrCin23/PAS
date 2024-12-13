@@ -105,7 +105,7 @@ public class RentController {
             try{
                 rentService.endRent(uuid.uuid(), endTimeDTO.getEndTime());
             } catch (RuntimeException ex) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(bindingResult.getAllErrors());
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(bindingResult.getAllErrors() + ex.getMessage());
             }
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         } catch (Exception ex) {
