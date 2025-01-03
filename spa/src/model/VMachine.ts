@@ -3,14 +3,14 @@ export class VMachine {
     CPUNumber: number
     RAMSize: string
     rented: boolean
-    actualrentalPrice: number | undefined
+    actualRentalPrice: number | undefined
 
 
-    constructor(id: string, CPUNumber: number, RAMSize: string, rented: boolean, actualrentalPrice?: number) {
+    constructor(id: string, CPUNumber: number, RAMSize: string, rented: boolean, actualRentalPrice?: number) {
         this.id = id;
         this.CPUNumber = CPUNumber;
         this.RAMSize = RAMSize;
         this.rented = rented;
-        this.actualrentalPrice = actualrentalPrice; //TODO 2 możliwości: 1. Jedna deklaracja dla tworzenia i druga do odczytu, 2. Konstruktor z opcjonalnym parametrem
+        this.actualRentalPrice = actualRentalPrice; //TODO 2 możliwości: 1. Jedna deklaracja dla tworzenia i druga do odczytu, 2. Konstruktor z opcjonalnym parametrem
     }
 }
