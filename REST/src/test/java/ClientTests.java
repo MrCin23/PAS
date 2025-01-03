@@ -3,6 +3,7 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
 import pl.lodz.p.DataInitializer;
 import pl.lodz.p.repository.ClientRepository;
 
@@ -14,7 +15,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
 public class ClientTests {
-    public static DataInitializer dataInitializer = new DataInitializer();
+    DataInitializer dataInitializer = new DataInitializer();
 
     @BeforeEach
 //    public static void init() {
@@ -33,22 +34,28 @@ public class ClientTests {
 //    }
 
     @Test
-    public void testCreateClient() throws JsonProcessingException {
+    public void testCreateClient()  {
         String payloadJson = """
                 {
-                  "firstName": "John",
-                  "surname": "Doe",
-                  "username": "johndoe",
-                  "emailAddress": "john.doe@example.com",
-                  "clientType": {
-                    "maxRentedMachines": 5,
-                    "name": "Standard",
-                    "_clazz": "standard"
-                  },
-                  "currentRents": 0,
-                  "active": true
+                    "entityId": {
+                        "uuid": "123e4567-e89b-12d3-a456-426614174000"
+                    },
+                    "firstName": "John",
+                    "surname": "Doe",
+                    "username": "JDoe",
+                    "emailAddress": "john.doe@example.com",
+                    "role": "CLIENT",
+                    "clientType": {
+                        "_clazz": "standard",
+                        "entityId": {
+                            "uuid": "5bd23f3d-0be9-41d7-9cd8-0ae77e6f463d"
+                        },
+                        "maxRentedMachines": 5,
+                        "name": "Standard"
+                    },
+                    "currentRents": 0,
+                    "active": true
                 }""";
-
         RestAssured.given()
                 .contentType(ContentType.JSON)
                 .body(payloadJson)
@@ -58,7 +65,7 @@ public class ClientTests {
                 .statusCode(201)
                 .body("firstName", equalTo("John"))
                 .body("surname", equalTo("Doe"))
-                .body("username", equalTo("johndoe"))
+                .body("username", equalTo("JDoe"))
                 .body("emailAddress", equalTo("john.doe@example.com"));
     }
 
@@ -68,8 +75,36 @@ public class ClientTests {
                 .when()
                 .get()
                 .then()
-                .statusCode(200)
-                .body("size()", greaterThan(0)); // Sprawdza, czy lista klientów nie jest pusta
+                .statusCode(404);
+        String payloadJson = """
+                {
+                    "entityId": {
+                        "uuid": "123e4567-e89b-12d3-a456-426614174000"
+                    },
+                    "firstName": "John",
+                    "surname": "Doe",
+                    "username": "JDoe",
+                    "emailAddress": "john.doe@example.com",
+                    "role": "CLIENT",
+                    "clientType": {
+                        "_clazz": "standard",
+                        "entityId": {
+                            "uuid": "5bd23f3d-0be9-41d7-9cd8-0ae77e6f463d"
+                        },
+                        "maxRentedMachines": 5,
+                        "name": "Standard"
+                    },
+                    "currentRents": 0,
+                    "active": true
+                }""";
+        RestAssured.given()
+                .contentType(ContentType.JSON)
+                .body(payloadJson)
+                .when()
+                .post()
+                .then()
+                .statusCode(201)
+                .body("size()", greaterThan(0));
     }
 
     @Test
@@ -83,6 +118,7 @@ public class ClientTests {
                     "surname": "Doe",
                     "username": "JDoe",
                     "emailAddress": "john.doe@example.com",
+                    "role": "CLIENT",
                     "clientType": {
                         "_clazz": "standard",
                         "entityId": {
@@ -123,6 +159,7 @@ public class ClientTests {
                     "surname": "Doe",
                     "username": "JDoe",
                     "emailAddress": "john.doe@example.com",
+                    "role": "CLIENT",
                     "clientType": {
                         "_clazz": "standard",
                         "entityId": {
@@ -338,12 +375,13 @@ public class ClientTests {
                     },
                     "firstName": "John",
                     "surname": "Doe",
-                    "username": "johndoe",
+                    "username": "JDoe",
                     "emailAddress": "john.doe@example.com",
+                    "role": "CLIENT",
                     "clientType": {
                         "_clazz": "standard",
                         "entityId": {
-                            "uuid": "f8a34079-809e-459b-b76f-f25a02c064c6"
+                            "uuid": "5bd23f3d-0be9-41d7-9cd8-0ae77e6f463d"
                         },
                         "maxRentedMachines": 5,
                         "name": "Standard"
@@ -351,7 +389,6 @@ public class ClientTests {
                     "currentRents": 0,
                     "active": true
                 }""";
-
         RestAssured.given()
                 .contentType(ContentType.JSON)
                 .body(payloadJson)
@@ -361,7 +398,7 @@ public class ClientTests {
                 .statusCode(201)
                 .body("firstName", equalTo("John"))
                 .body("surname", equalTo("Doe"))
-                .body("username", equalTo("johndoe"))
+                .body("username", equalTo("JDoe"))
                 .body("emailAddress", equalTo("john.doe@example.com"));
 
         payloadJson = """
@@ -400,19 +437,25 @@ public class ClientTests {
     public void testDuplicateUsernameRejection() {
         String payloadJson = """
                 {
+                    "entityId": {
+                        "uuid": "123e4567-e89b-12d3-a456-426614174000"
+                    },
                     "firstName": "John",
                     "surname": "Doe",
-                    "username": "johndoe",
+                    "username": "JDoe",
                     "emailAddress": "john.doe@example.com",
+                    "role": "CLIENT",
                     "clientType": {
                         "_clazz": "standard",
+                        "entityId": {
+                            "uuid": "5bd23f3d-0be9-41d7-9cd8-0ae77e6f463d"
+                        },
                         "maxRentedMachines": 5,
                         "name": "Standard"
                     },
                     "currentRents": 0,
                     "active": true
                 }""";
-
         RestAssured.given()
                 .contentType(ContentType.JSON)
                 .body(payloadJson)
@@ -422,8 +465,31 @@ public class ClientTests {
                 .statusCode(201)
                 .body("firstName", equalTo("John"))
                 .body("surname", equalTo("Doe"))
-                .body("username", equalTo("johndoe"))
+                .body("username", equalTo("JDoe"))
                 .body("emailAddress", equalTo("john.doe@example.com"));
+
+
+        payloadJson = """
+                {
+                    "entityId": {
+                        "uuid": "123e4567-e89b-12d3-a456-426614174001"
+                    },
+                    "firstName": "John",
+                    "surname": "Doe",
+                    "username": "JDoe",
+                    "emailAddress": "john.doe@example.com",
+                    "role": "CLIENT",
+                    "clientType": {
+                        "_clazz": "standard",
+                        "entityId": {
+                            "uuid": "5bd23f3d-0be9-41d7-9cd8-0ae77e6f463d"
+                        },
+                        "maxRentedMachines": 5,
+                        "name": "Standard"
+                    },
+                    "currentRents": 0,
+                    "active": true
+                }""";
 
 
         Response response = RestAssured.given()
@@ -434,6 +500,7 @@ public class ClientTests {
         response.then().statusCode(409);
 
         String responseBody = response.getBody().asString();
-        assertThat(responseBody, containsString("Client with username johndoe already exists! Error code: com.mongodb.MongoWriteException: Write operation error on server mongodb1:27017. Write error: WriteError{code=11000, message='E11000 duplicate key error collection: vmrental.clients index: username_1 dup key: { username: \"johndoe\" }', details={}}."));
+        assertThat(responseBody, containsString("Client with username JDoe already exists!"
+        ));
     }
 }

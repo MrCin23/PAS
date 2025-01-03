@@ -1,11 +1,10 @@
 import com.mongodb.client.MongoIterable;
+import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import jakarta.inject.Inject;
+import org.junit.jupiter.api.*;
 import pl.lodz.p.DataInitializer;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -13,23 +12,25 @@ import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+@QuarkusTest
 public class RentTests {
-    public static DataInitializer dataInitializer = new DataInitializer();
+    @Inject
+    DataInitializer dataInitializer;
 
-    @BeforeAll
-    public static void init() {
+    @BeforeEach
+    public void initCollection() {
         RestAssured.baseURI = "http://localhost";
         RestAssured.port = 8081;
         RestAssured.basePath = "/REST";
-//        dataInitializer.dropAndCreateRent();
+        dataInitializer.dropAndCreateRent();
 //        dataInitializer.init();
     }
 
-    @AfterEach
-    public void dropCollection() {
-        dataInitializer.dropAndCreateRent();
-        dataInitializer.init();
-    }
+//    @AfterEach
+//    public void dropCollection() {
+//        dataInitializer.dropAndCreateRent();
+//        dataInitializer.init();
+//    }
 
     @Test
     public void deleteLater() {
@@ -111,7 +112,7 @@ public class RentTests {
         String responseBody = response.getBody().asString();
         assertThat(responseBody, containsString("2abc9e5d-3d2f-42e7-b90b-e7c61f662da3"));
         assertThat(responseBody, containsString("7ab44a0b-8347-41cb-a64a-452666d0494a"));
-        assertThat(responseBody, containsString("[2024,11,11,11,11]"));
+        assertThat(responseBody, containsString("2024-11-11T11:11:00"));
     }
 
     @Test
@@ -196,11 +197,11 @@ public class RentTests {
         String responseBody = response.getBody().asString();
         assertThat(responseBody, containsString("2abc9e5d-3d2f-42e7-b90b-e7c61f662da3"));
         assertThat(responseBody, containsString("7ab44a0b-8347-41cb-a64a-452666d0494a"));
-        assertThat(responseBody, containsString("[2024,11,11,11,11]"));
+        assertThat(responseBody, containsString("2024-11-11T11:11:00"));
         //create rent of rented machine
         Response response2 = RestAssured.given()
                 .contentType(ContentType.JSON)
-                .body(payloadJson4)
+                .body(payloadJson3)
                 .when()
                 .post("/api/rent");
         response2.then().statusCode(409);

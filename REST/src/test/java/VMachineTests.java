@@ -1,10 +1,9 @@
 import com.fasterxml.jackson.core.JsonProcessingException;
+import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import jakarta.inject.Inject;
+import org.junit.jupiter.api.*;
 import pl.lodz.p.DataInitializer;
 
 import java.util.HashMap;
@@ -14,23 +13,26 @@ import java.util.UUID;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThan;
 
+@QuarkusTest
 public class VMachineTests {
-    public static DataInitializer dataInitializer = new DataInitializer();
+    @Inject
+    DataInitializer dataInitializer;
 
-    @BeforeAll
-    public static void init() {
+    @BeforeEach
+//    public static void init() {
+    public void initCollection() {
         RestAssured.baseURI = "http://localhost";
         RestAssured.port = 8081;
         RestAssured.basePath = "/REST/api/vmachine";
-//        dataInitializer.dropAndCreateVMachine();
+        dataInitializer.dropAndCreateVMachine();
 //        dataInitializer.initVM();
     }
 
-    @AfterEach
-    public void dropCollection() {
-        dataInitializer.dropAndCreateVMachine();
-        dataInitializer.initVM();
-    }
+//    @AfterEach
+//    public void dropCollection() {
+//        dataInitializer.dropAndCreateVMachine();
+//        dataInitializer.initVM();
+//    }
     @Test
     public void testCreateVMachine() throws JsonProcessingException {
         String payloadJson = """
@@ -57,12 +59,37 @@ public class VMachineTests {
 
     @Test
     public void testGetAllVMachines() {
+
+        RestAssured.given()
+                .when()
+                .get()
+                .then()
+                .statusCode(404);
+        String payloadJson = """
+                {
+                    "_clazz": "applearch",
+                    "entityId": {
+                        "uuid": "123e4567-e89b-12d3-a456-426614174000"
+                    },
+                    "ramSize": "8GB",
+                    "cpunumber": 2
+                }""";
+
+        RestAssured.given()
+                .contentType(ContentType.JSON)
+                .body(payloadJson)
+                .when()
+                .post()
+                .then()
+                .statusCode(201);
+
         RestAssured.given()
                 .when()
                 .get()
                 .then()
                 .statusCode(200)
                 .body("size()", greaterThan(0)); // Ensure there are VMachine entries
+
     }
 
     @Test
@@ -162,10 +189,14 @@ public class VMachineTests {
     public void testIncorrectCreateVM(){
         String payloadJson = """
                 {
-                    "_clazz": "applearch",
                     "entityId": {
-                        "uuid": "7ab44a0b-8347-41cb-a64a-452666d0494a"
-                    }
+                        "uuid": "22222222-434f-4b54-a81f-4b1d190e654d"
+                    },
+                    "ramSize": "4GB",
+                    "isRented": 1,
+                    "actualRentalPrice": 400.0,
+                    "cpunumber": 0,
+                    "_clazz":"applearch"
                 }""";
 
         RestAssured.given()
