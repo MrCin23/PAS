@@ -18,7 +18,9 @@ public abstract class AbstractEntityMgd implements Serializable {
     @BsonId
     private MongoUUID entityId;
 
-    public AbstractEntityMgd() {}
+    public AbstractEntityMgd() {
+        entityId = new MongoUUID(UUID.randomUUID());
+    } //to byc moze cos popsuje
 
     @BsonCreator
     public AbstractEntityMgd(@BsonProperty MongoUUID entityId) {
