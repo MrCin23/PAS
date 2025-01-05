@@ -23,7 +23,7 @@ interface FormData {
     clientType: ClientType;
 }
 
-const CreateUser: React.FC = () => {
+export const CreateUser = () => { //export const CreateUser: React.FC = () => {
     const navigate = useNavigate();
     const [formData, setFormData] = useState<FormData>({
         firstName: '',
@@ -159,4 +159,4 @@ const CreateUser: React.FC = () => {
     );
 };
 
-export default CreateUser;
+// export default CreateUser;

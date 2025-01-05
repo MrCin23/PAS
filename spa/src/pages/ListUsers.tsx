@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import './styles.css';
 
@@ -26,7 +26,7 @@ interface User {
     currentRents: number;
 }
 
-const ListUsers: React.FC = () => {
+export const ListUsers = () => {
     const [clients, setUsers] = useState<User[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
@@ -80,4 +80,4 @@ const ListUsers: React.FC = () => {
     );
 };
 
-export default ListUsers;
+// export default ListUsers;

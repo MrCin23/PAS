@@ -16,7 +16,7 @@ interface User {
     currentRents: number;
 }
 
-const LogInUser: React.FC = () => {
+export const LogInUser = () => {
     const [username, setUsername] = useState<string>('');
     const [userData, setUserData] = useState<User | null>(null);
     const [error, setError] = useState<string | null>(null);
@@ -74,4 +74,4 @@ const LogInUser: React.FC = () => {
     );
 };
 
-export default LogInUser;
+// export default LogInUser;

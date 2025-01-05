@@ -1,5 +1,6 @@
 // import React from "react";
 
-const HomePage = () => <div>home page</div>;
+export const HomePage = () => <div>home page</div>;
 
-export default HomePage;
+// export default HomePage;
+//TODO zakomentowane przez routes.ts, tam dodane {}

@@ -12,5 +12,8 @@ export default defineConfig({
       }
     }
   },
+  build: {
+    sourcemap: true, //add this property to enable browser code visibility. Needed for React dev tools plugin.
+  },
   plugins: [react()],
 });
