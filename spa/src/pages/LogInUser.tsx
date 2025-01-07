@@ -1,18 +1,30 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import './styles.css';
+import { useUserSession } from '../model/UserContext';
 /**
  * To na tę chwilę zastępuje nam logowanie się Użytkownika. Po prostu podajemy username i szukamy kogoś o takim username.
  */
+interface EntityId {
+    uuid: string;
+}
+
+interface ClientType {
+    _clazz: string;
+    entityId: EntityId;
+    maxRentedMachines: number;
+    name: string;
+}
+
 interface User {
-    entityId: { uuid: string };
+    entityId: EntityId;
     firstName: string;
     surname: string;
     username: string;
     emailAddress: string;
     role: string;
     active: boolean;
-    clientType: { _clazz: string };
+    clientType: ClientType;
     currentRents: number;
 }
 
@@ -20,6 +32,7 @@ export const LogInUser = () => {
     const [username, setUsername] = useState<string>('');
     const [userData, setUserData] = useState<User | null>(null);
     const [error, setError] = useState<string | null>(null);
+    const {setCurrentUser} = useUserSession();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setUsername(e.target.value);
@@ -35,6 +48,7 @@ export const LogInUser = () => {
         try {
             const response = await axios.get<User>(`/api/client/findClient/${username}`);
             setUserData(response.data);
+            setCurrentUser(response.data);
             setError(null);
         } catch (err) {
             console.error(err);
@@ -47,11 +61,12 @@ export const LogInUser = () => {
         <div className="container">
             <h2>Log In</h2>
             <div>
-                <label htmlFor="username">Username</label>
+                {/*<label htmlFor="username">Username</label>*/}
                 <input
                     type="text"
                     id="username"
                     name="username"
+                    placeholder={"Username"}
                     value={username}
                     onChange={handleChange}
                 />

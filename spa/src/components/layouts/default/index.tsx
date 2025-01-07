@@ -19,16 +19,19 @@ export const DefaultLayout = ({ children }: LayoutProps) => {
             <AppBar position="static">
                 <Toolbar sx={{ display: 'flex'}}>
                     <Button onClick={() => navigate(Pathnames.default.homePage)} sx={{ my: 2, mx: 2, color: 'white' }}>
-                        Go to Home
+                        Home
                     </Button>
                     <Button onClick={() => navigate(Pathnames.admin.listUsers)} sx={{ my: 2, mx: 2, color: 'white' }}>
-                        List Persons
+                        List Users
                     </Button>
                     <Button onClick={() => navigate(Pathnames.admin.createUser)} sx={{ my: 2, mx: 2, color: 'white' }}>
-                        Create Person
+                        Create User
                     </Button>
                     <Button onClick={() => navigate(Pathnames.admin.login)} sx={{ my: 2, mx: 2, color: 'white' }}>
                         LogIn User
+                    </Button>
+                    <Button onClick={() => navigate(Pathnames.user.listVMachines)} sx={{ my: 2, mx: 2, color: 'white' }}>
+                        List Virtual Machines
                     </Button>
                 </Toolbar>
             </AppBar>

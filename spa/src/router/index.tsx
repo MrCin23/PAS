@@ -1,5 +1,5 @@
 import {Route, Routes} from 'react-router-dom'
-import {defaultRoutes, adminRoutes} from './routes.ts'
+import {defaultRoutes, adminRoutes, userRoutes} from './routes.ts'
 import {DefaultLayout} from "../components/layouts/default";
 
 /** Komponent rutera definiuje możliwe ścieżki (konteksty URL), które prowadzą do określonych widoków (komponentów)
@@ -24,6 +24,14 @@ export const RoutesComponent = () => {
                 />
             ))}
             {adminRoutes.map(({path, Component}) => (
+                <Route key={path} path={path} element={
+                    <DefaultLayout>
+                        <Component />
+                    </DefaultLayout>
+                }
+                />
+            ))}
+            {userRoutes.map(({path, Component}) => (
                 <Route key={path} path={path} element={
                     <DefaultLayout>
                         <Component />

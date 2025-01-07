@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './styles.css';
 
@@ -28,8 +28,38 @@ interface User {
 
 export const ListUsers = () => {
     const [clients, setUsers] = useState<User[]>([]);
+    const [username, setUsername] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
+
+
+    const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const newUsername = e.target.value;
+        setUsername(newUsername);
+
+        try {
+            if (newUsername === '') {
+                // Jeśli pole jest puste, pobierz wszystkich użytkowników
+                const response = await axios.get<User[]>('/api/client');
+                setUsers(response.data);
+                setError(null); // Usunięcie ewentualnego komunikatu błędu
+            } else {
+                // Wyszukiwanie użytkownika
+                const response = await axios.get<User[]>(`/api/client/findClients/${newUsername}`);
+                if (response.data.length === 0) {
+                    setError(`Nie znaleziono użytkownika o nazwie "${newUsername}".`);
+                    setUsers([]); // Opróżnienie listy użytkowników
+                } else {
+                    setUsers(response.data);
+                    setError(null); // Usunięcie ewentualnego komunikatu błędu
+                }
+            }
+        } catch (err) {
+            setError('Wystąpił błąd podczas wyszukiwania użytkownika. Spróbuj ponownie później.');
+            setUsers([]); // Opróżnienie listy użytkowników w przypadku błędu
+        }
+    };
+
 
     useEffect(() => {
         const fetchUsers = async () => {
@@ -42,16 +72,25 @@ export const ListUsers = () => {
                 setLoading(false);
             }
         };
-
         fetchUsers();
     }, []);
 
     if (loading) return <div>Ładowanie...</div>;
-    if (error) return <div>{error}</div>;
+    // if (error) return <div>{error}</div>;
 
     return (
         <div>
             <h1>Lista Klientów</h1>
+                {/*<label htmlFor="username">Search by username</label><br/>*/}
+                <input
+                    type="text"
+                    id="username"
+                    name="username"
+                    placeholder={"Search by username"}
+                    value={username}
+                    onChange={handleChange}
+                />
+            {error && <div className="error">{error}</div>}
             <table>
                 <thead>
                 <tr>
