@@ -1,6 +1,9 @@
 import {Route, Routes} from 'react-router-dom'
-import {defaultRoutes, adminRoutes, userRoutes} from './routes.ts'
+import {defaultRoutes, adminRoutes, userRoutes, moderatorRoutes} from './routes.ts'
 import {DefaultLayout} from "../components/layouts/default";
+import {ClientLayout} from "../components/layouts/client";
+import {AdminLayout} from "../components/layouts/admin";
+import {ModeratorLayout} from "../components/layouts/moderator";
 
 /** Komponent rutera definiuje możliwe ścieżki (konteksty URL), które prowadzą do określonych widoków (komponentów)
  * Używana jest do tego mapa łącząca ścieżkę z komponentem.
@@ -25,17 +28,25 @@ export const RoutesComponent = () => {
             ))}
             {adminRoutes.map(({path, Component}) => (
                 <Route key={path} path={path} element={
-                    <DefaultLayout>
+                    <AdminLayout>
                         <Component />
-                    </DefaultLayout>
+                    </AdminLayout>
                 }
                 />
             ))}
             {userRoutes.map(({path, Component}) => (
                 <Route key={path} path={path} element={
-                    <DefaultLayout>
+                    <ClientLayout>
                         <Component />
-                    </DefaultLayout>
+                    </ClientLayout>
+                }
+                />
+            ))}
+            {moderatorRoutes.map(({path, Component}) => (
+                <Route key={path} path={path} element={
+                    <ModeratorLayout>
+                        <Component />
+                    </ModeratorLayout>
                 }
                 />
             ))}

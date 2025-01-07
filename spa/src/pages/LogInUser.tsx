@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import './styles.css';
-import { useUserSession } from '../model/UserContext';
+import {useUserSession } from '../model/UserContext';
+import { useNavigate } from 'react-router-dom';
+import {Pathnames} from "../router/pathnames.ts";
 /**
  * To na tę chwilę zastępuje nam logowanie się Użytkownika. Po prostu podajemy username i szukamy kogoś o takim username.
  */
@@ -33,6 +35,7 @@ export const LogInUser = () => {
     const [userData, setUserData] = useState<User | null>(null);
     const [error, setError] = useState<string | null>(null);
     const {setCurrentUser} = useUserSession();
+    const navigate = useNavigate();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setUsername(e.target.value);
@@ -50,6 +53,15 @@ export const LogInUser = () => {
             setUserData(response.data);
             setCurrentUser(response.data);
             setError(null);
+            if(response.data != null) {
+                if (response.data.role === "CLIENT") {
+                    navigate(Pathnames.user.homePage);
+                } else if (response.data.role === "ADMIN") {
+                    navigate(Pathnames.admin.homePage);
+                } else if (response.data.role === "RESOURCE_MANAGER") {
+                    navigate(Pathnames.moderator.homePage);
+                }
+            }
         } catch (err) {
             console.error(err);
             setError('User not found or an error occurred.');

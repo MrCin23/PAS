@@ -91,9 +91,6 @@ export const ListVMachines = () => {
                         <td>{vMachine.ramSize}</td>
                         <td>{vMachine.cpunumber}</td>
                         <td>{vMachine.cpumanufacturer}</td>
-                        <td>{vMachine.isRented ? "Wypożyczona" : "Wolna"}</td>
-                        <td>{vMachine.actualRentalPrice}</td>
-                        {/*TODO prawdopodobnie trzeba zrobić dwa niemal identyczne widoki tutaj, ale jeden jest z przyciskiem usuń, a drugi z przyciskiem wypożycz*/}
                         <td>
                             {vMachine.isRented ? (
                                 <span>Wypożyczona</span>
@@ -105,6 +102,8 @@ export const ListVMachines = () => {
                                 </button>
                             )}
                         </td>
+                        <td>{vMachine.actualRentalPrice}</td>
+                        {/*TODO prawdopodobnie trzeba zrobić dwa niemal identyczne widoki tutaj, ale jeden jest z przyciskiem usuń, a drugi z przyciskiem wypożycz*/}
                     </tr>
                 ))}
                 </tbody>

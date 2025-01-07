@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import {useNavigate} from "react-router-dom";
+import { v4 as uuidv4 } from 'uuid';
+
 
 
 enum Role {
@@ -9,11 +11,16 @@ enum Role {
     client = "CLIENT",
 }
 
+interface EntityId {
+    uuid: string;
+}
+
 interface ClientType {
     _clazz: "standard" | "premium";
 }
 
 interface FormData {
+    entityId: EntityId;
     firstName: string;
     surname: string;
     username: string;
@@ -26,6 +33,7 @@ interface FormData {
 export const CreateUser = () => { //export const CreateUser: React.FC = () => {
     const navigate = useNavigate();
     const [formData, setFormData] = useState<FormData>({
+        entityId: { uuid: uuidv4() },
         firstName: '',
         surname: '',
         username: '',
@@ -79,6 +87,7 @@ export const CreateUser = () => { //export const CreateUser: React.FC = () => {
             await axios.post('/api/client', formData);
             setNotification('User registered successfully!');
             setFormData({
+                entityId: { uuid: uuidv4() },
                 firstName: '',
                 surname: '',
                 username: '',

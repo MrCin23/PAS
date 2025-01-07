@@ -1,31 +1,36 @@
-
 import { AppBar, Button, Container, Toolbar } from '@mui/material'
 import { ReactNode } from 'react'
 import { Pathnames } from '../../../router/pathnames'
 import { useNavigate } from 'react-router-dom'
 import {FadingAlertComponent} from "../../alert/FadingAlert";
+import { useUserSession } from '../../../model/UserContext';
 
 interface LayoutProps {
     children: ReactNode
 }
 
-export const DefaultLayout = ({ children }: LayoutProps) => {
-    // Udostępnia funkcję pozwalającą na zmianę widoku na inny, zgodnie z określoną ścieżką (pathname)
+export const AdminLayout = ({ children }: LayoutProps) => {
+    // Klient ma dostęp do home, swojego profilu, listy maszyn, swoich wypożyczeń
     const navigate = useNavigate()
-
+    const { clearUser } = useUserSession();
 
     return (
         <div>
             <AppBar position="static">
                 <Toolbar sx={{ display: 'flex'}}>
-                    <Button onClick={() => navigate(Pathnames.default.homePage)} sx={{ my: 2, mx: 2, color: 'white' }}>
+                    <Button onClick={() => navigate(Pathnames.admin.homePage)} sx={{ my: 2, mx: 2, color: 'white' }}>
                         Home
                     </Button>
-                    <Button onClick={() => navigate(Pathnames.default.createUser)} sx={{ my: 2, mx: 2, color: 'white' }}>
-                        Register
+                    <Button onClick={() => navigate(Pathnames.admin.listUsers)} sx={{ my: 2, mx: 2, color: 'white' }}>
+                        List Users
                     </Button>
-                    <Button onClick={() => navigate(Pathnames.default.login)} sx={{ my: 2, mx: 2, color: 'white' }}>
-                        Log In
+                    <Button onClick={() => navigate(Pathnames.admin.userProfile)} sx={{ my: 2, mx: 2, color: 'white' }}>
+                        Profile
+                    </Button>
+                    <Button onClick={() => {
+                        clearUser();
+                        navigate(Pathnames.default.homePage)}} sx={{ my: 2, mx: 2, color: 'white' }}>
+                        Log out
                     </Button>
                 </Toolbar>
             </AppBar>

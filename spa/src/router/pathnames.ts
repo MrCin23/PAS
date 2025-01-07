@@ -4,20 +4,26 @@ export const Pathnames = {
     anonymous: {
     },
     user: {
-        listVMachines: '/vmachine/list',
-        userProfile: '/user/profile',
+        homePage: '/user',
+        listVMachines: '/user/vmachine/list',
+        userProfile: '/user/profile'
     },
     admin: {
-        listUsers: '/listUsers',
-        createUser: '/register',
-        login: '/login',
+        homePage: '/admin',
+        listUsers: '/admin/listUsers',
+        userProfile: '/admin/profile'
     },
-    //
-    // moderator: {
-    //   createVMachine: '/vmachine/create',
-    // },
+
+    moderator: {
+        homePage: '/moderator',
+        userProfile: '/moderator/profile',
+        createVMachine: '/moderator/vmachine/create',
+        listVMachines: '/moderator/vmachine/list',
+    },
 
     default: {
         homePage: '/',
+        login: '/login',
+        createUser: '/register'
     }
 }

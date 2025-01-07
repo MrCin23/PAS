@@ -1,0 +1,50 @@
+import { AppBar, Button, Container, Toolbar } from '@mui/material'
+import { ReactNode } from 'react'
+import { Pathnames } from '../../../router/pathnames'
+import { useNavigate } from 'react-router-dom'
+import {FadingAlertComponent} from "../../alert/FadingAlert";
+import { useUserSession } from '../../../model/UserContext';
+
+interface LayoutProps {
+    children: ReactNode
+}
+
+export const ModeratorLayout = ({ children }: LayoutProps) => {
+    // Klient ma dostęp do home, swojego profilu, listy maszyn, swoich wypożyczeń
+    const navigate = useNavigate()
+    const { clearUser } = useUserSession();
+
+    return (
+        <div>
+            <AppBar position="static">
+                <Toolbar sx={{ display: 'flex'}}>
+                    <Button onClick={() => navigate(Pathnames.moderator.homePage)} sx={{ my: 2, mx: 2, color: 'white' }}>
+                        Home
+                    </Button>
+                    <Button onClick={() => navigate(Pathnames.moderator.createVMachine)} sx={{ my: 2, mx: 2, color: 'white' }}>
+                        Create Virtual Machine
+                    </Button>
+                    <Button onClick={() => navigate(Pathnames.moderator.listVMachines)} sx={{ my: 2, mx: 2, color: 'white' }}>
+                        List Virtual Machines
+                    </Button>
+                    <Button onClick={() => navigate(Pathnames.moderator.userProfile)} sx={{ my: 2, mx: 2, color: 'white' }}>
+                        Profile
+                    </Button>
+                    <Button onClick={() => {
+                        clearUser();
+                        navigate(Pathnames.default.homePage)}} sx={{ my: 2, mx: 2, color: 'white' }}>
+                        Log out
+                    </Button>
+                </Toolbar>
+            </AppBar>
+            <div style={{ position: "fixed", overflow: "visible", width: "inherit" }}>
+                <FadingAlertComponent />
+                {/*<p>error</p>*/}
+                {/*TODO to correct*/}
+            </div>
+            <Container sx={{ p: 2 }}>
+                {children}
+            </Container>
+        </div>
+    )
+}
