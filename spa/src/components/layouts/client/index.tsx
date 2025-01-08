@@ -24,6 +24,9 @@ export const ClientLayout = ({ children }: LayoutProps) => {
                     <Button onClick={() => navigate(Pathnames.user.listVMachines)} sx={{ my: 2, mx: 2, color: 'white' }}>
                         List Virtual Machines
                     </Button>
+                    <Button onClick={() => navigate(Pathnames.user.myRents)} sx={{ my: 2, mx: 2, color: 'white' }}>
+                        Rents
+                    </Button>
                     <Button onClick={() => navigate(Pathnames.user.userProfile)} sx={{ my: 2, mx: 2, color: 'white' }}>
                         Profile
                     </Button>

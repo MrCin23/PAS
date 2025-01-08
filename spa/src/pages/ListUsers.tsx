@@ -60,6 +60,26 @@ export const ListUsers = () => {
         }
     };
 
+    const activate = async (activate: boolean, entityId: string) => {
+        try {
+            if(activate) {
+                await axios.put(`/api/client/activate/${entityId}`);
+                alert(`Klient o ID ${entityId} aktywowany!`);
+            }
+            else {
+                await axios.put(`/api/client/deactivate/${entityId}`);
+                alert(`Klient o ID ${entityId} deaktywowany!`);
+            }
+            setUsers((prev) =>
+                prev.map((user) =>
+                    user.entityId.uuid === entityId ? { ...user, active: activate } : user
+                )
+            );
+        } catch (err) {
+            console.error("Błąd przy deaktywowaniu użytkownika:", err);
+            alert("Nie udało się deaktywować użytkownika. Spróbuj ponownie później.");
+        }
+    };
 
     useEffect(() => {
         const fetchUsers = async () => {
@@ -100,6 +120,7 @@ export const ListUsers = () => {
                     <th>Adres e-mail</th>
                     <th>Rola</th>
                     <th>Typ klienta</th>
+                    <th></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -111,6 +132,21 @@ export const ListUsers = () => {
                         <td>{client.emailAddress}</td>
                         <td>{client.role}</td>
                         <td>{client.clientType.name}</td>
+                        <td>
+                            {client.active ? (
+                                <button
+                                    onClick={() => activate(false, client.entityId.uuid)}
+                                >
+                                    Deaktywuj
+                                </button>
+                            ) : (
+                                <button
+                                    onClick={() => activate(true, client.entityId.uuid)}
+                                >
+                                    Aktywuj
+                                </button>
+                            )}
+                        </td>
                     </tr>
                 ))}
                 </tbody>

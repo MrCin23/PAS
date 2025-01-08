@@ -1,6 +1,8 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './styles.css';
 import { useUserSession } from '../model/UserContext';
+import { useNavigate } from 'react-router-dom';
+import {Pathnames} from "../router/pathnames.ts";
 
 interface EntityId {
     uuid: string;
@@ -13,13 +15,19 @@ interface ClientType {
     name: string;
 }
 
+enum Role {
+    admin = "ADMIN",
+    moderator = "MODERATOR",
+    client = "CLIENT",
+}
+
 interface User {
     entityId: EntityId;
     firstName: string;
     surname: string;
     username: string;
     emailAddress: string;
-    role: string;
+    role: Role;
     active: boolean;
     clientType: ClientType;
     currentRents: number;
@@ -28,6 +36,32 @@ interface User {
 export const UserProfile = () => {
     const [userData, setUserData] = useState<User | null>(null);
     const { currentUser } = useUserSession();
+    const navigate = useNavigate();
+
+    const handleNavigate = () => {
+        if (!currentUser) {
+            console.error("Użytkownik nie jest zalogowany.");
+            return;
+        }
+
+        let path;
+        switch (currentUser.role) {
+            case "ADMIN":
+                path = Pathnames.admin.editProfile;
+                break;
+            case "RESOURCE_MANAGER":
+                path = Pathnames.moderator.editProfile;
+                break;
+            case "CLIENT":
+                path = Pathnames.user.editProfile;
+                break;
+            default:
+                console.error("Nieznana rola użytkownika:", currentUser.role);
+                return;
+        }
+
+        navigate(path);
+    };
 
     useEffect(() => {
         // Ustaw dane użytkownika w stanie tylko wtedy, gdy użytkownik jest zalogowany i aktywny.
@@ -66,6 +100,13 @@ export const UserProfile = () => {
                     </p>
                     <p>
                         <strong>Current Rents:</strong> {userData.currentRents}
+                    </p>
+                    <p>
+                        <button
+                            onClick={() => handleNavigate()}
+                        >
+                            Edit Profile
+                        </button>
                     </p>
                 </div>
             )}

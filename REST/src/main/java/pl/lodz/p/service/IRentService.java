@@ -19,6 +19,8 @@ public interface IRentService {
 
     Rent getRent(UUID id);
 
+    List<Rent> getClientAllRents(UUID uuid);
+
     List<Rent> getClientActiveRents(UUID uuid);
 
     List<Rent> getClientArchivedRents(UUID uuid);

@@ -7,6 +7,8 @@ import {LogInUser} from "../pages/LogInUser";
 import {ListVMachines} from "../pages/ListVMachines.tsx";
 import {UserProfile} from "../pages/Profile.tsx";
 import {CreateVMachine} from "../pages/CreateVMachine.tsx";
+import {MyRents} from "../pages/MyRents.tsx";
+import {EditProfile} from "../pages/EditProfile.tsx";
 
 /** Definiuje pseudo-mapy - tablice par ścieżka (kontekst URL) - komponent
  * Takie mapy są wykorzystywane przez mechanizm rutera, aby zdefiniować nawigację między widokami
@@ -44,6 +46,10 @@ export const adminRoutes: RouteType[] = [
     {
         path: Pathnames.admin.userProfile,
         Component: UserProfile,
+    },
+    {
+        path: Pathnames.admin.editProfile,
+        Component: EditProfile,
     }
 
 ]
@@ -60,6 +66,14 @@ export const userRoutes: RouteType[] = [
     {
         path: Pathnames.user.userProfile,
         Component: UserProfile,
+    },
+    {
+        path: Pathnames.user.myRents,
+        Component: MyRents,
+    },
+    {
+        path: Pathnames.user.editProfile,
+        Component: EditProfile,
     }
 ]
 
@@ -79,6 +93,10 @@ export const moderatorRoutes: RouteType[] = [
     {
         path: Pathnames.moderator.listVMachines,
         Component: ListVMachines,
+    },
+    {
+        path: Pathnames.moderator.editProfile,
+        Component: EditProfile,
     }
 ]
 

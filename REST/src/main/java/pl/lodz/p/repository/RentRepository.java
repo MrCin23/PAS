@@ -63,10 +63,10 @@ public class RentRepository extends AbstractMongoRepository {
             Bson update = Updates.inc("isRented", -1);
             vMachines.updateOne(session, filter, update);
 
-            Bson filter2 = Filters.eq("_id", rent.getClient().getEntityId().getUuid().toString());
+            Bson filter2 = Filters.eq("_id", rent.getClient().getEntityId().getUuid());
             Bson update2 = Updates.inc("currentRents", -1);
             vMachines.updateOne(session, filter2, update2);
-
+            clients.updateOne(session, filter2, update2);
             session.commitTransaction();
         } catch (MongoCommandException ex) {
             session.abortTransaction();
@@ -120,6 +120,11 @@ public class RentRepository extends AbstractMongoRepository {
 
     public List<Rent> getRents(boolean active) {
         return rents.find().into(new ArrayList<>());
+    }
+
+    public List<Rent> getClientRents(MongoUUID clientId) {
+        Bson filter1 = Filters.eq("client._id", clientId.getUuid());
+        return rents.find(filter1).into(new ArrayList<>());
     }
 
     public List<Rent> getClientRents(MongoUUID clientId, boolean active) {

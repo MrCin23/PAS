@@ -6,12 +6,15 @@ export const Pathnames = {
     user: {
         homePage: '/user',
         listVMachines: '/user/vmachine/list',
-        userProfile: '/user/profile'
+        userProfile: '/user/profile',
+        myRents: '/user/rents',
+        editProfile: '/user/edit',
     },
     admin: {
         homePage: '/admin',
         listUsers: '/admin/listUsers',
-        userProfile: '/admin/profile'
+        userProfile: '/admin/profile',
+        editProfile: '/admin/edit',
     },
 
     moderator: {
@@ -19,6 +22,7 @@ export const Pathnames = {
         userProfile: '/moderator/profile',
         createVMachine: '/moderator/vmachine/create',
         listVMachines: '/moderator/vmachine/list',
+        editProfile: '/moderator/edit',
     },
 
     default: {

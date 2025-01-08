@@ -100,18 +100,34 @@ public class RentController {
     }
 
     @PutMapping("/end/{uuid}")//not tested
-    public ResponseEntity<Object> endRent(@PathVariable("uuid") UuidDTO uuid, @Valid @RequestBody EndRentDTO endTimeDTO, BindingResult bindingResult) {
+    public ResponseEntity<Object> endRent(@PathVariable("uuid") UuidDTO uuid) { //, @Valid @RequestBody EndRentDTO endTimeDTO, BindingResult bindingResult
         try {
             try{
-                rentService.endRent(uuid.uuid(), endTimeDTO.getEndTime());
+                LocalDateTime endDate = LocalDateTime.now();
+                rentService.endRent(uuid.uuid(), endDate); //endTimeDTO.getEndTime()
             } catch (RuntimeException ex) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(bindingResult.getAllErrors() + ex.getMessage());
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
             }
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
         }
 
+    }
+
+    @GetMapping("/all/client/{uuid}")//not tested
+    public ResponseEntity<Object> getClientAllRents(@PathVariable("uuid") UuidDTO uuid){
+        try {
+            List<Rent> rents;
+            try {
+                rents = rentService.getClientAllRents(uuid.uuid());
+            } catch (RuntimeException ex) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No rents found");
+            }
+            return ResponseEntity.status(HttpStatus.OK).body(rents);
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
+        }
     }
 
     @GetMapping("/active/client/{uuid}")//not tested

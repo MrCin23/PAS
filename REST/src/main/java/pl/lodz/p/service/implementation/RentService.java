@@ -80,6 +80,15 @@ public class RentService implements IRentService {
     }
 
     @Override
+    public List<Rent> getClientAllRents(UUID uuid) {
+        List<Rent> allRents = repo.getClientRents(new MongoUUID(uuid));
+        if(allRents == null || allRents.isEmpty()) {
+            throw new RuntimeException("Client with UUID:" + uuid + " does not have any rents");
+        }
+        return allRents;
+    }
+
+    @Override
     public List<Rent> getClientActiveRents(UUID uuid) {
         List<Rent> activeRents = repo.getClientRents(new MongoUUID(uuid),true);
         if(activeRents == null || activeRents.isEmpty()) {

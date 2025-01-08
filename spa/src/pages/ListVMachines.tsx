@@ -19,7 +19,7 @@ interface VMachine {
 interface Rent{
     clientId: string;
     vmId: string;
-    beginTime: Date;
+    beginTime: string;
 }
 
 export const ListVMachines = () => {
@@ -37,10 +37,11 @@ export const ListVMachines = () => {
         const rent: Rent = {
             clientId: currentUser.entityId.uuid, // Użyj ID aktualnego użytkownika
             vmId,
-            beginTime: new Date(), // Ustaw aktualny czas
+            beginTime: new Date().toUTCString(), // Ustaw aktualny czas
         };
 
         try {
+            console.log(rent);
             await axios.post('/api/rent', rent);
             alert(`Maszyna o ID ${vmId} została wypożyczona!`);
             setvMachines((prev) =>
@@ -51,6 +52,21 @@ export const ListVMachines = () => {
         } catch (err) {
             console.error("Błąd przy wypożyczaniu maszyny:", err);
             alert("Nie udało się wypożyczyć maszyny. Spróbuj ponownie później.");
+        }
+    };
+
+    const deleteVMachine = async (vmId: string) => {
+        try {
+            await axios.delete(`/api/vmachine/${vmId}`);
+            alert(`Maszyna o ID ${vmId} została usunięta!`);
+            setvMachines((prev) =>
+                prev.map((vm) =>
+                    vm.entityId.uuid === vmId ? { ...vm, isRented: true } : vm
+                )
+            );
+        } catch (err) {
+            console.error("Błąd przy usuwaniu maszyny:", err);
+            alert("Nie udało się usunąć maszyny. Spróbuj ponownie później.");
         }
     };
 
@@ -72,42 +88,91 @@ export const ListVMachines = () => {
     if(loading) return <div>Ładowanie...</div>;
     if (error) return <div>{error}</div>;
 
-    return (
-        <div>
-            <h1>Lista maszyn wirtualnych</h1>
-            <table>
-                <thead>
-                <tr>
-                    <th>RAM</th>
-                    <th>Ilość jednostek przetwarzających</th>
-                    <th>Producent procesora</th>
-                    <th>Status</th>
-                    <th>Cena</th>
-                </tr>
-                </thead>
-                <tbody>
-                {vMachines.map((vMachine) => (
-                    <tr key={vMachine.entityId.uuid}>
-                        <td>{vMachine.ramSize}</td>
-                        <td>{vMachine.cpunumber}</td>
-                        <td>{vMachine.cpumanufacturer}</td>
-                        <td>
-                            {vMachine.isRented ? (
-                                <span>Wypożyczona</span>
-                            ) : (
-                                <button
-                                    onClick={() => handleRent(vMachine.entityId.uuid)}
-                                >
-                                    Wypożycz
-                                </button>
-                            )}
-                        </td>
-                        <td>{vMachine.actualRentalPrice}</td>
-                        {/*TODO prawdopodobnie trzeba zrobić dwa niemal identyczne widoki tutaj, ale jeden jest z przyciskiem usuń, a drugi z przyciskiem wypożycz*/}
+    if(currentUser == null) return <div>Musisz być zalogowany, aby móc przeglądać tą zawartość</div> //TODO można dorobić tutaj coś takiego jak przekierowanie na stronę główną, a to wyświetlać jako alert
+
+    if(currentUser.role == "ADMIN") {
+        return <div>Nie masz uprawnień do przeglądania tej witryny!</div>
+    }
+
+    if(currentUser.role == "RESOURCE_MANAGER") {
+        return (
+            <div>
+                <h1>Lista maszyn wirtualnych</h1>
+                <table>
+                    <thead>
+                    <tr>
+                        <th>RAM</th>
+                        <th>Ilość jednostek przetwarzających</th>
+                        <th>Producent procesora</th>
+                        <th>Status</th>
+                        <th>Cena</th>
                     </tr>
-                ))}
-                </tbody>
-            </table>
-        </div>
-    )
+                    </thead>
+                    <tbody>
+                    {vMachines.map((vMachine) => (
+                        <tr key={vMachine.entityId.uuid}>
+                            <td>{vMachine.ramSize}</td>
+                            <td>{vMachine.cpunumber}</td>
+                            <td>{vMachine.cpumanufacturer}</td>
+                            <td>
+                                {vMachine.isRented ? (
+                                    <span>Wypożyczona</span>
+                                ) : (
+                                    <button
+                                        onClick={() => deleteVMachine(vMachine.entityId.uuid)}
+                                    >
+                                        Usuń
+                                    </button>
+                                )}
+                            </td>
+                            <td>{vMachine.actualRentalPrice}</td>
+                        </tr>
+                    ))}
+                    </tbody>
+                </table>
+            </div>
+        )
+    }
+
+    if(currentUser.role == "CLIENT") {
+        return (
+            <div>
+                <h1>Lista maszyn wirtualnych</h1>
+                <table>
+                    <thead>
+                    <tr>
+                        <th>RAM</th>
+                        <th>Ilość jednostek przetwarzających</th>
+                        <th>Producent procesora</th>
+                        <th>Status</th>
+                        <th>Cena</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {vMachines.map((vMachine) => (
+                        <tr key={vMachine.entityId.uuid}>
+                            <td>{vMachine.ramSize}</td>
+                            <td>{vMachine.cpunumber}</td>
+                            <td>{vMachine.cpumanufacturer}</td>
+                            <td>
+                                {vMachine.isRented ? (
+                                    <span>Wypożyczona</span>
+                                ) : (
+                                    <button
+                                        onClick={() => handleRent(vMachine.entityId.uuid)}
+                                    >
+                                        Wypożycz
+                                    </button>
+                                )}
+                            </td>
+                            <td>{vMachine.actualRentalPrice}</td>
+                        </tr>
+                    ))}
+                    </tbody>
+                </table>
+            </div>
+        )
+    }
+
+    return <div>xDDD</div>
 }
