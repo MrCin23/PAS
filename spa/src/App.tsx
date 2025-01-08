@@ -49,6 +49,12 @@ import {UserProvider} from "./model/UserContext.tsx";
 
 export const App = () => (
     // Dostarcza komponentom aplikacji kontekst, który umożliwia pokazywanie okna alertu
+    // TODO edycja danych usera przez niego samego
+    // TODO usuwanie maszyn wirtualnych przez moderatora
+    // TODO podgląd wypożyczeń przez admina/moderatora (klikasz w Usera i widzisz jego wypożyczenia)
+    // TODO tworzenie administratorów i moderatorów
+    // TODO podgląd wypożyczeń przez usera (kończenie wypożyczeń)
+    // TODO aktywacja/deaktywacja użytkownika
     <UserProvider>
         {/*Test czy to działa*/}
         <FadingAlertContextProvider>
