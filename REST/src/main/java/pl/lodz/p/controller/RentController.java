@@ -105,7 +105,7 @@ public class RentController {
             try{
                 LocalDateTime endDate = LocalDateTime.now();
                 rentService.endRent(uuid.uuid(), endDate); //endTimeDTO.getEndTime()
-            } catch (RuntimeException ex) {
+            } catch (RuntimeException ex) { 
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
             }
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

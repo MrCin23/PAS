@@ -19,10 +19,11 @@ import java.util.UUID;
 @Setter
 @Getter
 @NoArgsConstructor
-@BsonDiscriminator("Client")
+@BsonDiscriminator(value="Client", key="_clazz")
 public class Client extends User{
     @BsonProperty("clientType")
     private ClientType clientType;
+    @Min(0)
     @BsonProperty("currentRents")
     private int currentRents;
 

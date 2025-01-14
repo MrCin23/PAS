@@ -43,6 +43,17 @@ interface Rent {
     rentCost: number;
 }
 
+function convertToDate(input: Date | Array<number>): Date {
+    if (input instanceof Date) {
+        return input;
+    } else if (Array.isArray(input)) {
+        const [year, month, day, hour = 0, minute = 0, second = 0, nanoseconds = 0] = input;
+        const milliseconds = nanoseconds / 1e6;
+        return new Date(year, month - 1, day, hour, minute, second, milliseconds);
+    } else {
+        throw new TypeError("Input must be a Date or an array of numbers.");
+    }
+}
 // interface EndRentForms {
 //     endTime: string;
 // }
@@ -57,7 +68,11 @@ export const MyRents = () => {
             if(currentUser != null) {
                 try {
                     const response = await axios.get<Rent[]>(`/api/rent/all/client/${currentUser.entityId.uuid}`);
-                    setRents(response.data);
+                    setRents(response.data.map(rent => ({ //here
+                        ...rent,
+                        beginTime: convertToDate(rent.beginTime),
+                        endTime: rent.endTime ? convertToDate(rent.endTime) : null,
+                    })));
                 } catch (error) {
                     console.error('Error fetching rents:', error);
                 }
@@ -68,6 +83,11 @@ export const MyRents = () => {
     }, [currentUser]);
 
     const handleEndRent = async (rentId: string) => {
+        const confirmRent = window.confirm(
+            `Czy na pewno chcesz zakończyć wypożyczenie o ID ${rentId}?`
+        );
+
+        if (!confirmRent) return;
         // const endTime: EndRentForms = {
         //     endTime: new Date().toISOString(),
         // };
@@ -82,7 +102,7 @@ export const MyRents = () => {
             console.error('Error ending rent:', error);
         }
     };
-    
+
     if(currentUser == null) return <div>Musisz być zalogowany aby przeglądać tę witrynę!</div>;
 
     return (

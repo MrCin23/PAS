@@ -27,7 +27,7 @@
     <mvc:annotation-driven validator="validator" />
     <bean id="restTemplate" class="org.springframework.web.client.RestTemplate" />
     <bean id="vMachineManager" class="pl.lodz.p.manager.VMachineManager" />
-    <bean id="clientManager" class="pl.lodz.p.manager.ClientManager" />
+    <bean id="clientManager" class="pl.lodz.p.manager.UserManager" />
     <bean id="rentManager" class="pl.lodz.p.manager.RentManager" />
     <bean id="dataInitializer" class="pl.lodz.p.DataInitializer" init-method="init">
         <property name="clientMan" ref="clientManager"/>

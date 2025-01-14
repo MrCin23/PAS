@@ -1,5 +1,7 @@
 package pl.lodz.p.model.user;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -11,12 +13,23 @@ import org.bson.codecs.pojo.annotations.BsonCreator;
 import org.bson.codecs.pojo.annotations.BsonDiscriminator;
 import org.bson.codecs.pojo.annotations.BsonProperty;
 import pl.lodz.p.model.AbstractEntityMgd;
+import pl.lodz.p.model.AppleArch;
 import pl.lodz.p.model.MongoUUID;
+import pl.lodz.p.model.x86;
 
 @Getter
 @Setter
 @NoArgsConstructor
-@BsonDiscriminator("User")
+@BsonDiscriminator(value="User", key="_clazz")
+@JsonTypeInfo(
+        use = JsonTypeInfo.Id.NAME,
+        property = "_clazz"
+)
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = Client.class, name = "Client"),
+        @JsonSubTypes.Type(value = Admin.class, name = "Admin"),
+        @JsonSubTypes.Type(value = ResourceManager.class, name = "ResourceManager")
+})
 public abstract class User extends AbstractEntityMgd {
     @BsonProperty("firstName")
     @NotBlank(message = "First name cannot be blank")

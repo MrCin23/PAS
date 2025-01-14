@@ -1,5 +1,11 @@
 import React, { createContext, useContext, useState } from 'react';
 
+enum Role {
+    admin = "ADMIN",
+    resourcemanager = "RESOURCE_MANAGER",
+    client = "CLIENT",
+}
+
 interface EntityId {
     uuid: string;
 }
@@ -17,12 +23,11 @@ interface User {
     surname: string;
     username: string;
     emailAddress: string;
-    role: string;
+    role: Role; // Use the Role enum here
     active: boolean;
-    clientType: ClientType;
-    currentRents: number;
+    clientType: ClientType | null; // Align with ModelUserProfile's nullable type
+    currentRents: number | null;  // Align with ModelUserProfile's nullable type
 }
-
 
 const UserContext = createContext<{
     currentUser: User | null;
@@ -52,7 +57,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     );
 };
 
-// Hook do ułatwienia dostępu do kontekstu
+// Hook for easier access to the context
 export const useUserSession = () => {
     return useContext(UserContext);
 };

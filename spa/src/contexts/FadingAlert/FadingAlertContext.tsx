@@ -16,7 +16,7 @@ interface FadingAlertSharedState {
 
 // Początkowy stan kontekstu to obiekt domyślnych właściwości alertu (w ten sposób jest on początkowo niewidoczny) oraz niezdefiniowana funkcja
 // Kontekst udostępniany subkomponentom i tak zostanie ustawiony odrębnie przez FadingAlertContextProvider
-const fadingAlertContext = createContext<FadingAlertSharedState>({alertProps:defaultAlertProps, setAlertProps:(newProps)=>{}});
+const fadingAlertContext = createContext<FadingAlertSharedState>({alertProps:defaultAlertProps, setAlertProps:(newProps)=>{console.log(newProps)}});
 
 interface ProviderChildren {
     children: ReactNode

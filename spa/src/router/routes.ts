@@ -50,8 +50,11 @@ export const adminRoutes: RouteType[] = [
     {
         path: Pathnames.admin.editProfile,
         Component: EditProfile,
+    },
+    {
+        path: Pathnames.admin.createUser,
+        Component: CreateUser,
     }
-
 ]
 
 export const userRoutes: RouteType[] = [

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './styles.css';
 
-
 interface EntityId {
     uuid: string;
 }
@@ -14,6 +13,24 @@ interface ClientType {
     name: string;
 }
 
+
+interface VMachine {
+    entityId: EntityId;
+    ramSize: string;
+    isRented: boolean;
+    actualRentalPrice: number;
+    cpunumber: number;
+    cpumanufacturer: string | null;
+}
+
+interface Rent {
+    entityId: EntityId;
+    client: User;
+    vmachine: VMachine;
+    beginTime: Date;
+    endTime: Date | null;
+    rentCost: number;
+}
 interface User {
     entityId: EntityId;
     firstName: string;
@@ -22,16 +39,30 @@ interface User {
     emailAddress: string;
     role: string;
     active: boolean;
-    clientType: ClientType;
-    currentRents: number;
+    clientType: ClientType | undefined | null;
+    currentRents: number | undefined | null;
 }
+
+function convertToDate(input: Date | Array<number>): Date {
+    if (input instanceof Date) {
+        return input;
+    } else if (Array.isArray(input)) {
+        const [year, month, day, hour = 0, minute = 0, second = 0, nanoseconds = 0] = input;
+        const milliseconds = nanoseconds / 1e6;
+        return new Date(year, month - 1, day, hour, minute, second, milliseconds);
+    } else {
+        throw new TypeError("Input must be a Date or an array of numbers.");
+    }
+}
+
 
 export const ListUsers = () => {
     const [clients, setUsers] = useState<User[]>([]);
     const [username, setUsername] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
-
+    const [rents, setRents] = useState<Rent[] | null>(null);
+    const [currentUser, setCurrentUser] = useState<User | null>(null);
 
     const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const newUsername = e.target.value;
@@ -39,34 +70,31 @@ export const ListUsers = () => {
 
         try {
             if (newUsername === '') {
-                // Jeśli pole jest puste, pobierz wszystkich użytkowników
                 const response = await axios.get<User[]>('/api/client');
                 setUsers(response.data);
-                setError(null); // Usunięcie ewentualnego komunikatu błędu
+                setError(null);
             } else {
-                // Wyszukiwanie użytkownika
                 const response = await axios.get<User[]>(`/api/client/findClients/${newUsername}`);
                 if (response.data.length === 0) {
                     setError(`Nie znaleziono użytkownika o nazwie "${newUsername}".`);
-                    setUsers([]); // Opróżnienie listy użytkowników
+                    setUsers([]);
                 } else {
                     setUsers(response.data);
-                    setError(null); // Usunięcie ewentualnego komunikatu błędu
+                    setError(null);
                 }
             }
         } catch (err) {
-            setError('Wystąpił błąd podczas wyszukiwania użytkownika. Spróbuj ponownie później.');
-            setUsers([]); // Opróżnienie listy użytkowników w przypadku błędu
+            setError(`Wystąpił błąd podczas wyszukiwania użytkownika ${err}. Spróbuj ponownie później.`);
+            setUsers([]);
         }
     };
 
     const activate = async (activate: boolean, entityId: string) => {
         try {
-            if(activate) {
+            if (activate) {
                 await axios.put(`/api/client/activate/${entityId}`);
                 alert(`Klient o ID ${entityId} aktywowany!`);
-            }
-            else {
+            } else {
                 await axios.put(`/api/client/deactivate/${entityId}`);
                 alert(`Klient o ID ${entityId} deaktywowany!`);
             }
@@ -79,6 +107,27 @@ export const ListUsers = () => {
             console.error("Błąd przy deaktywowaniu użytkownika:", err);
             alert("Nie udało się deaktywować użytkownika. Spróbuj ponownie później.");
         }
+    };
+
+    const fetchRents = async (user: User) => {
+        try {
+            const response = await axios.get<Rent[]>(`/api/rent/all/client/${user.entityId.uuid}`);
+
+            setRents(response.data.map(rent => ({ //here
+                ...rent,
+                beginTime: convertToDate(rent.beginTime),
+                endTime: rent.endTime ? convertToDate(rent.endTime) : null,
+            })));
+            console.log(response.data)
+            setCurrentUser(user);
+        } catch (err) {
+            alert(`Nie udało się pobrać listy wypożyczeń ${err}. Spróbuj ponownie później.`);
+        }
+    };
+
+    const closeRentsModal = () => {
+        setRents(null);
+        setCurrentUser(null);
     };
 
     useEffect(() => {
@@ -96,20 +145,18 @@ export const ListUsers = () => {
     }, []);
 
     if (loading) return <div>Ładowanie...</div>;
-    // if (error) return <div>{error}</div>;
 
     return (
         <div>
             <h1>Lista Klientów</h1>
-                {/*<label htmlFor="username">Search by username</label><br/>*/}
-                <input
-                    type="text"
-                    id="username"
-                    name="username"
-                    placeholder={"Search by username"}
-                    value={username}
-                    onChange={handleChange}
-                />
+            <input
+                type="text"
+                id="username"
+                name="username"
+                placeholder="Search by username"
+                value={username}
+                onChange={handleChange}
+            />
             {error && <div className="error">{error}</div>}
             <table>
                 <thead>
@@ -121,6 +168,7 @@ export const ListUsers = () => {
                     <th>Rola</th>
                     <th>Typ klienta</th>
                     <th></th>
+                    <th>Wypożyczenia</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -131,28 +179,59 @@ export const ListUsers = () => {
                         <td>{client.username}</td>
                         <td>{client.emailAddress}</td>
                         <td>{client.role}</td>
-                        <td>{client.clientType.name}</td>
+                        <td>{client.clientType?.name}</td>
                         <td>
                             {client.active ? (
-                                <button
-                                    onClick={() => activate(false, client.entityId.uuid)}
-                                >
+                                <button onClick={() => activate(false, client.entityId.uuid)}>
                                     Deaktywuj
                                 </button>
                             ) : (
-                                <button
-                                    onClick={() => activate(true, client.entityId.uuid)}
-                                >
+                                <button onClick={() => activate(true, client.entityId.uuid)}>
                                     Aktywuj
                                 </button>
                             )}
+                        </td>
+                        <td>
+                            <button onClick={() => fetchRents(client)}>Pokaż wypożyczenia</button>
                         </td>
                     </tr>
                 ))}
                 </tbody>
             </table>
+            {rents && (
+                <div className="rents-modal">
+                    <div className="rents-modal-content">
+                        <button className="close-btn" onClick={closeRentsModal}>
+                            X
+                        </button>
+                        <h2>Wypożyczenia klienta {currentUser?.firstName} {currentUser?.surname}</h2>
+                        <table>
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Maszyna</th>
+                                <th>RAM Size</th>
+                                <th>CPU</th>
+                                <th>Data rozpoczęcia</th>
+                                <th>Data zakończenia</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {rents.map((rent) => (
+                                <tr key={rent.entityId.uuid}>
+                                    <td>{rent.entityId.uuid}</td>
+                                    <td>{rent.vmachine.entityId.uuid}</td>
+                                    <td>{rent.vmachine.ramSize}</td>
+                                    <td>{`${rent.vmachine.cpunumber} - ${rent.vmachine.cpumanufacturer || 'Apple Arch'}`}</td>
+                                    <td>{new Date(rent.beginTime).toLocaleString()}</td>
+                                    <td>{rent.endTime ? new Date(rent.endTime).toLocaleString() : 'Active'}</td>
+                                </tr>
+                            ))}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
-
-// export default ListUsers;

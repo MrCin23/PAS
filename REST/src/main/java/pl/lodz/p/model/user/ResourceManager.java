@@ -7,7 +7,7 @@ import pl.lodz.p.model.MongoUUID;
 import java.util.UUID;
 
 @NoArgsConstructor
-@BsonDiscriminator("ResourceManager")
+@BsonDiscriminator(value="ResourceManager", key="_clazz")
 public class ResourceManager extends User{
     public ResourceManager(String firstName, String surname, String username, String emailAddress) {
         super(new MongoUUID(UUID.randomUUID()), firstName, username, surname, emailAddress, Role.RESOURCE_MANAGER, true);

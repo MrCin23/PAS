@@ -33,7 +33,11 @@ export const ListVMachines = () => {
             alert("Musisz być zalogowany, aby wypożyczyć maszynę!");
             return;
         }
+        const confirmRent = window.confirm(
+            `Czy na pewno chcesz wypożyczyć maszynę o ID ${vmId}?`
+        );
 
+        if (!confirmRent) return;
         const rent: Rent = {
             clientId: currentUser.entityId.uuid, // Użyj ID aktualnego użytkownika
             vmId,
@@ -56,6 +60,10 @@ export const ListVMachines = () => {
     };
 
     const deleteVMachine = async (vmId: string) => {
+        const confirmDeletion = window.confirm(
+            `Czy na pewno chcesz usunąć maszynę o ID ${vmId}?`
+        );
+        if (!confirmDeletion) return;
         try {
             await axios.delete(`/api/vmachine/${vmId}`);
             alert(`Maszyna o ID ${vmId} została usunięta!`);

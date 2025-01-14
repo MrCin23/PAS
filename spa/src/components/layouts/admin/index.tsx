@@ -27,6 +27,9 @@ export const AdminLayout = ({ children }: LayoutProps) => {
                     <Button onClick={() => navigate(Pathnames.admin.userProfile)} sx={{ my: 2, mx: 2, color: 'white' }}>
                         Profile
                     </Button>
+                    <Button onClick={() => navigate(Pathnames.admin.createUser)} sx={{ my: 2, mx: 2, color: 'white' }}>
+                        Create user
+                    </Button>
                     <Button onClick={() => {
                         clearUser();
                         navigate(Pathnames.default.homePage)}} sx={{ my: 2, mx: 2, color: 'white' }}>

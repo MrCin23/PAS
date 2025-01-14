@@ -10,6 +10,7 @@ import org.bson.conversions.Bson;
 import org.springframework.stereotype.Repository;
 import pl.lodz.p.model.*;
 import pl.lodz.p.model.user.Client;
+import pl.lodz.p.model.user.User;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -20,7 +21,7 @@ import java.util.Map;
 public class RentRepository extends AbstractMongoRepository {
     private final MongoCollection<Rent> rents;
     private final MongoCollection<VMachine> vMachines;
-    private final MongoCollection<Client> clients;
+    private final MongoCollection<User> clients;
 
     public RentRepository() {
         super.initDbConnection();
@@ -35,7 +36,7 @@ public class RentRepository extends AbstractMongoRepository {
 
         this.rents = this.getDatabase().getCollection("rents", Rent.class);
         this.vMachines = this.getDatabase().getCollection("vMachines", VMachine.class);
-        this.clients = this.getDatabase().getCollection("clients", Client.class);
+        this.clients = this.getDatabase().getCollection("users", User.class);
     }
 
     public void endRent(MongoUUID uuid, LocalDateTime endTime){
@@ -81,7 +82,7 @@ public class RentRepository extends AbstractMongoRepository {
 
     public void add(Rent rent) {
         ClientSession session = getMongoClient().startSession();
-        Client client;
+        User client;
         try {
             session.startTransaction();
 //            VMachine vm = getVMachineById(rent.getVMachine().getEntityId().getUuid());

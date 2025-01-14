@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import './styles.css';
 import { useUserSession } from '../model/UserContext';
 import { useNavigate } from 'react-router-dom';
@@ -17,7 +17,7 @@ interface ClientType {
 
 enum Role {
     admin = "ADMIN",
-    moderator = "MODERATOR",
+    resourcemanager = "RESOURCE_MANAGER",
     client = "CLIENT",
 }
 
@@ -29,12 +29,12 @@ interface User {
     emailAddress: string;
     role: Role;
     active: boolean;
-    clientType: ClientType;
-    currentRents: number;
+    clientType: ClientType | undefined | null;
+    currentRents: number | undefined | null;
 }
 
 export const UserProfile = () => {
-    const [userData, setUserData] = useState<User | null>(null);
+    const [ModelUserData, setModelUserData] = useState<User | null>(null);
     const { currentUser } = useUserSession();
     const navigate = useNavigate();
 
@@ -66,40 +66,40 @@ export const UserProfile = () => {
     useEffect(() => {
         // Ustaw dane użytkownika w stanie tylko wtedy, gdy użytkownik jest zalogowany i aktywny.
         if (currentUser && currentUser.active) {
-            setUserData(currentUser);
+            setModelUserData(currentUser);
         }
     }, [currentUser]);
 
     if (currentUser == null) {
-        return <div>User not logged</div>;
+        return <div>ModelUser not logged</div>;
     }
 
     if (!currentUser.active) {
-        return <div>User deactivated</div>;
+        return <div>ModelUser deactivated</div>;
     }
 
     return (
         <div className="container">
-            {userData && (
-                <div className="user-details">
-                    <h3>User Details:</h3>
+            {ModelUserData && (
+                <div className="ModelUser-details">
+                    <h3>ModelUser Details:</h3>
                     <p>
-                        <strong>First Name:</strong> {userData.firstName}
+                        <strong>First Name:</strong> {ModelUserData.firstName}
                     </p>
                     <p>
-                        <strong>Surname:</strong> {userData.surname}
+                        <strong>Surname:</strong> {ModelUserData.surname}
                     </p>
                     <p>
-                        <strong>Email:</strong> {userData.emailAddress}
+                        <strong>Email:</strong> {ModelUserData.emailAddress}
                     </p>
                     <p>
-                        <strong>Role:</strong> {userData.role}
+                        <strong>Role:</strong> {ModelUserData.role}
                     </p>
                     <p>
-                        <strong>Client Type:</strong> {userData.clientType._clazz}
+                        <strong>Client Type:</strong> {ModelUserData.clientType?._clazz}
                     </p>
                     <p>
-                        <strong>Current Rents:</strong> {userData.currentRents}
+                        <strong>Current Rents:</strong> {ModelUserData.currentRents}
                     </p>
                     <p>
                         <button

@@ -4,13 +4,11 @@ import com.mongodb.client.model.IndexOptions;
 import lombok.Getter;
 import lombok.Setter;
 import org.bson.Document;
-import pl.lodz.p.manager.ClientManager;
+import pl.lodz.p.manager.UserManager;
 import pl.lodz.p.manager.RentManager;
 import pl.lodz.p.manager.VMachineManager;
 import pl.lodz.p.model.*;
-import pl.lodz.p.model.user.Premium;
-import pl.lodz.p.model.user.Client;
-import pl.lodz.p.model.user.Standard;
+import pl.lodz.p.model.user.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -19,10 +17,10 @@ import java.util.List;
 @Getter
 @Setter
 public class DataInitializer {
-    private ClientManager clientMan = ClientManager.getInstance();
+    private UserManager clientMan = UserManager.getInstance();
     private RentManager rentMan = RentManager.getInstance();
     private VMachineManager vmMan = VMachineManager.getInstance();
-    List<Client> clients = new ArrayList<>();
+    List<User> clients = new ArrayList<>();
     List<Rent> rents = new ArrayList<>();
     List<VMachine> vms = new ArrayList<>();
     public void init(){
@@ -35,9 +33,9 @@ public class DataInitializer {
     }
 
     public void dropAndCreateClient(){
-        clientMan.getClientsRepository().getDatabase().getCollection("clients").drop();
-        clientMan.getClientsRepository().getDatabase().createCollection("clients");
-        clientMan.getClientsRepository().getDatabase().getCollection("clients").createIndex(
+        clientMan.getClientsRepository().getDatabase().getCollection("users").drop();
+        clientMan.getClientsRepository().getDatabase().createCollection("users");
+        clientMan.getClientsRepository().getDatabase().getCollection("users").createIndex(
                 new Document("username", 1),
                 new IndexOptions().unique(true)
         );
@@ -50,10 +48,10 @@ public class DataInitializer {
 
     public void dropAndCreateRent(){
         rentMan.getRentRepository().getDatabase().getCollection("rents").drop();
-        rentMan.getRentRepository().getDatabase().getCollection("clients").drop();
+        rentMan.getRentRepository().getDatabase().getCollection("users").drop();
         rentMan.getRentRepository().getDatabase().getCollection("vMachines").drop();
         rentMan.getRentRepository().getDatabase().createCollection("vMachines");
-        rentMan.getRentRepository().getDatabase().createCollection("clients");
+        rentMan.getRentRepository().getDatabase().createCollection("users");
         rentMan.getRentRepository().getDatabase().createCollection("rents");
     }
 
@@ -63,11 +61,15 @@ public class DataInitializer {
         clients.add(new Client("Matthew", "Tar", "MTar", "MTar@TarVSCorrugated.com", new Premium()));
         clients.add(new Client("Martin", "Bricky", "Brickman", "IntelEnjoyer@whatisonpage4035.com", new Standard()));
         clients.add(new Client("Juan", "Escobar", "JEscobar", "JEscobar@colombianSnow.com", new Standard()));
+        clients.add(new Admin("John Paul", "II", "jp2gmd", "kremowki@barka.va"));
+        clients.add(new ResourceManager("Frank", "Pepper", "pepper", "zgon@delta.p.lodz.pl"));
         clientMan.registerExistingClient(clients.get(0));
         clientMan.registerExistingClient(clients.get(1));
         clientMan.registerExistingClient(clients.get(2));
         clientMan.registerExistingClient(clients.get(3));
         clientMan.registerExistingClient(clients.get(4));
+        clientMan.registerExistingClient(clients.get(5));
+        clientMan.registerExistingClient(clients.get(6));
     }
 
 
@@ -87,11 +89,11 @@ public class DataInitializer {
     }
 
     public void initRent(){
-        rents.add(new Rent(clients.get(0), vms.get(0), LocalDateTime.of(2024,11,21,21,37)));
-        rents.add(new Rent(clients.get(0), vms.get(2), LocalDateTime.of(2024,10,26,21,37)));
-        rents.add(new Rent(clients.get(3), vms.get(3), LocalDateTime.of(2023,10,26,21,37)));
-        rents.add(new Rent(clients.get(4), vms.get(1), LocalDateTime.of(2023,11,11,11,11)));
-        rents.add(new Rent(clients.get(1), vms.get(4), LocalDateTime.of(2011,11,11,11,11)));
+        rents.add(new Rent((Client)clients.get(0), vms.get(0), LocalDateTime.of(2024,11,21,21,37)));
+        rents.add(new Rent((Client)clients.get(0), vms.get(2), LocalDateTime.of(2024,10,26,21,37)));
+        rents.add(new Rent((Client)clients.get(3), vms.get(3), LocalDateTime.of(2023,10,26,21,37)));
+        rents.add(new Rent((Client)clients.get(4), vms.get(1), LocalDateTime.of(2023,11,11,11,11)));
+        rents.add(new Rent((Client)clients.get(1), vms.get(4), LocalDateTime.of(2011,11,11,11,11)));
         rentMan.registerExistingRent(rents.get(0));
         rentMan.registerExistingRent(rents.get(1));
         rentMan.registerExistingRent(rents.get(2));

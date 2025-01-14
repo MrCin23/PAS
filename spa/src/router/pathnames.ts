@@ -15,6 +15,7 @@ export const Pathnames = {
         listUsers: '/admin/listUsers',
         userProfile: '/admin/profile',
         editProfile: '/admin/edit',
+        createUser: '/admin/create',
     },
 
     moderator: {

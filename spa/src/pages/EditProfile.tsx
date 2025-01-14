@@ -14,13 +14,19 @@ interface ClientType {
     name: string;
 }
 
+enum Role {
+    admin = "ADMIN",
+    resourcemanager = "RESOURCE_MANAGER",
+    client = "CLIENT",
+}
+
 interface User {
     entityId: EntityId;
     firstName: string;
     surname: string;
     username: string;
     emailAddress: string;
-    role: string;
+    role: Role;
     active: boolean;
     clientType: ClientType;
     currentRents: number;
@@ -52,7 +58,7 @@ export const EditProfile = () => {
                 });
                 setLoading(false);
             } catch (err) {
-                setError("Nie udało się pobrać danych użytkownika.");
+                setError(`Nie udało się pobrać danych użytkownika ${err}.`);
                 setLoading(false);
             }
         };

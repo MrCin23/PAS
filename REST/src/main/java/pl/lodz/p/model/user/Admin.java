@@ -7,7 +7,7 @@ import pl.lodz.p.model.MongoUUID;
 import java.util.UUID;
 
 @NoArgsConstructor
-@BsonDiscriminator("Admin")
+@BsonDiscriminator(value="Admin", key="_clazz")
 public class Admin extends User{
     public Admin(String firstName, String surname, String username, String emailAddress) {
         super(new MongoUUID(UUID.randomUUID()), firstName, username, surname, emailAddress, Role.ADMIN, true);
