@@ -32,7 +32,7 @@ interface User {
     emailAddress: string;
     role: Role;
     active: boolean;
-    clientType: ClientType;
+    clientType: ClientType | null;
     currentRents: number;
 }
 
@@ -55,7 +55,14 @@ export const LogInUser = () => {
         }
 
         try {
-            const response = await axios.get<User>(`/api/client/findClient/${username}`);
+            const response = await axios.get<User>(
+                `https://flounder-sunny-goldfish.ngrok-free.app/REST/api/client/findClient/${username}`,
+                {
+                    headers: {
+                        'ngrok-skip-browser-warning': '69420'
+                    }
+                }
+            );
             setUserData(response.data);
             setCurrentUser(response.data);
             setError(null);
@@ -98,7 +105,7 @@ export const LogInUser = () => {
                     <p><strong>Surname:</strong> {userData.surname}</p>
                     <p><strong>Email:</strong> {userData.emailAddress}</p>
                     <p><strong>Role:</strong> {userData.role}</p>
-                    <p><strong>Client Type:</strong> {userData.clientType._clazz}</p>
+                    <p><strong>Client Type:</strong> {userData.clientType?._clazz}</p>
                     <p><strong>Active:</strong> {userData.active ? 'Yes' : 'No'}</p>
                     <p><strong>Current Rents:</strong> {userData.currentRents}</p>
                 </div>

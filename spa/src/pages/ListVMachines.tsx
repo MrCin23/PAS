@@ -46,7 +46,12 @@ export const ListVMachines = () => {
 
         try {
             console.log(rent);
-            await axios.post('/api/rent', rent);
+            await axios.post('https://flounder-sunny-goldfish.ngrok-free.app/REST/api/rent', rent,
+                {
+                    headers: {
+                        'ngrok-skip-browser-warning': '69420'
+                    }
+                });
             alert(`Maszyna o ID ${vmId} została wypożyczona!`);
             setvMachines((prev) =>
                 prev.map((vm) =>
@@ -65,12 +70,15 @@ export const ListVMachines = () => {
         );
         if (!confirmDeletion) return;
         try {
-            await axios.delete(`/api/vmachine/${vmId}`);
+            await axios.delete(`https://flounder-sunny-goldfish.ngrok-free.app/REST/api/vmachine/${vmId}`,
+                {
+                    headers: {
+                        'ngrok-skip-browser-warning': '69420'
+                    }
+                });
             alert(`Maszyna o ID ${vmId} została usunięta!`);
             setvMachines((prev) =>
-                prev.map((vm) =>
-                    vm.entityId.uuid === vmId ? { ...vm, isRented: true } : vm
-                )
+                prev.filter((vm) => vm.entityId.uuid !== vmId)
             );
         } catch (err) {
             console.error("Błąd przy usuwaniu maszyny:", err);
@@ -81,7 +89,12 @@ export const ListVMachines = () => {
     useEffect(() => {
         const fetchVMachines = async () => {
             try {
-                const response = await axios.get<VMachine[]>('/api/vmachine');
+                const response = await axios.get<VMachine[]>('https://flounder-sunny-goldfish.ngrok-free.app/REST/api/vmachine',
+                    {
+                        headers: {
+                            'ngrok-skip-browser-warning': '69420'
+                        }
+                    });
                 setvMachines(response.data);
                 setLoading(false);
             } catch (err) {
@@ -184,3 +197,4 @@ export const ListVMachines = () => {
 
     return <div>xDDD</div>
 }
+

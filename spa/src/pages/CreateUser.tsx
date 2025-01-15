@@ -103,7 +103,12 @@ export const CreateUser = () => { //export const CreateUser: React.FC = () => {
 
         try {
             console.log(formData);
-            await axios.post('/api/client', formData);
+            await axios.post('https://flounder-sunny-goldfish.ngrok-free.app/REST/api/client', formData,
+                {
+                    headers: {
+                        'ngrok-skip-browser-warning': '69420'
+                    }
+                });
             setNotification('User registered successfully!');
             setFormData({
                 _clazz: 'Client',

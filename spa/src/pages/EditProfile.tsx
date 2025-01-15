@@ -49,7 +49,12 @@ export const EditProfile = () => {
             if (!currentUser) return;
 
             try {
-                const response = await axios.get<User>(`/api/client/${currentUser.entityId.uuid}`);
+                const response = await axios.get<User>(`https://flounder-sunny-goldfish.ngrok-free.app/REST/api/client/${currentUser.entityId.uuid}`,
+                    {
+                        headers: {
+                            'ngrok-skip-browser-warning': '69420'
+                        }
+                    });
                 setUserData(response.data);
                 setFormData({
                     firstName: response.data.firstName,
@@ -80,9 +85,19 @@ export const EditProfile = () => {
         }
 
         try {
-            await axios.put(`/api/client/${currentUser.entityId.uuid}`, formData);
+            await axios.put(`https://flounder-sunny-goldfish.ngrok-free.app/REST/api/client/${currentUser.entityId.uuid}`, formData,
+                {
+                    headers: {
+                        'ngrok-skip-browser-warning': '69420'
+                    }
+                });
             alert("Dane zostały zaktualizowane!");
-            const response = await axios.get<User>(`/api/client/${currentUser.entityId.uuid}`)
+            const response = await axios.get<User>(`https://flounder-sunny-goldfish.ngrok-free.app/REST/api/client/${currentUser.entityId.uuid}`,
+                {
+                    headers: {
+                        'ngrok-skip-browser-warning': '69420'
+                    }
+                })
             setCurrentUser(response.data);
         } catch (err) {
             console.error("Błąd przy aktualizacji danych:", err);

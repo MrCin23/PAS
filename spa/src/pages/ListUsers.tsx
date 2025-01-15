@@ -70,11 +70,21 @@ export const ListUsers = () => {
 
         try {
             if (newUsername === '') {
-                const response = await axios.get<User[]>('/api/client');
+                const response = await axios.get<User[]>('https://flounder-sunny-goldfish.ngrok-free.app/REST/api/client',
+                    {
+                        headers: {
+                            'ngrok-skip-browser-warning': '69420'
+                        }
+                    });
                 setUsers(response.data);
                 setError(null);
             } else {
-                const response = await axios.get<User[]>(`/api/client/findClients/${newUsername}`);
+                const response = await axios.get<User[]>(`https://flounder-sunny-goldfish.ngrok-free.app/REST/api/client/findClients/${newUsername}`,
+                    {
+                        headers: {
+                            'ngrok-skip-browser-warning': '69420'
+                        }
+                    });
                 if (response.data.length === 0) {
                     setError(`Nie znaleziono użytkownika o nazwie "${newUsername}".`);
                     setUsers([]);
@@ -92,10 +102,20 @@ export const ListUsers = () => {
     const activate = async (activate: boolean, entityId: string) => {
         try {
             if (activate) {
-                await axios.put(`/api/client/activate/${entityId}`);
+                await axios.put(`https://flounder-sunny-goldfish.ngrok-free.app/REST/api/client/activate/${entityId}`,
+                    {
+                        headers: {
+                            'ngrok-skip-browser-warning': '69420'
+                        }
+                    });
                 alert(`Klient o ID ${entityId} aktywowany!`);
             } else {
-                await axios.put(`/api/client/deactivate/${entityId}`);
+                await axios.put(`https://flounder-sunny-goldfish.ngrok-free.app/REST/api/client/deactivate/${entityId}`,
+                    {
+                        headers: {
+                            'ngrok-skip-browser-warning': '69420'
+                        }
+                    });
                 alert(`Klient o ID ${entityId} deaktywowany!`);
             }
             setUsers((prev) =>
@@ -111,7 +131,12 @@ export const ListUsers = () => {
 
     const fetchRents = async (user: User) => {
         try {
-            const response = await axios.get<Rent[]>(`/api/rent/all/client/${user.entityId.uuid}`);
+            const response = await axios.get<Rent[]>(`https://flounder-sunny-goldfish.ngrok-free.app/REST/api/rent/all/client/${user.entityId.uuid}`,
+                {
+                    headers: {
+                        'ngrok-skip-browser-warning': '69420'
+                    }
+                });
 
             setRents(response.data.map(rent => ({ //here
                 ...rent,
@@ -133,7 +158,12 @@ export const ListUsers = () => {
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-                const response = await axios.get<User[]>('/api/client');
+                const response = await axios.get<User[]>('https://flounder-sunny-goldfish.ngrok-free.app/REST/api/client',
+                    {
+                        headers: {
+                            'ngrok-skip-browser-warning': '69420'
+                        }
+                    });
                 setUsers(response.data);
                 setLoading(false);
             } catch (err) {
