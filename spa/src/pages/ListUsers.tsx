@@ -102,6 +102,10 @@ export const ListUsers = () => {
     const activate = async (activate: boolean, entityId: string) => {
         try {
             if (activate) {
+                const confirmation = window.confirm(
+                    `Czy na pewno chcesz aktywować użytkownika o ID ${entityId}?`
+                );
+                if (!confirmation) return;
                 await axios.put(`https://flounder-sunny-goldfish.ngrok-free.app/REST/api/client/activate/${entityId}`,
                     {
                         headers: {
@@ -110,6 +114,10 @@ export const ListUsers = () => {
                     });
                 alert(`Klient o ID ${entityId} aktywowany!`);
             } else {
+                const confirmation = window.confirm(
+                    `Czy na pewno chcesz dezaktywować użytkownika o ID ${entityId}?`
+                );
+                if (!confirmation) return;
                 await axios.put(`https://flounder-sunny-goldfish.ngrok-free.app/REST/api/client/deactivate/${entityId}`,
                     {
                         headers: {

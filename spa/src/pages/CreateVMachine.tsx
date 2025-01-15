@@ -79,7 +79,10 @@ export const CreateVMachine = () => {
             setNotification('There are errors in the form.');
             return;
         }
-
+        const confirmation = window.confirm(
+            `Czy na pewno chcesz zarejestrować maszynę wirtualną?`
+        );
+        if (!confirmation) return;
         // Połącz ilość RAM i jednostkę
         const ramSize = `${ramAmount}${ramUnit}`;
         const payload = { ...formData, ramSize };

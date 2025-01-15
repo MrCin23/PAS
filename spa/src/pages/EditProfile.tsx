@@ -83,7 +83,10 @@ export const EditProfile = () => {
             alert("Musisz być zalogowany, aby edytować swój profil.");
             return;
         }
-
+        const confirmation = window.confirm(
+            `Czy na pewno chcesz zmienić dane?`
+        );
+        if (!confirmation) return;
         try {
             await axios.put(`https://flounder-sunny-goldfish.ngrok-free.app/REST/api/client/${currentUser.entityId.uuid}`, formData,
                 {

@@ -66,7 +66,6 @@ export const CreateUser = () => { //export const CreateUser: React.FC = () => {
         } else if (!emailRegex.test(formData.emailAddress)) {
             errors.emailAddress = 'Invalid email address';
         }
-
         setFormErrors(errors);
         return Object.keys(errors).length === 0;
     };
@@ -100,7 +99,10 @@ export const CreateUser = () => { //export const CreateUser: React.FC = () => {
             setNotification('There are errors in the form.');
             return;
         }
-
+        const confirmation = window.confirm(
+            `Czy na pewno chcesz utworzyć użytkownika?`
+        );
+        if (!confirmation) return;
         try {
             console.log(formData);
             await axios.post('https://flounder-sunny-goldfish.ngrok-free.app/REST/api/client', formData,

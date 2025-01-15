@@ -91,7 +91,6 @@ export const MyRents = () => {
         const confirmRent = window.confirm(
             `Czy na pewno chcesz zakończyć wypożyczenie o ID ${rentId}?`
         );
-
         if (!confirmRent) return;
         // const endTime: EndRentForms = {
         //     endTime: new Date().toISOString(),
