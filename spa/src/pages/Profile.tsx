@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import './styles.css';
+// import './styles.css';
 import { useUserSession } from '../model/UserContext';
 import { useNavigate } from 'react-router-dom';
-import {Pathnames} from "../router/pathnames.ts";
+import { Pathnames } from "../router/pathnames.ts";
 
 interface EntityId {
     uuid: string;
@@ -71,43 +71,46 @@ export const UserProfile = () => {
     }, [currentUser]);
 
     if (currentUser == null) {
-        return <div>ModelUser not logged</div>;
+        return <div className="text-center text-white mt-5">ModelUser not logged</div>;
     }
 
     if (!currentUser.active) {
-        return <div>ModelUser deactivated</div>;
+        return <div className="text-center text-white mt-5">ModelUser deactivated</div>;
     }
 
     return (
-        <div className="container">
+        <div className="container py-5">
             {ModelUserData && (
-                <div className="ModelUser-details">
-                    <h3>ModelUser Details:</h3>
-                    <p>
-                        <strong>First Name:</strong> {ModelUserData.firstName}
-                    </p>
-                    <p>
-                        <strong>Surname:</strong> {ModelUserData.surname}
-                    </p>
-                    <p>
-                        <strong>Email:</strong> {ModelUserData.emailAddress}
-                    </p>
-                    <p>
-                        <strong>Role:</strong> {ModelUserData.role}
-                    </p>
-                    <p>
-                        <strong>Client Type:</strong> {ModelUserData.clientType?._clazz}
-                    </p>
-                    <p>
-                        <strong>Current Rents:</strong> {ModelUserData.currentRents}
-                    </p>
-                    <p>
+                <div className="card bg-dark text-light p-4">
+                    <h3 className="card-title text-center mb-4">ModelUser Details</h3>
+                    <div className="list-group">
+                        <p className="list-group-item bg-dark text-light">
+                            <strong>First Name:</strong> {ModelUserData.firstName}
+                        </p>
+                        <p className="list-group-item bg-dark text-light">
+                            <strong>Surname:</strong> {ModelUserData.surname}
+                        </p>
+                        <p className="list-group-item bg-dark text-light">
+                            <strong>Email:</strong> {ModelUserData.emailAddress}
+                        </p>
+                        <p className="list-group-item bg-dark text-light">
+                            <strong>Role:</strong> {ModelUserData.role}
+                        </p>
+                        <p className="list-group-item bg-dark text-light">
+                            <strong>Client Type:</strong> {ModelUserData.clientType?._clazz}
+                        </p>
+                        <p className="list-group-item bg-dark text-light">
+                            <strong>Current Rents:</strong> {ModelUserData.currentRents}
+                        </p>
+                    </div>
+                    <div className="text-center mt-4">
                         <button
+                            className="btn btn-primary btn-lg"
                             onClick={() => handleNavigate()}
                         >
                             Edit Profile
                         </button>
-                    </p>
+                    </div>
                 </div>
             )}
         </div>

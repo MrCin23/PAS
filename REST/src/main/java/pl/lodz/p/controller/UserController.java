@@ -19,6 +19,8 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/client")
 @Validated
+//@CrossOrigin(origins = {"http://localhost", "https://localhost", "https://flounder-sunny-goldfish.ngrok-free.app", "http://localhost:8080", "http://192.168.1.105", "http://192.168.56.1", "https://192.168.1.105", "https://192.168.56.1"}, allowedHeaders = "*")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class UserController {
 
     private UserService clientServiceImplementation;

@@ -1,8 +1,7 @@
-import { AppBar, Button, Container, Toolbar } from '@mui/material'
 import { ReactNode } from 'react'
 import { Pathnames } from '../../../router/pathnames'
 import { useNavigate } from 'react-router-dom'
-import {FadingAlertComponent} from "../../alert/FadingAlert";
+import { FadingAlertComponent } from "../../alert/FadingAlert";
 import { useUserSession } from '../../../model/UserContext';
 
 interface LayoutProps {
@@ -10,41 +9,92 @@ interface LayoutProps {
 }
 
 export const ModeratorLayout = ({ children }: LayoutProps) => {
-    // Klient ma dostęp do home, swojego profilu, listy maszyn, swoich wypożyczeń
+    // Moderator ma dostęp do home, swojego profilu, listy maszyn, tworzenia maszyn
     const navigate = useNavigate()
     const { clearUser } = useUserSession();
 
     return (
-        <div>
-            <AppBar position="static">
-                <Toolbar sx={{ display: 'flex'}}>
-                    <Button onClick={() => navigate(Pathnames.moderator.homePage)} sx={{ my: 2, mx: 2, color: 'white' }}>
-                        Home
-                    </Button>
-                    <Button onClick={() => navigate(Pathnames.moderator.createVMachine)} sx={{ my: 2, mx: 2, color: 'white' }}>
-                        Create Virtual Machine
-                    </Button>
-                    <Button onClick={() => navigate(Pathnames.moderator.listVMachines)} sx={{ my: 2, mx: 2, color: 'white' }}>
-                        List Virtual Machines
-                    </Button>
-                    <Button onClick={() => navigate(Pathnames.moderator.userProfile)} sx={{ my: 2, mx: 2, color: 'white' }}>
-                        Profile
-                    </Button>
-                    <Button onClick={() => {
-                        clearUser();
-                        navigate(Pathnames.default.homePage)}} sx={{ my: 2, mx: 2, color: 'white' }}>
-                        Log out
-                    </Button>
-                </Toolbar>
-            </AppBar>
+        <div className="bg-dark text-light"> {/* Ciemne tło i jasny tekst */}
+            {/* Pasek nawigacji */}
+            <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+                <div className="container-fluid">
+                    <a
+                        className="navbar-brand"
+                        onClick={() => navigate(Pathnames.moderator.homePage)}
+                        style={{ cursor: 'pointer' }}
+                    >
+                        Moderator Panel
+                    </a>
+                    <button
+                        className="navbar-toggler"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#navbarNav"
+                        aria-controls="navbarNav"
+                        aria-expanded="false"
+                        aria-label="Toggle navigation"
+                    >
+                        <span className="navbar-toggler-icon"></span>
+                    </button>
+                    <div className="collapse navbar-collapse" id="navbarNav">
+                        <ul className="navbar-nav ms-auto">
+                            <li className="nav-item">
+                                <button
+                                    className="btn btn-outline-light mx-2"
+                                    onClick={() => navigate(Pathnames.moderator.homePage)}
+                                >
+                                    Home
+                                </button>
+                            </li>
+                            <li className="nav-item">
+                                <button
+                                    className="btn btn-outline-light mx-2"
+                                    onClick={() => navigate(Pathnames.moderator.createVMachine)}
+                                >
+                                    Create Virtual Machine
+                                </button>
+                            </li>
+                            <li className="nav-item">
+                                <button
+                                    className="btn btn-outline-light mx-2"
+                                    onClick={() => navigate(Pathnames.moderator.listVMachines)}
+                                >
+                                    List Virtual Machines
+                                </button>
+                            </li>
+                            <li className="nav-item">
+                                <button
+                                    className="btn btn-outline-light mx-2"
+                                    onClick={() => navigate(Pathnames.moderator.userProfile)}
+                                >
+                                    Profile
+                                </button>
+                            </li>
+                            <li className="nav-item">
+                                <button
+                                    className="btn btn-outline-light mx-2"
+                                    onClick={() => {
+                                        clearUser();
+                                        navigate(Pathnames.default.homePage);
+                                    }}
+                                >
+                                    Log Out
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+            {/* Alert */}
             <div style={{ position: "fixed", overflow: "visible", width: "inherit" }}>
                 <FadingAlertComponent />
-                {/*<p>error</p>*/}
-                {/*TODO to correct*/}
             </div>
-            <Container sx={{ p: 2 }}>
+
+            {/* Zawartość strony */}
+            <div className="container mt-4">
                 {children}
-            </Container>
+            </div>
         </div>
     )
 }

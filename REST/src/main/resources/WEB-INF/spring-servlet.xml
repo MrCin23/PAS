@@ -34,5 +34,7 @@
         <property name="rentMan" ref="rentManager"/>
         <property name="vmMan" ref="vMachineManager"/>
     </bean>
+    <bean class="pl.lodz.p.WebConfig"/>
+<!--    <bean class="org.springframework.config.java"-->
     <!--<bean id="jacksonDatatype" class="com.fasterxml.jackson.datatype.jsr310.JavaTimeModule"/>-->
 </beans>

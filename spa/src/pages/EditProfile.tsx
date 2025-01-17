@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useUserSession } from '../model/UserContext';
-import axios from "axios";
-import "./styles.css"
+import axios from 'axios';
+import './styles.css';
 
 interface EntityId {
     uuid: string;
@@ -15,9 +15,9 @@ interface ClientType {
 }
 
 enum Role {
-    admin = "ADMIN",
-    resourcemanager = "RESOURCE_MANAGER",
-    client = "CLIENT",
+    admin = 'ADMIN',
+    resourcemanager = 'RESOURCE_MANAGER',
+    client = 'CLIENT',
 }
 
 interface User {
@@ -39,9 +39,9 @@ export const EditProfile = () => {
     const [error, setError] = useState<string | null>(null);
 
     const [formData, setFormData] = useState({
-        firstName: "",
-        surname: "",
-        emailAddress: ""
+        firstName: '',
+        surname: '',
+        emailAddress: '',
     });
 
     useEffect(() => {
@@ -49,17 +49,19 @@ export const EditProfile = () => {
             if (!currentUser) return;
 
             try {
-                const response = await axios.get<User>(`https://flounder-sunny-goldfish.ngrok-free.app/REST/api/client/${currentUser.entityId.uuid}`,
+                const response = await axios.get<User>(
+                    `https://flounder-sunny-goldfish.ngrok-free.app/REST/api/client/${currentUser.entityId.uuid}`,
                     {
                         headers: {
-                            'ngrok-skip-browser-warning': '69420'
-                        }
-                    });
+                            'ngrok-skip-browser-warning': '69420',
+                        },
+                    }
+                );
                 setUserData(response.data);
                 setFormData({
                     firstName: response.data.firstName,
                     surname: response.data.surname,
-                    emailAddress: response.data.emailAddress
+                    emailAddress: response.data.emailAddress,
                 });
                 setLoading(false);
             } catch (err) {
@@ -80,31 +82,34 @@ export const EditProfile = () => {
         e.preventDefault();
 
         if (!currentUser) {
-            alert("Musisz być zalogowany, aby edytować swój profil.");
+            alert('Musisz być zalogowany, aby edytować swój profil.');
             return;
         }
-        const confirmation = window.confirm(
-            `Czy na pewno chcesz zmienić dane?`
-        );
+        const confirmation = window.confirm(`Czy na pewno chcesz zmienić dane?`);
         if (!confirmation) return;
         try {
-            await axios.put(`https://flounder-sunny-goldfish.ngrok-free.app/REST/api/client/${currentUser.entityId.uuid}`, formData,
+            await axios.put(
+                `https://flounder-sunny-goldfish.ngrok-free.app/REST/api/client/${currentUser.entityId.uuid}`,
+                formData,
                 {
                     headers: {
-                        'ngrok-skip-browser-warning': '69420'
-                    }
-                });
-            alert("Dane zostały zaktualizowane!");
-            const response = await axios.get<User>(`https://flounder-sunny-goldfish.ngrok-free.app/REST/api/client/${currentUser.entityId.uuid}`,
+                        'ngrok-skip-browser-warning': '69420',
+                    },
+                }
+            );
+            alert('Dane zostały zaktualizowane!');
+            const response = await axios.get<User>(
+                `https://flounder-sunny-goldfish.ngrok-free.app/REST/api/client/${currentUser.entityId.uuid}`,
                 {
                     headers: {
-                        'ngrok-skip-browser-warning': '69420'
-                    }
-                })
+                        'ngrok-skip-browser-warning': '69420',
+                    },
+                }
+            );
             setCurrentUser(response.data);
         } catch (err) {
-            console.error("Błąd przy aktualizacji danych:", err);
-            alert("Nie udało się zaktualizować danych. Spróbuj ponownie.");
+            console.error('Błąd przy aktualizacji danych:', err);
+            alert('Nie udało się zaktualizować danych. Spróbuj ponownie.');
         }
     };
 
@@ -113,43 +118,54 @@ export const EditProfile = () => {
 
     return (
         <div className="container">
-            <h1 className="title">Edycja profilu</h1>
+            <h1 className="text-center mb-4">Edycja profilu</h1>
             {userData && (
                 <form className="edit-profile-form" onSubmit={handleFormSubmit}>
-                    <div className="form-group">
-                        <label htmlFor="firstName">Imię:</label>
+                    <div className="mb-3">
+                        <label htmlFor="firstName" className="form-label">
+                            Imię:
+                        </label>
                         <input
                             type="text"
                             id="firstName"
                             name="firstName"
                             value={formData.firstName}
                             onChange={handleInputChange}
+                            className="form-control"
                             required
                         />
                     </div>
-                    <div className="form-group">
-                        <label htmlFor="surname">Nazwisko:</label>
+                    <div className="mb-3">
+                        <label htmlFor="surname" className="form-label">
+                            Nazwisko:
+                        </label>
                         <input
                             type="text"
                             id="surname"
                             name="surname"
                             value={formData.surname}
                             onChange={handleInputChange}
+                            className="form-control"
                             required
                         />
                     </div>
-                    <div className="form-group">
-                        <label htmlFor="emailAddress">Adres e-mail:</label>
+                    <div className="mb-3">
+                        <label htmlFor="emailAddress" className="form-label">
+                            Adres e-mail:
+                        </label>
                         <input
                             type="email"
                             id="emailAddress"
                             name="emailAddress"
                             value={formData.emailAddress}
                             onChange={handleInputChange}
+                            className="form-control"
                             required
                         />
                     </div>
-                    <button className="save-button" type="submit">Zapisz zmiany</button>
+                    <button className="btn btn-primary w-100" type="submit">
+                        Zapisz zmiany
+                    </button>
                 </form>
             )}
         </div>

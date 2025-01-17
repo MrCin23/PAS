@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import './styles.css';
+import './styles.css'; // Dołączysz swój plik CSS na później, aby ustawić ciemny motyw
 
 interface EntityId {
     uuid: string;
@@ -12,7 +12,6 @@ interface ClientType {
     maxRentedMachines: number;
     name: string;
 }
-
 
 interface VMachine {
     entityId: EntityId;
@@ -31,6 +30,7 @@ interface Rent {
     endTime: Date | null;
     rentCost: number;
 }
+
 interface User {
     entityId: EntityId;
     firstName: string;
@@ -54,7 +54,6 @@ function convertToDate(input: Date | Array<number>): Date {
         throw new TypeError("Input must be a Date or an array of numbers.");
     }
 }
-
 
 export const ListUsers = () => {
     const [clients, setUsers] = useState<User[]>([]);
@@ -146,7 +145,7 @@ export const ListUsers = () => {
                     }
                 });
 
-            setRents(response.data.map(rent => ({ //here
+            setRents(response.data.map(rent => ({
                 ...rent,
                 beginTime: convertToDate(rent.beginTime),
                 endTime: rent.endTime ? convertToDate(rent.endTime) : null,
@@ -185,88 +184,96 @@ export const ListUsers = () => {
     if (loading) return <div>Ładowanie...</div>;
 
     return (
-        <div>
-            <h1>Lista Klientów</h1>
+        <div className="container mt-4 text-light bg-dark p-4 rounded">
+            <h1 className="mb-4 text-center">Lista Klientów</h1>
             <input
                 type="text"
+                className="form-control mb-4"
                 id="username"
                 name="username"
-                placeholder="Search by username"
+                placeholder="Wyszukaj po nazwie użytkownika"
                 value={username}
                 onChange={handleChange}
             />
-            {error && <div className="error">{error}</div>}
-            <table>
-                <thead>
-                <tr>
-                    <th>Imię</th>
-                    <th>Nazwisko</th>
-                    <th>Nazwa użytkownika</th>
-                    <th>Adres e-mail</th>
-                    <th>Rola</th>
-                    <th>Typ klienta</th>
-                    <th></th>
-                    <th>Wypożyczenia</th>
-                </tr>
-                </thead>
-                <tbody>
-                {clients.map((client) => (
-                    <tr key={client.entityId.uuid}>
-                        <td>{client.firstName}</td>
-                        <td>{client.surname}</td>
-                        <td>{client.username}</td>
-                        <td>{client.emailAddress}</td>
-                        <td>{client.role}</td>
-                        <td>{client.clientType?.name}</td>
-                        <td>
-                            {client.active ? (
-                                <button onClick={() => activate(false, client.entityId.uuid)}>
-                                    Deaktywuj
-                                </button>
-                            ) : (
-                                <button onClick={() => activate(true, client.entityId.uuid)}>
-                                    Aktywuj
-                                </button>
-                            )}
-                        </td>
-                        <td>
-                            <button onClick={() => fetchRents(client)}>Pokaż wypożyczenia</button>
-                        </td>
+            {error && <div className="alert alert-danger">{error}</div>}
+            <div className="table-responsive" style={{ maxHeight: '400px', overflowY: 'auto' }}>
+                <table className="table table-striped table-bordered table-dark">
+                    <thead>
+                    <tr>
+                        <th>Imię</th>
+                        <th>Nazwisko</th>
+                        <th>Nazwa użytkownika</th>
+                        <th>Adres e-mail</th>
+                        <th>Rola</th>
+                        <th>Typ klienta</th>
+                        <th>Aktywacja</th>
+                        <th>Wypożyczenia</th>
                     </tr>
-                ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                    {clients.map((client) => (
+                        <tr key={client.entityId.uuid}>
+                            <td>{client.firstName}</td>
+                            <td>{client.surname}</td>
+                            <td>{client.username}</td>
+                            <td>{client.emailAddress}</td>
+                            <td>{client.role}</td>
+                            <td>{client.clientType?.name}</td>
+                            <td>
+                                {client.active ? (
+                                    <button className="btn btn-danger" onClick={() => activate(false, client.entityId.uuid)}>
+                                        Deaktywuj
+                                    </button>
+                                ) : (
+                                    <button className="btn btn-success" onClick={() => activate(true, client.entityId.uuid)}>
+                                        Aktywuj
+                                    </button>
+                                )}
+                            </td>
+                            <td>
+                                <button className="btn btn-info" onClick={() => fetchRents(client)}>
+                                    Pokaż wypożyczenia
+                                </button>
+                            </td>
+                        </tr>
+                    ))}
+                    </tbody>
+                </table>
+            </div>
+
             {rents && (
-                <div className="rents-modal">
-                    <div className="rents-modal-content">
-                        <button className="close-btn" onClick={closeRentsModal}>
-                            X
-                        </button>
-                        <h2>Wypożyczenia klienta {currentUser?.firstName} {currentUser?.surname}</h2>
-                        <table>
-                            <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Maszyna</th>
-                                <th>RAM Size</th>
-                                <th>CPU</th>
-                                <th>Data rozpoczęcia</th>
-                                <th>Data zakończenia</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {rents.map((rent) => (
-                                <tr key={rent.entityId.uuid}>
-                                    <td>{rent.entityId.uuid}</td>
-                                    <td>{rent.vmachine.entityId.uuid}</td>
-                                    <td>{rent.vmachine.ramSize}</td>
-                                    <td>{`${rent.vmachine.cpunumber} - ${rent.vmachine.cpumanufacturer || 'Apple Arch'}`}</td>
-                                    <td>{new Date(rent.beginTime).toLocaleString()}</td>
-                                    <td>{rent.endTime ? new Date(rent.endTime).toLocaleString() : 'Active'}</td>
-                                </tr>
-                            ))}
-                            </tbody>
-                        </table>
+                <div className="modal d-block">
+                    <div className="modal-dialog">
+                        <div className="modal-content bg-dark text-light">
+                            <div className="modal-header">
+                                <button className="close text-light" onClick={closeRentsModal}>X</button>
+                                <h5 className="modal-title">Wypożyczenia użytkownika {currentUser?.firstName} {currentUser?.surname}</h5>
+                            </div>
+                            <div className="modal-body">
+                                <div className="table-responsive" style={{ maxHeight: '300px', overflowY: 'auto' }}>
+                                    <table className="table table-striped table-dark">
+                                        <thead>
+                                        <tr>
+                                            <th>Maszyna</th>
+                                            <th>Data początkowa</th>
+                                            <th>Data końcowa</th>
+                                            <th>Cena</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {rents.map((rent) => (
+                                            <tr key={rent.entityId.uuid}>
+                                                <td>{rent.vmachine.ramSize} GB</td>
+                                                <td>{rent.beginTime.toLocaleString()}</td>
+                                                <td>{rent.endTime?.toLocaleString() || "Brak"}</td>
+                                                <td>{rent.rentCost}</td>
+                                            </tr>
+                                        ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             )}

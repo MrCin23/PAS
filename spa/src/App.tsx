@@ -4,6 +4,8 @@ import {BrowserRouter as Router} from 'react-router-dom'
 import {RoutesComponent} from "./router";
 import {FadingAlertContextProvider} from "./contexts/FadingAlert/FadingAlertContext.tsx";
 import {UserProvider} from "./model/UserContext.tsx";
+import 'bootstrap/dist/css/bootstrap.min.css'
+import 'bootstrap/dist/js/bootstrap.bundle.min.js'
 
 export const App = () => (
     // Dostarcza komponentom aplikacji kontekst, który umożliwia pokazywanie okna alertu

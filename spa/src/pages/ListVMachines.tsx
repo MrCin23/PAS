@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import './styles.css';
 import { useUserSession } from '../model/UserContext';
+import 'bootstrap/dist/css/bootstrap.min.css'
+import 'bootstrap/dist/js/bootstrap.bundle.min.js'
 
 interface EntityId {
     uuid: string;
@@ -16,7 +18,7 @@ interface VMachine {
     cpumanufacturer: string | null;
 }
 
-interface Rent{
+interface Rent {
     clientId: string;
     vmId: string;
     beginTime: string;
@@ -26,7 +28,7 @@ export const ListVMachines = () => {
     const [vMachines, setvMachines] = useState<VMachine[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
-    const {currentUser} = useUserSession();
+    const { currentUser } = useUserSession();
 
     const handleRent = async (vmId: string) => {
         if (!currentUser) {
@@ -39,9 +41,9 @@ export const ListVMachines = () => {
 
         if (!confirmRent) return;
         const rent: Rent = {
-            clientId: currentUser.entityId.uuid, // Użyj ID aktualnego użytkownika
+            clientId: currentUser.entityId.uuid,
             vmId,
-            beginTime: new Date().toUTCString(), // Ustaw aktualny czas
+            beginTime: new Date().toUTCString(),
         };
 
         try {
@@ -101,25 +103,25 @@ export const ListVMachines = () => {
                 setError("Nie udało się pobrać listy maszyn wirtualnych. Spróbuj ponownie później." + err);
                 setLoading(false);
             }
-        }
+        };
 
         fetchVMachines();
     }, [])
 
-    if(loading) return <div>Ładowanie...</div>;
+    if (loading) return <div>Ładowanie...</div>;
     if (error) return <div>{error}</div>;
 
-    if(currentUser == null) return <div>Musisz być zalogowany, aby móc przeglądać tą zawartość</div> //TODO można dorobić tutaj coś takiego jak przekierowanie na stronę główną, a to wyświetlać jako alert
+    if (currentUser == null) return <div>Musisz być zalogowany, aby móc przeglądać tą zawartość</div>;
 
-    if(currentUser.role == "ADMIN") {
-        return <div>Nie masz uprawnień do przeglądania tej witryny!</div>
+    if (currentUser.role == "ADMIN") {
+        return <div>Nie masz uprawnień do przeglądania tej witryny!</div>;
     }
 
-    if(currentUser.role == "RESOURCE_MANAGER") {
+    if (currentUser.role == "RESOURCE_MANAGER") {
         return (
-            <div>
-                <h1>Lista maszyn wirtualnych</h1>
-                <table>
+            <div className="container py-5 text-light">
+                <h1 className="mb-4">Lista maszyn wirtualnych</h1>
+                <table className="table table-dark table-striped table-bordered">
                     <thead>
                     <tr>
                         <th>RAM</th>
@@ -137,16 +139,17 @@ export const ListVMachines = () => {
                             <td>{vMachine.cpumanufacturer}</td>
                             <td>
                                 {vMachine.isRented ? (
-                                    <span>Wypożyczona</span>
+                                    <span className="text-warning">Wypożyczona</span>
                                 ) : (
                                     <button
+                                        className="btn btn-danger"
                                         onClick={() => deleteVMachine(vMachine.entityId.uuid)}
                                     >
                                         Usuń
                                     </button>
                                 )}
                             </td>
-                            <td>{vMachine.actualRentalPrice}</td>
+                            <td>{vMachine.actualRentalPrice} PLN</td>
                         </tr>
                     ))}
                     </tbody>
@@ -155,11 +158,11 @@ export const ListVMachines = () => {
         )
     }
 
-    if(currentUser.role == "CLIENT") {
+    if (currentUser.role == "CLIENT") {
         return (
-            <div>
-                <h1>Lista maszyn wirtualnych</h1>
-                <table>
+            <div className="container py-5 text-light">
+                <h1 className="mb-4">Lista maszyn wirtualnych</h1>
+                <table className="table table-dark table-striped table-bordered">
                     <thead>
                     <tr>
                         <th>RAM</th>
@@ -177,16 +180,17 @@ export const ListVMachines = () => {
                             <td>{vMachine.cpumanufacturer}</td>
                             <td>
                                 {vMachine.isRented ? (
-                                    <span>Wypożyczona</span>
+                                    <span className="text-warning">Wypożyczona</span>
                                 ) : (
                                     <button
+                                        className="btn btn-success"
                                         onClick={() => handleRent(vMachine.entityId.uuid)}
                                     >
                                         Wypożycz
                                     </button>
                                 )}
                             </td>
-                            <td>{vMachine.actualRentalPrice}</td>
+                            <td>{vMachine.actualRentalPrice} PLN</td>
                         </tr>
                     ))}
                     </tbody>
@@ -195,6 +199,5 @@ export const ListVMachines = () => {
         )
     }
 
-    return <div>xDDD</div>
-}
-
+    return <div>Brak uprawnień</div>;
+};

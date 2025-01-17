@@ -1,42 +1,82 @@
-
-import { AppBar, Button, Container, Toolbar } from '@mui/material'
-import { ReactNode } from 'react'
-import { Pathnames } from '../../../router/pathnames'
-import { useNavigate } from 'react-router-dom'
-import {FadingAlertComponent} from "../../alert/FadingAlert";
+import { ReactNode } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Pathnames } from '../../../router/pathnames';
+import { FadingAlertComponent } from '../../alert/FadingAlert';
+import 'bootstrap/dist/css/bootstrap.min.css'
+import 'bootstrap/dist/js/bootstrap.bundle.min.js'
 
 interface LayoutProps {
-    children: ReactNode
+    children: ReactNode;
 }
 
 export const DefaultLayout = ({ children }: LayoutProps) => {
-    // Udostępnia funkcję pozwalającą na zmianę widoku na inny, zgodnie z określoną ścieżką (pathname)
-    const navigate = useNavigate()
-
+    // Funkcja nawigacji między widokami
+    const navigate = useNavigate();
 
     return (
-        <div>
-            <AppBar position="static">
-                <Toolbar sx={{ display: 'flex'}}>
-                    <Button onClick={() => navigate(Pathnames.default.homePage)} sx={{ my: 2, mx: 2, color: 'white' }}>
-                        Home
-                    </Button>
-                    <Button onClick={() => navigate(Pathnames.default.createUser)} sx={{ my: 2, mx: 2, color: 'white' }}>
-                        Register
-                    </Button>
-                    <Button onClick={() => navigate(Pathnames.default.login)} sx={{ my: 2, mx: 2, color: 'white' }}>
-                        Log In
-                    </Button>
-                </Toolbar>
-            </AppBar>
-            <div style={{ position: "fixed", overflow: "visible", width: "inherit" }}>
+        <div className="bg-dark text-light"> {/* Ciemne tło dla całego layoutu */}
+            {/* Pasek nawigacji */}
+            <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+                <div className="container-fluid">
+                    <a
+                        className="navbar-brand"
+                        onClick={() => navigate(Pathnames.default.homePage)}
+                        style={{ cursor: 'pointer' }}
+                    >
+                        MyApp
+                    </a>
+                    <button
+                        className="navbar-toggler"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#navbarNav"
+                        aria-controls="navbarNav"
+                        aria-expanded="false"
+                        aria-label="Toggle navigation"
+                    >
+                        <span className="navbar-toggler-icon"></span>
+                    </button>
+                    <div className="collapse navbar-collapse" id="navbarNav">
+                        <ul className="navbar-nav ms-auto">
+                            <li className="nav-item">
+                                <button
+                                    className="btn btn-outline-light mx-2"
+                                    onClick={() => navigate(Pathnames.default.homePage)}
+                                >
+                                    Home
+                                </button>
+                            </li>
+                            <li className="nav-item">
+                                <button
+                                    className="btn btn-outline-light mx-2"
+                                    onClick={() => navigate(Pathnames.default.createUser)}
+                                >
+                                    Register
+                                </button>
+                            </li>
+                            <li className="nav-item">
+                                <button
+                                    className="btn btn-outline-light mx-2"
+                                    onClick={() => navigate(Pathnames.default.login)}
+                                >
+                                    Log In
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+            {/* Alert */}
+            <div style={{ position: 'fixed', overflow: 'visible', width: 'inherit' }}>
                 <FadingAlertComponent />
-                {/*<p>error</p>*/}
-                {/*TODO to correct*/}
             </div>
-            <Container sx={{ p: 2 }}>
+
+            {/* Zawartość strony */}
+            <div className="container mt-4">
                 {children}
-            </Container>
+            </div>
         </div>
-    )
-}
+    );
+};
+

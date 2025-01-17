@@ -1,18 +1,15 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useUserSession } from '../model/UserContext';
-
+import 'bootstrap/dist/css/bootstrap.min.css'
+import 'bootstrap/dist/js/bootstrap.bundle.min.js'
 
 enum Role {
     admin = "ADMIN",
     moderator = "RESOURCE_MANAGER",
     client = "CLIENT",
 }
-//
-// interface EntityId {
-//     uuid: string;
-// }
 
 interface ClientType {
     _clazz: "standard" | "premium";
@@ -20,7 +17,6 @@ interface ClientType {
 
 interface FormData {
     _clazz: string;
-    // entityId: EntityId;
     firstName: string;
     surname: string;
     username: string;
@@ -30,11 +26,10 @@ interface FormData {
     clientType: ClientType;
 }
 
-export const CreateUser = () => { //export const CreateUser: React.FC = () => {
+export const CreateUser = () => {
     const navigate = useNavigate();
     const { currentUser } = useUserSession();
     const [formData, setFormData] = useState<FormData>({
-        // entityId: { uuid: uuidv4() },
         _clazz: 'Client',
         firstName: '',
         surname: '',
@@ -91,7 +86,6 @@ export const CreateUser = () => { //export const CreateUser: React.FC = () => {
         setFormData(updatedFormData);
     };
 
-
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -114,7 +108,6 @@ export const CreateUser = () => { //export const CreateUser: React.FC = () => {
             setNotification('User registered successfully!');
             setFormData({
                 _clazz: 'Client',
-                // entityId: { uuid: uuidv4() },
                 firstName: '',
                 surname: '',
                 username: '',
@@ -130,147 +123,152 @@ export const CreateUser = () => { //export const CreateUser: React.FC = () => {
         }
     };
 
-    if(currentUser != undefined && currentUser.role == "ADMIN") {
+    if (currentUser != undefined && currentUser.role == "ADMIN") {
         return (
-            <div style={{ maxWidth: '400px', margin: '0 auto' }}>
-                <h2>User Registration</h2>
-                {notification && <p style={{ color: notification.includes('success') ? 'green' : 'red' }}>{notification}</p>}
+            <div className="container" style={{ maxWidth: '400px' }}>
+                <h2 className="mb-4">User Registration</h2>
+                {notification && (
+                    <div className={`alert ${notification.includes('success') ? 'alert-success' : 'alert-danger'}`} role="alert">
+                        {notification}
+                    </div>
+                )}
                 <form onSubmit={handleSubmit}>
-                    <div style={{marginBottom: '10px'}}>
-                        <label htmlFor="firstName">First Name</label>
+                    <div className="mb-3">
+                        <label htmlFor="firstName" className="form-label">First Name</label>
                         <input
                             type="text"
                             id="firstName"
                             name="firstName"
                             value={formData.firstName}
                             onChange={handleChange}
-                            style={{display: 'block', width: '100%', padding: '8px'}}
+                            className="form-control"
                         />
-                        {formErrors.firstName && <span style={{color: 'red'}}>{formErrors.firstName}</span>}
+                        {formErrors.firstName && <div className="text-danger">{formErrors.firstName}</div>}
                     </div>
 
-                    <div style={{marginBottom: '10px'}}>
-                        <label htmlFor="surname">Surname</label>
+                    <div className="mb-3">
+                        <label htmlFor="surname" className="form-label">Surname</label>
                         <input
                             type="text"
                             id="surname"
                             name="surname"
                             value={formData.surname}
                             onChange={handleChange}
-                            style={{display: 'block', width: '100%', padding: '8px'}}
+                            className="form-control"
                         />
-                        {formErrors.surname && <span style={{color: 'red'}}>{formErrors.surname}</span>}
+                        {formErrors.surname && <div className="text-danger">{formErrors.surname}</div>}
                     </div>
 
-                    <div style={{marginBottom: '10px'}}>
-                        <label htmlFor="username">Username</label>
+                    <div className="mb-3">
+                        <label htmlFor="username" className="form-label">Username</label>
                         <input
                             type="text"
                             id="username"
                             name="username"
                             value={formData.username}
                             onChange={handleChange}
-                            style={{display: 'block', width: '100%', padding: '8px'}}
+                            className="form-control"
                         />
-                        {formErrors.username && <span style={{color: 'red'}}>{formErrors.username}</span>}
+                        {formErrors.username && <div className="text-danger">{formErrors.username}</div>}
                     </div>
 
-                    <div style={{marginBottom: '10px'}}>
-                        <label htmlFor="emailAddress">Email address</label>
+                    <div className="mb-3">
+                        <label htmlFor="emailAddress" className="form-label">Email address</label>
                         <input
                             type="email"
                             id="emailAddress"
                             name="emailAddress"
                             value={formData.emailAddress}
                             onChange={handleChange}
-                            style={{display: 'block', width: '100%', padding: '8px'}}
+                            className="form-control"
                         />
-                        {formErrors.emailAddress && <span style={{color: 'red'}}>{formErrors.emailAddress}</span>}
+                        {formErrors.emailAddress && <div className="text-danger">{formErrors.emailAddress}</div>}
                     </div>
-                    <div>
+
+                    <div className="mb-3">
+                        <label htmlFor="_clazz" className="form-label">Role</label>
                         <select
                             id="_clazz"
                             name="_clazz"
                             value={formData._clazz}
                             onChange={handleChange}
-                            style={{padding: '8px', width: '40%'}}
+                            className="form-select"
                         >
                             <option value="Client">Client</option>
-                            <option value="ResourceManager">ResourceManager</option>
+                            <option value="ResourceManager">Resource Manager</option>
                             <option value="Admin">Admin</option>
                         </select>
                     </div>
-                    <button type="submit" style={{padding: '10px 20px'}}>
-                        Register
-                    </button>
+
+                    <button type="submit" className="btn btn-primary w-100">Register</button>
                 </form>
             </div>
         );
     }
 
     return (
-        <div style={{maxWidth: '400px', margin: '0 auto'}}>
-            <h2>User Registration</h2>
-            {notification && <p style={{color: notification.includes('success') ? 'green' : 'red'}}>{notification}</p>}
+        <div className="container" style={{ maxWidth: '400px' }}>
+            <h2 className="mb-4">User Registration</h2>
+            {notification && (
+                <div className={`alert ${notification.includes('success') ? 'alert-success' : 'alert-danger'}`} role="alert">
+                    {notification}
+                </div>
+            )}
             <form onSubmit={handleSubmit}>
-                <div style={{marginBottom: '10px'}}>
-                    <label htmlFor="firstName">First Name</label>
+                <div className="mb-3">
+                    <label htmlFor="firstName" className="form-label">First Name</label>
                     <input
                         type="text"
                         id="firstName"
                         name="firstName"
                         value={formData.firstName}
                         onChange={handleChange}
-                        style={{display: 'block', width: '100%', padding: '8px'}}
+                        className="form-control"
                     />
-                    {formErrors.firstName && <span style={{color: 'red'}}>{formErrors.firstName}</span>}
+                    {formErrors.firstName && <div className="text-danger">{formErrors.firstName}</div>}
                 </div>
 
-                <div style={{marginBottom: '10px'}}>
-                    <label htmlFor="surname">Surname</label>
+                <div className="mb-3">
+                    <label htmlFor="surname" className="form-label">Surname</label>
                     <input
                         type="text"
                         id="surname"
                         name="surname"
                         value={formData.surname}
                         onChange={handleChange}
-                        style={{display: 'block', width: '100%', padding: '8px'}}
+                        className="form-control"
                     />
-                    {formErrors.surname && <span style={{color: 'red'}}>{formErrors.surname}</span>}
+                    {formErrors.surname && <div className="text-danger">{formErrors.surname}</div>}
                 </div>
 
-                <div style={{marginBottom: '10px'}}>
-                    <label htmlFor="username">Username</label>
+                <div className="mb-3">
+                    <label htmlFor="username" className="form-label">Username</label>
                     <input
                         type="text"
                         id="username"
                         name="username"
                         value={formData.username}
                         onChange={handleChange}
-                        style={{display: 'block', width: '100%', padding: '8px'}}
+                        className="form-control"
                     />
-                    {formErrors.username && <span style={{color: 'red'}}>{formErrors.username}</span>}
+                    {formErrors.username && <div className="text-danger">{formErrors.username}</div>}
                 </div>
 
-                <div style={{marginBottom: '10px'}}>
-                    <label htmlFor="emailAddress">Email address</label>
+                <div className="mb-3">
+                    <label htmlFor="emailAddress" className="form-label">Email address</label>
                     <input
                         type="email"
                         id="emailAddress"
                         name="emailAddress"
                         value={formData.emailAddress}
                         onChange={handleChange}
-                        style={{display: 'block', width: '100%', padding: '8px'}}
+                        className="form-control"
                     />
-                    {formErrors.emailAddress && <span style={{color: 'red'}}>{formErrors.emailAddress}</span>}
+                    {formErrors.emailAddress && <div className="text-danger">{formErrors.emailAddress}</div>}
                 </div>
 
-                <button type="submit" style={{padding: '10px 20px'}}>
-                    Register
-                </button>
+                <button type="submit" className="btn btn-primary w-100">Register</button>
             </form>
         </div>
     );
 };
-
-// export default CreateUser;

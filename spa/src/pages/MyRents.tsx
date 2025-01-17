@@ -54,9 +54,6 @@ function convertToDate(input: Date | Array<number>): Date {
         throw new TypeError("Input must be a Date or an array of numbers.");
     }
 }
-// interface EndRentForms {
-//     endTime: string;
-// }
 
 export const MyRents = () => {
     const { currentUser } = useUserSession();
@@ -65,7 +62,7 @@ export const MyRents = () => {
     useEffect(() => {
         // Fetch rents for the current user
         const fetchRents = async () => {
-            if(currentUser != null) {
+            if (currentUser != null) {
                 try {
                     const response = await axios.get<Rent[]>(`https://flounder-sunny-goldfish.ngrok-free.app/REST/api/rent/all/client/${currentUser.entityId.uuid}`,
                         {
@@ -73,7 +70,7 @@ export const MyRents = () => {
                                 'ngrok-skip-browser-warning': '69420'
                             }
                         });
-                    setRents(response.data.map(rent => ({ //here
+                    setRents(response.data.map(rent => ({
                         ...rent,
                         beginTime: convertToDate(rent.beginTime),
                         endTime: rent.endTime ? convertToDate(rent.endTime) : null,
@@ -92,17 +89,13 @@ export const MyRents = () => {
             `Czy na pewno chcesz zakończyć wypożyczenie o ID ${rentId}?`
         );
         if (!confirmRent) return;
-        // const endTime: EndRentForms = {
-        //     endTime: new Date().toISOString(),
-        // };
         try {
-            // console.log(endTime);
             await axios.put(`https://flounder-sunny-goldfish.ngrok-free.app/REST/api/rent/end/${rentId}`,
                 {
                     headers: {
                         'ngrok-skip-browser-warning': '69420'
                     }
-                }); //, endTime
+                });
             // Update rents after ending
             setRents((prevRents) => prevRents.map(rent =>
                 rent.entityId.uuid === rentId ? { ...rent, endTime: new Date() } : rent
@@ -112,44 +105,46 @@ export const MyRents = () => {
         }
     };
 
-    if(currentUser == null) return <div>Musisz być zalogowany aby przeglądać tę witrynę!</div>;
+    if (currentUser == null) return <div className="text-center text-white mt-5">Musisz być zalogowany, aby przeglądać tę witrynę!</div>;
 
     return (
-        <div>
-            <h1>My Rents</h1>
+        <div className="container py-5">
+            <h1 className="text-center text-white mb-4">My Rents</h1>
             {rents.length === 0 ? (
-                <p>No rents found.</p>
+                <p className="text-center text-white">No rents found.</p>
             ) : (
-                <table>
-                    <thead>
-                    <tr>
-                        <th>VM Name</th>
-                        <th>RAM Size</th>
-                        <th>CPU</th>
-                        <th>Begin Time</th>
-                        <th>End Time</th>
-                        <th>Rent Cost</th>
-                        <th>Actions</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {rents.map(rent => (
-                        <tr key={rent.entityId.uuid}>
-                            <td>{rent.vmachine.entityId.uuid}</td>
-                            <td>{rent.vmachine.ramSize}</td>
-                            <td>{`${rent.vmachine.cpunumber} - ${rent.vmachine.cpumanufacturer || 'Apple Arch'}`}</td>
-                            <td>{new Date(rent.beginTime).toLocaleString()}</td>
-                            <td>{rent.endTime ? new Date(rent.endTime).toLocaleString() : 'Active'}</td>
-                            <td>{rent.rentCost}</td>
-                            <td>
-                                {!rent.endTime && (
-                                    <button onClick={() => handleEndRent(rent.entityId.uuid)}>End Rent</button>
-                                )}
-                            </td>
+                <div className="table-responsive">
+                    <table className="table table-dark table-striped table-bordered">
+                        <thead>
+                        <tr>
+                            <th>VM Name</th>
+                            <th>RAM Size</th>
+                            <th>CPU</th>
+                            <th>Begin Time</th>
+                            <th>End Time</th>
+                            <th>Rent Cost</th>
+                            <th>Actions</th>
                         </tr>
-                    ))}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                        {rents.map(rent => (
+                            <tr key={rent.entityId.uuid}>
+                                <td>{rent.vmachine.entityId.uuid}</td>
+                                <td>{rent.vmachine.ramSize}</td>
+                                <td>{`${rent.vmachine.cpunumber} - ${rent.vmachine.cpumanufacturer || 'Apple Arch'}`}</td>
+                                <td>{new Date(rent.beginTime).toLocaleString()}</td>
+                                <td>{rent.endTime ? new Date(rent.endTime).toLocaleString() : 'Active'}</td>
+                                <td>{rent.rentCost}</td>
+                                <td>
+                                    {!rent.endTime && (
+                                        <button className="btn btn-danger" onClick={() => handleEndRent(rent.entityId.uuid)}>End Rent</button>
+                                    )}
+                                </td>
+                            </tr>
+                        ))}
+                        </tbody>
+                    </table>
+                </div>
             )}
         </div>
     );

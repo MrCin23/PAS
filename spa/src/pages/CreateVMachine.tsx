@@ -110,69 +110,69 @@ export const CreateVMachine = () => {
     };
 
     return (
-        <div style={{ maxWidth: '400px', margin: '0 auto' }}>
-            <h2>VMachine Registration</h2>
-            {notification && <p style={{ color: notification.includes('success') ? 'green' : 'red' }}>{notification}</p>}
-            <div>
-                <button onClick={() => handleTypeChange('applearch')}>AppleArch</button>
-                <button onClick={() => handleTypeChange('x86')}>x86</button>
+        <div className="container mt-5">
+            <h2 className="text-center text-light">VMachine Registration</h2>
+            {notification && <p className={`alert ${notification.includes('success') ? 'alert-success' : 'alert-danger'}`}>{notification}</p>}
+            <div className="d-flex justify-content-center mb-4">
+                <button className="btn btn-primary mx-2" onClick={() => handleTypeChange('applearch')}>AppleArch</button>
+                <button className="btn btn-primary mx-2" onClick={() => handleTypeChange('x86')}>x86</button>
             </div>
-            <form onSubmit={handleSubmit}>
-                <div style={{ marginBottom: '10px' }}>
-                    <label htmlFor="ramAmount">RAM</label>
-                    <div style={{ display: 'flex', gap: '10px' }}>
+            <form onSubmit={handleSubmit} className="shadow p-4 rounded bg-dark text-light">
+                <div className="mb-3">
+                    <label htmlFor="ramAmount" className="form-label">RAM</label>
+                    <div className="d-flex gap-2">
                         <input
                             type="number"
                             id="ramAmount"
                             name="ramAmount"
                             value={ramAmount}
                             onChange={handleChange}
-                            style={{ padding: '8px', width: '60%' }}
+                            className="form-control bg-dark text-light"
                         />
                         <select
                             id="ramUnit"
                             name="ramUnit"
                             value={ramUnit}
                             onChange={handleChange}
-                            style={{ padding: '8px', width: '40%' }}
+                            className="form-select bg-dark text-light"
                         >
                             <option value="MB">MB</option>
                             <option value="GB">GB</option>
                             <option value="TB">TB</option>
                         </select>
                     </div>
-                    {formErrors.ramSize && <span style={{ color: 'red' }}>{formErrors.ramSize}</span>}
+                    {formErrors.ramSize && <span className="text-danger">{formErrors.ramSize}</span>}
                 </div>
 
-                <div style={{ marginBottom: '10px' }}>
-                    <label htmlFor="cpunumber">CPU Number</label>
+                <div className="mb-3">
+                    <label htmlFor="cpunumber" className="form-label">CPU Number</label>
                     <input
                         type="number"
                         id="cpunumber"
                         name="cpunumber"
                         value={formData.cpunumber}
                         onChange={handleChange}
-                        style={{ display: 'block', width: '100%', padding: '8px' }}
+                        className="form-control bg-dark text-light"
                     />
-                    {formErrors.cpunumber && <span style={{ color: 'red' }}>{formErrors.cpunumber}</span>}
+                    {formErrors.cpunumber && <span className="text-danger">{formErrors.cpunumber}</span>}
                 </div>
 
                 {formData._clazz === 'x86' && (
-                    <div style={{ marginBottom: '10px' }}>
-                        <label htmlFor="cpumanufacturer">CPU Manufacturer</label>
+                    <div className="mb-3">
+                        <label htmlFor="cpumanufacturer" className="form-label">CPU Manufacturer</label>
                         <input
                             type="text"
                             id="cpumanufacturer"
                             name="cpumanufacturer"
                             value={(formData as x86).cpumanufacturer || ''}
                             onChange={handleChange}
-                            style={{ display: 'block', width: '100%', padding: '8px' }}
+                            className="form-control bg-dark text-light"
                         />
-                        {formErrors.cpumanufacturer && <span style={{ color: 'red' }}>{formErrors.cpumanufacturer}</span>}
+                        {formErrors.cpumanufacturer && <span className="text-danger">{formErrors.cpumanufacturer}</span>}
                     </div>
                 )}
 
-                <button type="submit" style={{ padding: '10px 20px' }}>
+                <button type="submit" className="btn btn-success w-100">
                     Register
                 </button>
             </form>
