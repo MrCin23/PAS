@@ -9,12 +9,12 @@ import java.util.UUID;
 @NoArgsConstructor
 @BsonDiscriminator(value="ResourceManager", key="_clazz")
 public class ResourceManager extends User{
-    public ResourceManager(String firstName, String surname, String username, String emailAddress) {
-        super(new MongoUUID(UUID.randomUUID()), firstName, username, surname, emailAddress, Role.RESOURCE_MANAGER, true);
+    public ResourceManager(String firstName, String surname, String username, String password, String emailAddress) {
+        super(new MongoUUID(UUID.randomUUID()), firstName, username, password, surname, emailAddress, Role.RESOURCE_MANAGER, true);
     }
 
-    public ResourceManager(MongoUUID uuid, String firstName, String surname, String username, String emailAddress) {
-        super(uuid, firstName, username, surname, emailAddress, Role.RESOURCE_MANAGER, true);
+    public ResourceManager(MongoUUID uuid, String firstName, String surname, String username, String password, String emailAddress) {
+        super(uuid, firstName, username, password, surname, emailAddress, Role.RESOURCE_MANAGER, true);
     }
 
     @Override

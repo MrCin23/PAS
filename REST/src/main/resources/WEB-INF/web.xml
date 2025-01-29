@@ -26,4 +26,24 @@
         <url-pattern>/</url-pattern>
     </servlet-mapping>
 
+    <filter>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+<!--    <filter>-->
+<!--        <filter-name>customFilter</filter-name>-->
+<!--        <filter-class>pl.lodz.p.security.JwtFilter</filter-class>-->
+<!--    </filter>-->
+
+
+<!--    <filter-mapping>-->
+<!--        <filter-name>customFilter</filter-name>-->
+<!--        <url-pattern>/*</url-pattern>-->
+<!--    </filter-mapping>-->
+
 </web-app>

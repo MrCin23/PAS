@@ -4,7 +4,7 @@
 //import io.restassured.http.ContentType;
 //import jakarta.inject.Inject;
 //import org.junit.jupiter.api.*;
-//import pl.lodz.p.DataInitializer;
+//import pl.lodz.p.data.DataInitializer;
 //
 //import java.util.HashMap;
 //import java.util.Map;

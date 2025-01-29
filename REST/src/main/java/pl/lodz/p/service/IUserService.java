@@ -1,5 +1,7 @@
 package pl.lodz.p.service;
 
+import org.springframework.security.core.userdetails.UserDetails;
+import pl.lodz.p.dto.LoginDTO;
 import pl.lodz.p.model.user.User;
 
 import java.util.List;
@@ -21,7 +23,13 @@ public interface IUserService {
 
     //void deleteUser(UUID uuid);
 
-    User getUserByUsername(String username);
+    String getUserByUsername(LoginDTO loginDTO);
 
     List<User> getUsersByUsername(String username);
+
+    UserDetails loadUserByUsername(String username);
+
+    void invalidateToken(String token);
+
+    boolean checkToken(String token);
 }

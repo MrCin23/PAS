@@ -48,7 +48,7 @@ export const ListVMachines = () => {
 
         try {
             console.log(rent);
-            await axios.post('https://flounder-sunny-goldfish.ngrok-free.app/REST/api/rent', rent,
+            await axios.post('/api/rent', rent,
                 {
                     headers: {
                         'ngrok-skip-browser-warning': '69420'
@@ -72,7 +72,7 @@ export const ListVMachines = () => {
         );
         if (!confirmDeletion) return;
         try {
-            await axios.delete(`https://flounder-sunny-goldfish.ngrok-free.app/REST/api/vmachine/${vmId}`,
+            await axios.delete(`/api/vmachine/${vmId}`,
                 {
                     headers: {
                         'ngrok-skip-browser-warning': '69420'
@@ -91,7 +91,7 @@ export const ListVMachines = () => {
     useEffect(() => {
         const fetchVMachines = async () => {
             try {
-                const response = await axios.get<VMachine[]>('https://flounder-sunny-goldfish.ngrok-free.app/REST/api/vmachine',
+                const response = await axios.get<VMachine[]>('/api/vmachine',
                     {
                         headers: {
                             'ngrok-skip-browser-warning': '69420'

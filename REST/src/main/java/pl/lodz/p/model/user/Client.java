@@ -38,9 +38,10 @@ public class Client extends User{
     public Client(String firstName,
                   String surname,
                   String username,
+                  String password,
                   String emailAddress,
                   @BsonProperty("clientType") ClientType clientType) {
-        super(new MongoUUID(UUID.randomUUID()), firstName, username, surname, emailAddress, Role.CLIENT, true);
+        super(new MongoUUID(UUID.randomUUID()), firstName, username, password, surname, emailAddress, Role.CLIENT, true);
         this.clientType = clientType;
         this.currentRents = 0;
     }
@@ -48,13 +49,14 @@ public class Client extends User{
     public Client(MongoUUID userId,
                   String firstName,
                   String username,
+                  String password,
                   String surname,
                   String emailAddress,
                   Role role,
                   boolean active,
                   @BsonProperty("clientType") ClientType clientType,
                   @BsonProperty("currentRents") int currentRents) {
-        super(userId, firstName, username, surname, emailAddress, role, active);
+        super(userId, firstName, username, password, surname, emailAddress, role, active);
         this.clientType = clientType;
         this.currentRents = currentRents;
     }

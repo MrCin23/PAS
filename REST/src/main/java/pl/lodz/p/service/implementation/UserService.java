@@ -1,22 +1,33 @@
 package pl.lodz.p.service.implementation;
 
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
+import pl.lodz.p.dto.LoginDTO;
+import pl.lodz.p.exception.WrongPasswordException;
 import pl.lodz.p.model.user.User;
 import pl.lodz.p.model.MongoUUID;
-import pl.lodz.p.model.user.User;
+import pl.lodz.p.model.user.UserPrincipal;
 import pl.lodz.p.repository.UserRepository;
+import pl.lodz.p.security.JwtTokenProvider;
 import pl.lodz.p.service.IUserService;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 @AllArgsConstructor
-public class UserService implements IUserService {
+public class UserService implements IUserService, UserDetailsService {
 
     private UserRepository repo;
+
+    private JwtTokenProvider tokenProvider;
+
+    private final Set<String> blacklistedTokens = ConcurrentHashMap.newKeySet();
 
     @Override
     public User createUser(User user) {
@@ -75,11 +86,16 @@ public class UserService implements IUserService {
 //    }
 
     @Override
-    public User getUserByUsername(String username) {
-        if(repo.getUserByUsername(username) == null) {
-            throw new RuntimeException("User with username " + username + " does not exist");
+    public String getUserByUsername(LoginDTO loginDTO) {
+        if(repo.getUserByUsername(loginDTO.getUsername()) == null) {
+            throw new RuntimeException("User with username " + loginDTO.getUsername() + " does not exist");
         }
-        return repo.getUserByUsername(username);
+        User user = repo.getUserByUsername(loginDTO.getUsername());
+        if(user.checkPassword(loginDTO.getPassword())) {
+            return tokenProvider.generateToken(loginDTO.getUsername(), user.getRole());
+        } else {
+            throw new WrongPasswordException("Wrong password");
+        }
     }
 
     @Override
@@ -88,5 +104,24 @@ public class UserService implements IUserService {
             throw new RuntimeException("No users with username " + username + " found");
         }
         return repo.getUsersByUsername(username);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) {
+        User user = repo.getUserByUsername(username);
+        if (user == null) {
+            throw new RuntimeException("User with login " + username + " not found");
+        }
+        return new UserPrincipal(user);
+    }
+
+    @Override
+    public void invalidateToken(String token) {
+        blacklistedTokens.add(token);
+    }
+
+    @Override
+    public boolean checkToken(String token) {
+        return blacklistedTokens.contains(token);
     }
 }

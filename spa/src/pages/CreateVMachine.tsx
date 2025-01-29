@@ -88,7 +88,7 @@ export const CreateVMachine = () => {
         const payload = { ...formData, ramSize };
 
         try {
-            await axios.post('https://flounder-sunny-goldfish.ngrok-free.app/REST/api/vmachine', payload,
+            await axios.post('/api/vmachine', payload,
                 {
                     headers: {
                         'ngrok-skip-browser-warning': '69420'

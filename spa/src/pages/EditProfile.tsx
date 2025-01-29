@@ -50,7 +50,7 @@ export const EditProfile = () => {
 
             try {
                 const response = await axios.get<User>(
-                    `https://flounder-sunny-goldfish.ngrok-free.app/REST/api/client/${currentUser.entityId.uuid}`,
+                    `/api/client/${currentUser.entityId.uuid}`,
                     {
                         headers: {
                             'ngrok-skip-browser-warning': '69420',
@@ -89,7 +89,7 @@ export const EditProfile = () => {
         if (!confirmation) return;
         try {
             await axios.put(
-                `https://flounder-sunny-goldfish.ngrok-free.app/REST/api/client/${currentUser.entityId.uuid}`,
+                `/api/client/${currentUser.entityId.uuid}`,
                 formData,
                 {
                     headers: {
@@ -99,7 +99,7 @@ export const EditProfile = () => {
             );
             alert('Dane zostały zaktualizowane!');
             const response = await axios.get<User>(
-                `https://flounder-sunny-goldfish.ngrok-free.app/REST/api/client/${currentUser.entityId.uuid}`,
+                `/api/client/${currentUser.entityId.uuid}`,
                 {
                     headers: {
                         'ngrok-skip-browser-warning': '69420',

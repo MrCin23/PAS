@@ -64,7 +64,7 @@ export const MyRents = () => {
         const fetchRents = async () => {
             if (currentUser != null) {
                 try {
-                    const response = await axios.get<Rent[]>(`https://flounder-sunny-goldfish.ngrok-free.app/REST/api/rent/all/client/${currentUser.entityId.uuid}`,
+                    const response = await axios.get<Rent[]>(`/api/rent/all/client/${currentUser.entityId.uuid}`,
                         {
                             headers: {
                                 'ngrok-skip-browser-warning': '69420'
@@ -90,7 +90,7 @@ export const MyRents = () => {
         );
         if (!confirmRent) return;
         try {
-            await axios.put(`https://flounder-sunny-goldfish.ngrok-free.app/REST/api/rent/end/${rentId}`,
+            await axios.put(`/api/rent/end/${rentId}`,
                 {
                     headers: {
                         'ngrok-skip-browser-warning': '69420'

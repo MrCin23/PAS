@@ -12,6 +12,7 @@ import lombok.Setter;
 import org.bson.codecs.pojo.annotations.BsonCreator;
 import org.bson.codecs.pojo.annotations.BsonDiscriminator;
 import org.bson.codecs.pojo.annotations.BsonProperty;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import pl.lodz.p.model.AbstractEntityMgd;
 import pl.lodz.p.model.AppleArch;
 import pl.lodz.p.model.MongoUUID;
@@ -43,6 +44,9 @@ public abstract class User extends AbstractEntityMgd {
     @Size(min = 4, max = 20)
     @BsonProperty("username")
     private String username;
+    @BsonProperty("password")
+    @NotBlank(message = "Password cannot be blank")
+    private String password;
     @BsonProperty("emailAddress")
     @NotBlank(message = "Email cannot be blank")
     @Email(message = "Email address has to be valid")
@@ -52,10 +56,12 @@ public abstract class User extends AbstractEntityMgd {
     @BsonProperty("active")
     private boolean active;
 
+
     @BsonCreator
     public User(@BsonProperty("_id") MongoUUID userId,
                 @BsonProperty("firstName") String firstName,
                 @BsonProperty("username") String username,
+                @BsonProperty("password") String password,
                 @BsonProperty("surname") String surname,
                 @BsonProperty("emailAddress") String emailAddress,
                 @BsonProperty("role") Role role,
@@ -64,10 +70,16 @@ public abstract class User extends AbstractEntityMgd {
         this.firstName = firstName;
         this.surname = surname;
         this.username = username;
+        this.password = BCrypt.hashpw(password, BCrypt.gensalt());
         this.emailAddress = emailAddress;
         this.role = role;
         this.active = active;
     }
+
+    public boolean checkPassword(String password) {
+        return BCrypt.checkpw(password, this.password);
+    }
+
 
     @Override
     public String toString() {
@@ -75,6 +87,7 @@ public abstract class User extends AbstractEntityMgd {
                 "firstName='" + firstName + '\'' +
                 ", surname='" + surname + '\'' +
                 ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
                 ", emailAddress='" + emailAddress + '\'' +
                 ", role=" + role +
                 ", active=" + active +

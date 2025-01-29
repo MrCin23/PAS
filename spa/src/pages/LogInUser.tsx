@@ -56,7 +56,7 @@ export const LogInUser = () => {
 
         try {
             const response = await axios.get<User>(
-                `https://flounder-sunny-goldfish.ngrok-free.app/REST/api/client/findClient/${username}`,
+                `/api/client/findClient/${username}`,
                 {
                     headers: {
                         'ngrok-skip-browser-warning': '69420'

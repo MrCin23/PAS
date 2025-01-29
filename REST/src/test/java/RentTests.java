@@ -5,7 +5,7 @@
 //import io.restassured.response.Response;
 //import jakarta.inject.Inject;
 //import org.junit.jupiter.api.*;
-//import pl.lodz.p.DataInitializer;
+//import pl.lodz.p.data.DataInitializer;
 //
 //import static org.hamcrest.MatcherAssert.assertThat;
 //import static org.hamcrest.Matchers.containsString;

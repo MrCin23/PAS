@@ -1,5 +1,6 @@
 package pl.lodz.p.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -7,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import pl.lodz.p.dto.LoginDTO;
 import pl.lodz.p.dto.UuidDTO;
 import pl.lodz.p.model.user.Client;
 import pl.lodz.p.model.user.User;
@@ -20,7 +22,7 @@ import java.util.Map;
 @RequestMapping("/api/client")
 @Validated
 //@CrossOrigin(origins = {"http://localhost", "https://localhost", "https://flounder-sunny-goldfish.ngrok-free.app", "http://localhost:8080", "http://192.168.1.105", "http://192.168.56.1", "https://192.168.1.105", "https://192.168.56.1"}, allowedHeaders = "*")
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+//@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class UserController {
 
     private UserService clientServiceImplementation;
@@ -112,22 +114,22 @@ public class UserController {
         }
     }
 
-    @GetMapping("findClient/{username}")//tested
-    public ResponseEntity<Object> findUser(@PathVariable("username") String username) {
+    @GetMapping("/login")
+    public ResponseEntity<Object> findUser(@RequestBody @Valid LoginDTO loginDTO) {
         try {
-            User user;
+            String token;
             try {
-                user = clientServiceImplementation.getUserByUsername(username);
+                token = clientServiceImplementation.getUserByUsername(loginDTO);
             } catch (RuntimeException ex) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No users found");
             }
-            return ResponseEntity.status(HttpStatus.OK).body(user);
+            return ResponseEntity.status(HttpStatus.OK).body(token);
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
         }
     }
 
-    @GetMapping("findClients/{username}")//tested
+    @GetMapping("/findClients/{username}")//tested
     public ResponseEntity<Object> findUsers(@PathVariable("username") String username) {
         try {
             List<User> users;
@@ -140,5 +142,15 @@ public class UserController {
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
         }
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Object> logout(HttpServletRequest request) {
+        String bearerToken = request.getHeader("Authorization");
+        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+            clientServiceImplementation.invalidateToken(bearerToken.substring(7));
+            return ResponseEntity.status(HttpStatus.OK).build();
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 }
