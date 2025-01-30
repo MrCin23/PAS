@@ -9,7 +9,7 @@ import java.util.UUID;
 
 public interface IRentService {
 
-    Rent createRent(RentDTO rentDTO);
+    Rent createRent(RentDTO rentDTO, String token);
 
     List<Rent> getAllRents();
 
@@ -21,6 +21,7 @@ public interface IRentService {
 
 //    List<Rent> getClientAllRents(UUID uuid);
     List<Rent> getClientAllRents(String authHeader);
+    List<Rent> getClientAllRents(UUID uuid);
 
     List<Rent> getClientActiveRents(UUID uuid);
 

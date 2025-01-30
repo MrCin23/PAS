@@ -49,10 +49,14 @@
         <security:csrf disabled="true"/>
         <security:intercept-url pattern="/api/client" method="POST" access="permitAll"/>
         <security:intercept-url pattern="/api/client/login" access="permitAll"/>
+        <security:intercept-url pattern="/api/client/activate" access="hasRole('ADMIN')"/>
+        <security:intercept-url pattern="/api/client/deactivate" access="hasRole('ADMIN')"/>
         <security:intercept-url pattern="/api/rent" access="isAuthenticated()"/>
         <security:intercept-url pattern="/api/rent/active" access="hasRole('RESOURCE_MANAGER')"/>
         <security:intercept-url pattern="/api/rent/archived" access="hasRole('RESOURCE_MANAGER')"/>
-        <security:intercept-url pattern="/api/rent/all/client/**" access="hasAnyRole('ADMIN')"/>
+        <security:intercept-url pattern="/api/vmachine" method="POST" access="hasRole('RESOURCE_MANAGER')"/>
+        <security:intercept-url pattern="/api/vmachine" method="PUT" access="hasRole('RESOURCE_MANAGER')"/>
+        <security:intercept-url pattern="/api/vmachine" method="DELETE" access="hasRole('RESOURCE_MANAGER')"/>
 <!--        <intercept-url pattern="/auth/register" access="permitAll"/>-->
 <!--        <intercept-url pattern="/admin/**" access="hasRole('ADMIN')"/>-->
         <security:intercept-url pattern="/**" access="isAuthenticated()"/>

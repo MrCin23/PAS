@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 // import './styles.css';
-import { useUserSession } from '../model/UserContext';
 import { useNavigate } from 'react-router-dom';
 import { Pathnames } from "../router/pathnames.ts";
+import {jwtDecode} from "jwt-decode";
+import axios from "axios";
 
 interface EntityId {
     uuid: string;
@@ -34,18 +35,19 @@ interface User {
 }
 
 export const UserProfile = () => {
+    const [token] = useState<string | null>(localStorage.getItem('token'));
     const [ModelUserData, setModelUserData] = useState<User | null>(null);
-    const { currentUser } = useUserSession();
     const navigate = useNavigate();
 
     const handleNavigate = () => {
-        if (!currentUser) {
+        if (!token) {
             console.error("Użytkownik nie jest zalogowany.");
             return;
         }
 
+        const decodedToken: any = jwtDecode(token);
         let path;
-        switch (currentUser.role) {
+        switch (decodedToken.role) {
             case "ADMIN":
                 path = Pathnames.admin.editProfile;
                 break;
@@ -56,7 +58,7 @@ export const UserProfile = () => {
                 path = Pathnames.user.editProfile;
                 break;
             default:
-                console.error("Nieznana rola użytkownika:", currentUser.role);
+                console.error("Nieznana rola użytkownika:", decodedToken.role);
                 return;
         }
 
@@ -64,19 +66,37 @@ export const UserProfile = () => {
     };
 
     useEffect(() => {
-        // Ustaw dane użytkownika w stanie tylko wtedy, gdy użytkownik jest zalogowany i aktywny.
-        if (currentUser && currentUser.active) {
-            setModelUserData(currentUser);
-        }
-    }, [currentUser]);
+        // Funkcja asynchroniczna do pobrania danych użytkownika
+        const fetchUserData = async () => {
+            if (token) {
+                const decodedToken: any = jwtDecode(token);
+                const username = decodedToken.sub;
+                try {
+                    const response = await axios.get<User>(`/api/client/findClient/${username}`, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'ngrok-skip-browser-warning': '69420',
+                        },
+                    });
+                    setModelUserData(response.data);
+                } catch (error) {
+                    console.error('Error fetching user data:', error);
+                }
+            }
+        };
 
-    if (currentUser == null) {
-        return <div className="text-center text-white mt-5">ModelUser not logged</div>;
+        fetchUserData(); // Wywołanie funkcji asynchronicznej
+
+    }, [token]);
+
+
+    if (token == null) {
+        return <div className="text-center text-white mt-5">User not logged</div>;
     }
 
-    if (!currentUser.active) {
-        return <div className="text-center text-white mt-5">ModelUser deactivated</div>;
-    }
+    // if (!currentUser.active) {
+    //     return <div className="text-center text-white mt-5">ModelUser deactivated</div>;
+    // }
 
     return (
         <div className="container py-5">

@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { useUserSession } from '../model/UserContext';
 import axios from "axios";
 
 interface EntityId {
@@ -56,15 +55,14 @@ function convertToDate(input: Date | Array<number>): Date {
 }
 
 export const MyRents = () => {
-    const { currentUser } = useUserSession();
+    const [token] = useState<string | null>(localStorage.getItem('token'));
     const [rents, setRents] = useState<Rent[]>([]);
 
     useEffect(() => {
         // Fetch rents for the current user
         const fetchRents = async () => {
-            if (currentUser != null) {
+            if (token) {
                 try {
-                    const token = localStorage.getItem("token");
                     const response = await axios.get<Rent[]>(`/api/rent/all/client`,
                         {
                             headers: {
@@ -84,7 +82,7 @@ export const MyRents = () => {
         };
 
         fetchRents();
-    }, [currentUser]);
+    }, [token]);
 
     const handleEndRent = async (rentId: string) => {
         const confirmRent = window.confirm(
@@ -94,6 +92,7 @@ export const MyRents = () => {
         try {
             const token = localStorage.getItem("token");
             await axios.put(`/api/rent/end/${rentId}`,
+                {},
                 {
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -108,7 +107,6 @@ export const MyRents = () => {
             console.error('Error ending rent:', error);
         }
     };
-    const token = localStorage.getItem('token');
     if (token == null) return <div className="text-center text-white mt-5">Musisz być zalogowany, aby przeglądać tę witrynę!</div>;
 
     return (

@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Repository
 public class RentRepository extends AbstractMongoRepository {
@@ -130,6 +131,11 @@ public class RentRepository extends AbstractMongoRepository {
 
     public List<Rent> getClientRents(String username) {
         Bson filter1 = Filters.eq("client.username", username);
+        return rents.find(filter1).into(new ArrayList<>());
+    }
+
+    public List<Rent> getClientRents(UUID uuid) {
+        Bson filter1 = Filters.eq("client._id", uuid);
         return rents.find(filter1).into(new ArrayList<>());
     }
 

@@ -56,6 +56,7 @@ function convertToDate(input: Date | Array<number>): Date {
 }
 
 export const ListUsers = () => {
+    const [token] = useState<string | null>(localStorage.getItem('token'));
     const [clients, setUsers] = useState<User[]>([]);
     const [username, setUsername] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(true);
@@ -72,6 +73,7 @@ export const ListUsers = () => {
                 const response = await axios.get<User[]>('/api/client',
                     {
                         headers: {
+                            'Authorization': `Bearer ${token}`,
                             'ngrok-skip-browser-warning': '69420'
                         }
                     });
@@ -81,6 +83,7 @@ export const ListUsers = () => {
                 const response = await axios.get<User[]>(`/api/client/findClients/${newUsername}`,
                     {
                         headers: {
+                            'Authorization': `Bearer ${token}`,
                             'ngrok-skip-browser-warning': '69420'
                         }
                     });
@@ -106,8 +109,10 @@ export const ListUsers = () => {
                 );
                 if (!confirmation) return;
                 await axios.put(`/api/client/activate/${entityId}`,
+                    {},
                     {
                         headers: {
+                            'Authorization': `Bearer ${token}`,
                             'ngrok-skip-browser-warning': '69420'
                         }
                     });
@@ -118,8 +123,10 @@ export const ListUsers = () => {
                 );
                 if (!confirmation) return;
                 await axios.put(`/api/client/deactivate/${entityId}`,
+                    {},
                     {
                         headers: {
+                            'Authorization': `Bearer ${token}`,
                             'ngrok-skip-browser-warning': '69420'
                         }
                     });
@@ -141,6 +148,7 @@ export const ListUsers = () => {
             const response = await axios.get<Rent[]>(`/api/rent/all/client/${user.entityId.uuid}`,
                 {
                     headers: {
+                        'Authorization': `Bearer ${token}`,
                         'ngrok-skip-browser-warning': '69420'
                     }
                 });
@@ -168,6 +176,7 @@ export const ListUsers = () => {
                 const response = await axios.get<User[]>('/api/client',
                     {
                         headers: {
+                            'Authorization': `Bearer ${token}`,
                             'ngrok-skip-browser-warning': '69420'
                         }
                     });

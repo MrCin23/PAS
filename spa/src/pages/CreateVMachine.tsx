@@ -18,6 +18,7 @@ interface x86 {
 type FormData = AppleArch | x86;
 
 export const CreateVMachine = () => {
+    const [token] = useState<string | null>(localStorage.getItem('token'));
     const navigate = useNavigate();
     const [formData, setFormData] = useState<FormData>({
         ramSize: '',
@@ -91,6 +92,7 @@ export const CreateVMachine = () => {
             await axios.post('/api/vmachine', payload,
                 {
                     headers: {
+                        'Authorization': `Bearer ${token}`,
                         'ngrok-skip-browser-warning': '69420'
                     }
                 });

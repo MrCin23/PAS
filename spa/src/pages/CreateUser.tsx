@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { useUserSession } from '../model/UserContext';
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap.bundle.min.js'
+import {jwtDecode} from "jwt-decode";
+import {Pathnames} from "../router/pathnames.ts";
 
 enum Role {
     admin = "ADMIN",
@@ -128,101 +130,108 @@ export const CreateUser = () => {
             navigate("/error", { state: { error } });
         }
     };
+    const token = localStorage.getItem('token');
+    let decodedToken: any
+    if (token) {
+        // Dekodowanie tokenu
+        decodedToken = jwtDecode(token);
 
-    if (currentUser != undefined && currentUser.role == "ADMIN") {
-        return (
-            <div className="container" style={{ maxWidth: '400px' }}>
-                <h2 className="mb-4">User Registration</h2>
-                {notification && (
-                    <div className={`alert ${notification.includes('success') ? 'alert-success' : 'alert-danger'}`} role="alert">
-                        {notification}
-                    </div>
-                )}
-                <form onSubmit={handleSubmit}>
-                    <div className="mb-3">
-                        <label htmlFor="firstName" className="form-label">First Name</label>
-                        <input
-                            type="text"
-                            id="firstName"
-                            name="firstName"
-                            value={formData.firstName}
-                            onChange={handleChange}
-                            className="form-control"
-                        />
-                        {formErrors.firstName && <div className="text-danger">{formErrors.firstName}</div>}
-                    </div>
+        if (decodedToken.role == "ADMIN") {
+            return (
+                <div className="container" style={{ maxWidth: '400px' }}>
+                    <h2 className="mb-4">User Registration</h2>
+                    {notification && (
+                        <div className={`alert ${notification.includes('success') ? 'alert-success' : 'alert-danger'}`} role="alert">
+                            {notification}
+                        </div>
+                    )}
+                    <form onSubmit={handleSubmit}>
+                        <div className="mb-3">
+                            <label htmlFor="firstName" className="form-label">First Name</label>
+                            <input
+                                type="text"
+                                id="firstName"
+                                name="firstName"
+                                value={formData.firstName}
+                                onChange={handleChange}
+                                className="form-control"
+                            />
+                            {formErrors.firstName && <div className="text-danger">{formErrors.firstName}</div>}
+                        </div>
 
-                    <div className="mb-3">
-                        <label htmlFor="surname" className="form-label">Surname</label>
-                        <input
-                            type="text"
-                            id="surname"
-                            name="surname"
-                            value={formData.surname}
-                            onChange={handleChange}
-                            className="form-control"
-                        />
-                        {formErrors.surname && <div className="text-danger">{formErrors.surname}</div>}
-                    </div>
+                        <div className="mb-3">
+                            <label htmlFor="surname" className="form-label">Surname</label>
+                            <input
+                                type="text"
+                                id="surname"
+                                name="surname"
+                                value={formData.surname}
+                                onChange={handleChange}
+                                className="form-control"
+                            />
+                            {formErrors.surname && <div className="text-danger">{formErrors.surname}</div>}
+                        </div>
 
-                    <div className="mb-3">
-                        <label htmlFor="username" className="form-label">Username</label>
-                        <input
-                            type="text"
-                            id="username"
-                            name="username"
-                            value={formData.username}
-                            onChange={handleChange}
-                            className="form-control"
-                        />
-                        {formErrors.username && <div className="text-danger">{formErrors.username}</div>}
-                    </div>
+                        <div className="mb-3">
+                            <label htmlFor="username" className="form-label">Username</label>
+                            <input
+                                type="text"
+                                id="username"
+                                name="username"
+                                value={formData.username}
+                                onChange={handleChange}
+                                className="form-control"
+                            />
+                            {formErrors.username && <div className="text-danger">{formErrors.username}</div>}
+                        </div>
 
-                    <div className="mb-3">
-                        <label htmlFor="emailAddress" className="form-label">Email address</label>
-                        <input
-                            type="email"
-                            id="emailAddress"
-                            name="emailAddress"
-                            value={formData.emailAddress}
-                            onChange={handleChange}
-                            className="form-control"
-                        />
-                        {formErrors.emailAddress && <div className="text-danger">{formErrors.emailAddress}</div>}
-                    </div>
+                        <div className="mb-3">
+                            <label htmlFor="emailAddress" className="form-label">Email address</label>
+                            <input
+                                type="email"
+                                id="emailAddress"
+                                name="emailAddress"
+                                value={formData.emailAddress}
+                                onChange={handleChange}
+                                className="form-control"
+                            />
+                            {formErrors.emailAddress && <div className="text-danger">{formErrors.emailAddress}</div>}
+                        </div>
 
-                    <div className="mb-3">
-                        <label htmlFor="password" className="form-label">Password</label>
-                        <input
-                            type="password"
-                            id="password"
-                            name="password"
-                            value={formData.password}
-                            onChange={handleChange}
-                            className="form-control"
-                        />
-                        {formErrors.password && <div className="text-danger">{formErrors.password}</div>}
-                    </div>
+                        <div className="mb-3">
+                            <label htmlFor="password" className="form-label">Password</label>
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                value={formData.password}
+                                onChange={handleChange}
+                                className="form-control"
+                            />
+                            {formErrors.password && <div className="text-danger">{formErrors.password}</div>}
+                        </div>
 
-                    <div className="mb-3">
-                        <label htmlFor="_clazz" className="form-label">Role</label>
-                        <select
-                            id="_clazz"
-                            name="_clazz"
-                            value={formData._clazz}
-                            onChange={handleChange}
-                            className="form-select"
-                        >
-                            <option value="Client">Client</option>
-                            <option value="ResourceManager">Resource Manager</option>
-                            <option value="Admin">Admin</option>
-                        </select>
-                    </div>
+                        <div className="mb-3">
+                            <label htmlFor="_clazz" className="form-label">Role</label>
+                            <select
+                                id="_clazz"
+                                name="_clazz"
+                                value={formData._clazz}
+                                onChange={handleChange}
+                                className="form-select"
+                            >
+                                <option value="Client">Client</option>
+                                <option value="ResourceManager">Resource Manager</option>
+                                <option value="Admin">Admin</option>
+                            </select>
+                        </div>
 
-                    <button type="submit" className="btn btn-primary w-100">Register</button>
-                </form>
-            </div>
-        );
+                        <button type="submit" className="btn btn-primary w-100">Register</button>
+                    </form>
+                </div>
+            );
+        }
+
     }
 
     return (

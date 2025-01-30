@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { useUserSession } from '../model/UserContext';
 import axios from 'axios';
 import './styles.css';
+import {jwtDecode} from "jwt-decode";
 
 interface EntityId {
     uuid: string;
@@ -33,7 +33,7 @@ interface User {
 }
 
 export const EditProfile = () => {
-    const { currentUser, setCurrentUser } = useUserSession();
+    const [token] = useState<string | null>(localStorage.getItem('token'));
     const [userData, setUserData] = useState<User | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
@@ -46,32 +46,37 @@ export const EditProfile = () => {
 
     useEffect(() => {
         const fetchUserData = async () => {
-            if (!currentUser) return;
+            if (!token) return;
 
             try {
-                const response = await axios.get<User>(
-                    `/api/client/${currentUser.entityId.uuid}`,
-                    {
+                const decodedToken: string = jwtDecode(token);
+                const username = decodedToken.sub;
+                try {
+                    const response = await axios.get<User>(`/api/client/findClient/${username}`, {
                         headers: {
+                            'Authorization': `Bearer ${token}`,
                             'ngrok-skip-browser-warning': '69420',
                         },
-                    }
-                );
-                setUserData(response.data);
-                setFormData({
-                    firstName: response.data.firstName,
-                    surname: response.data.surname,
-                    emailAddress: response.data.emailAddress,
-                });
-                setLoading(false);
-            } catch (err) {
-                setError(`Nie udało się pobrać danych użytkownika ${err}.`);
+                    });
+                    setUserData(response.data);
+                    setFormData({
+                        firstName: response.data.firstName,
+                        surname: response.data.surname,
+                        emailAddress: response.data.emailAddress,
+                    });
+                    setLoading(false);
+                } catch (err) {
+                    setError(`Nie udało się pobrać danych użytkownika ${err}.`);
+                    setLoading(false);
+                }
+            } catch (error) {
+                setError(`Token decoding failed: ${error}`);
                 setLoading(false);
             }
         };
 
         fetchUserData();
-    }, [currentUser]);
+    }, [token]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -81,7 +86,7 @@ export const EditProfile = () => {
     const handleFormSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        if (!currentUser) {
+        if (!token) {
             alert('Musisz być zalogowany, aby edytować swój profil.');
             return;
         }
@@ -89,24 +94,25 @@ export const EditProfile = () => {
         if (!confirmation) return;
         try {
             await axios.put(
-                `/api/client/${currentUser.entityId.uuid}`,
+                `/api/client/${userData?.entityId.uuid}`,
                 formData,
                 {
                     headers: {
+                        'Authorization': `Bearer ${token}`,
                         'ngrok-skip-browser-warning': '69420',
                     },
                 }
             );
             alert('Dane zostały zaktualizowane!');
-            const response = await axios.get<User>(
-                `/api/client/${currentUser.entityId.uuid}`,
+            await axios.get<User>(
+                `/api/client/${userData?.entityId.uuid}`,
                 {
                     headers: {
+                        'Authorization': `Bearer ${token}`,
                         'ngrok-skip-browser-warning': '69420',
                     },
                 }
             );
-            setCurrentUser(response.data);
         } catch (err) {
             console.error('Błąd przy aktualizacji danych:', err);
             alert('Nie udało się zaktualizować danych. Spróbuj ponownie.');

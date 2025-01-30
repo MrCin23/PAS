@@ -1,6 +1,7 @@
 package pl.lodz.p.controller;
 
 import io.jsonwebtoken.ExpiredJwtException;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -27,16 +28,37 @@ import java.util.UUID;
 public class RentController {
     private RentService rentService;
 
-    @PostMapping//not tested
-    public ResponseEntity<Object> createRent(@Valid @RequestBody RentDTO rentDTO, BindingResult bindingResult) {
+//    @PostMapping//not tested
+//    public ResponseEntity<Object> createRent(@Valid @RequestBody RentDTO rentDTO, BindingResult bindingResult) {
+//        try {
+//            Rent pom = rentService.createRent(rentDTO);
+//            if (bindingResult.hasErrors()) {
+//                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(bindingResult.getAllErrors());
+//            }
+//            return ResponseEntity.status(HttpStatus.CREATED).body(pom);
+//        } catch (RuntimeException e) {
+//            return ResponseEntity.status(HttpStatus.CONFLICT).body(e);
+//        } catch (Exception ex) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
+//        }
+//    }
+
+    @PostMapping
+    public ResponseEntity<Object> createRent(@Valid @RequestBody RentDTO rentDTO,
+                                             BindingResult bindingResult,
+                                             HttpServletRequest request) {
         try {
-            Rent pom = rentService.createRent(rentDTO);
+            String bearerToken = request.getHeader("Authorization");
+
+            Rent pom = rentService.createRent(rentDTO, bearerToken);
+
             if (bindingResult.hasErrors()) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(bindingResult.getAllErrors());
             }
+
             return ResponseEntity.status(HttpStatus.CREATED).body(pom);
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(e);
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
         }
@@ -137,6 +159,20 @@ public class RentController {
     public ResponseEntity<Object> getClientAllRents(@RequestHeader("Authorization") String authHeader) {
         try {
             List<Rent> rents = rentService.getClientAllRents(authHeader);
+            return ResponseEntity.ok(rents);
+        } catch (ExpiredJwtException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token expired");
+        } catch (RuntimeException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/all/client/{uuid}")
+    public ResponseEntity<Object> getClientAllRentsByUUID(@PathVariable("uuid") UuidDTO uuid) {
+        try {
+            List<Rent> rents = rentService.getClientAllRents(uuid.uuid());
             return ResponseEntity.ok(rents);
         } catch (ExpiredJwtException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token expired");
