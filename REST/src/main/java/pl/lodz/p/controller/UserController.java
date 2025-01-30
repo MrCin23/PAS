@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import pl.lodz.p.dto.ChangePasswordDTO;
 import pl.lodz.p.dto.LoginDTO;
 import pl.lodz.p.dto.UuidDTO;
+import pl.lodz.p.exception.DeactivatedUserException;
 import pl.lodz.p.exception.WrongPasswordException;
 import pl.lodz.p.model.user.Client;
 import pl.lodz.p.model.user.User;
@@ -123,6 +124,8 @@ public class UserController {
             String token;
             try {
                 token = clientServiceImplementation.getUserByUsername(loginDTO);
+            } catch (DeactivatedUserException ex) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("User is deactivated");
             } catch (WrongPasswordException e) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
             } catch (RuntimeException ex) {

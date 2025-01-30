@@ -16,7 +16,7 @@ export default defineConfig({
   build: {
     sourcemap: true,
   },
-  // plugins: [
-  //     react(),mkcert()
-  // ]
+  plugins: [
+      react(),mkcert()
+  ]
 })

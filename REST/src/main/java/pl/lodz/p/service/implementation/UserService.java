@@ -6,6 +6,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 import pl.lodz.p.dto.LoginDTO;
+import pl.lodz.p.exception.DeactivatedUserException;
 import pl.lodz.p.exception.WrongPasswordException;
 import pl.lodz.p.model.user.User;
 import pl.lodz.p.model.MongoUUID;
@@ -93,6 +94,9 @@ public class UserService implements IUserService, UserDetailsService {
             throw new RuntimeException("User with username " + loginDTO.getUsername() + " does not exist");
         }
         User user = repo.getUserByUsername(loginDTO.getUsername());
+        if(!user.isActive()) {
+            throw new DeactivatedUserException("User with username " + loginDTO.getUsername() + " does not exist");
+        }
         if(user.checkPassword(loginDTO.getPassword())) {
             return tokenProvider.generateToken(loginDTO.getUsername(), user.getRole());
         } else {

@@ -26,7 +26,9 @@ export const LogInUser = () => {
             const response = await axios.post<string>('/api/client/login', loginForm, {
                 headers: { 'ngrok-skip-browser-warning': '69420' }
             });
-
+            if (response.status === 403) {
+                setError(response.data);
+            }
             console.log("Token received:", response.data);
             setToken(response.data); // Update context
 

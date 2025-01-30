@@ -1,8 +1,9 @@
-import { ReactNode } from 'react'
+import {ReactNode, useState} from 'react'
 import { Pathnames } from '../../../router/pathnames'
 import { useNavigate } from 'react-router-dom'
 import { FadingAlertComponent } from "../../alert/FadingAlert";
 import { useUserSession } from '../../../model/UserContext';
+import axios from "axios";
 
 interface LayoutProps {
     children: ReactNode
@@ -12,6 +13,8 @@ export const AdminLayout = ({ children }: LayoutProps) => {
     // Klient ma dostęp do home, swojego profilu, listy maszyn, swoich wypożyczeń
     const navigate = useNavigate()
     const { clearUser } = useUserSession();
+    const [token] = useState<string | null>(localStorage.getItem('token'));
+
 
     return (
         <div className="bg-dark text-light"> {/* Ciemne tło i jasny tekst */}
@@ -75,6 +78,11 @@ export const AdminLayout = ({ children }: LayoutProps) => {
                                     className="btn btn-outline-light mx-2"
                                     onClick={() => {
                                         clearUser();
+                                        axios.post('api/client/logout', {}, {
+                                            headers: {
+                                                'Authorization': `Bearer ${token}`,
+                                            }
+                                        });
                                         localStorage.removeItem('token');
                                         navigate(Pathnames.default.homePage);
                                     }}
