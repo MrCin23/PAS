@@ -75,6 +75,7 @@ export const AdminLayout = ({ children }: LayoutProps) => {
                                     className="btn btn-outline-light mx-2"
                                     onClick={() => {
                                         clearUser();
+                                        localStorage.removeItem('token');
                                         navigate(Pathnames.default.homePage);
                                     }}
                                 >
