@@ -134,4 +134,9 @@ public class UserService implements IUserService, UserDetailsService {
     public boolean checkToken(String token) {
         return blacklistedTokens.contains(token);
     }
+
+    @Override
+    public void changePassword(String username, String newPassword){
+        repo.update(repo.getUserByUsername(username).getEntityId(), "password", BCrypt.hashpw(newPassword, BCrypt.gensalt()));
+    }
 }

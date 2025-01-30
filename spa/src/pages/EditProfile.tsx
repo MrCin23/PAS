@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './styles.css';
-import {jwtDecode} from "jwt-decode";
+import { jwtDecode } from 'jwt-decode';
 
 interface EntityId {
     uuid: string;
@@ -44,33 +44,35 @@ export const EditProfile = () => {
         emailAddress: '',
     });
 
+    const [passwordData, setPasswordData] = useState({
+        oldPassword: '',
+        newPassword: '',
+    });
+
     useEffect(() => {
         const fetchUserData = async () => {
             if (!token) return;
 
             try {
-                const decodedToken: string = jwtDecode(token);
+                const decodedToken: any = jwtDecode(token);
                 const username = decodedToken.sub;
-                try {
-                    const response = await axios.get<User>(`/api/client/findClient/${username}`, {
-                        headers: {
-                            'Authorization': `Bearer ${token}`,
-                            'ngrok-skip-browser-warning': '69420',
-                        },
-                    });
-                    setUserData(response.data);
-                    setFormData({
-                        firstName: response.data.firstName,
-                        surname: response.data.surname,
-                        emailAddress: response.data.emailAddress,
-                    });
-                    setLoading(false);
-                } catch (err) {
-                    setError(`Nie udało się pobrać danych użytkownika ${err}.`);
-                    setLoading(false);
-                }
-            } catch (error) {
-                setError(`Token decoding failed: ${error}`);
+                const response = await axios.get<User>(`/api/client/findClient/${username}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'ngrok-skip-browser-warning': '69420',
+                    },
+                });
+
+                setUserData(response.data);
+                setFormData({
+                    firstName: response.data.firstName,
+                    surname: response.data.surname,
+                    emailAddress: response.data.emailAddress,
+                });
+
+                setLoading(false);
+            } catch (err) {
+                setError(`Nie udało się pobrać danych użytkownika: ${err}`);
                 setLoading(false);
             }
         };
@@ -83,39 +85,69 @@ export const EditProfile = () => {
         setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
-    const handleFormSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
+    const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setPasswordData((prev) => ({ ...prev, [name]: value }));
+    };
 
-        if (!token) {
+    const handleProfileUpdate = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!token || !userData) {
             alert('Musisz być zalogowany, aby edytować swój profil.');
             return;
         }
-        const confirmation = window.confirm(`Czy na pewno chcesz zmienić dane?`);
+
+        const confirmation = window.confirm('Czy na pewno chcesz zmienić dane?');
         if (!confirmation) return;
+
         try {
-            await axios.put(
-                `/api/client/${userData?.entityId.uuid}`,
-                formData,
-                {
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'ngrok-skip-browser-warning': '69420',
-                    },
-                }
-            );
+            await axios.put(`/api/client/${userData.entityId.uuid}`, formData, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'ngrok-skip-browser-warning': '69420',
+                },
+            });
             alert('Dane zostały zaktualizowane!');
-            await axios.get<User>(
-                `/api/client/${userData?.entityId.uuid}`,
-                {
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'ngrok-skip-browser-warning': '69420',
-                    },
-                }
-            );
         } catch (err) {
             console.error('Błąd przy aktualizacji danych:', err);
             alert('Nie udało się zaktualizować danych. Spróbuj ponownie.');
+        }
+    };
+
+    const handlePasswordUpdate = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!token || !userData) {
+            alert('Musisz być zalogowany, aby zmienić hasło.');
+            return;
+        }
+
+        if (passwordData.newPassword.length < 6) {
+            alert('Nowe hasło musi mieć co najmniej 6 znaków.');
+            return;
+        }
+
+        const confirmation = window.confirm('Czy na pewno chcesz zmienić hasło?');
+        if (!confirmation) return;
+
+        try {
+            await axios.put(
+                `/api/client/changePassword`,
+                {
+                    username: userData.username,
+                    oldPassword: passwordData.oldPassword,
+                    newPassword: passwordData.newPassword,
+                },
+                {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'ngrok-skip-browser-warning': '69420',
+                    },
+                }
+            );
+            alert('Hasło zostało zmienione!');
+        } catch (err) {
+            console.error('Błąd przy zmianie hasła:', err);
+            alert('Nie udało się zmienić hasła. Sprawdź poprawność starego hasła i spróbuj ponownie.');
         }
     };
 
@@ -125,8 +157,9 @@ export const EditProfile = () => {
     return (
         <div className="container">
             <h1 className="text-center mb-4">Edycja profilu</h1>
+
             {userData && (
-                <form className="edit-profile-form" onSubmit={handleFormSubmit}>
+                <form className="edit-profile-form" onSubmit={handleProfileUpdate}>
                     <div className="mb-3">
                         <label htmlFor="firstName" className="form-label">
                             Imię:
@@ -174,6 +207,41 @@ export const EditProfile = () => {
                     </button>
                 </form>
             )}
+
+            <h2 className="text-center mt-5">Zmiana hasła</h2>
+            <form className="edit-profile-form" onSubmit={handlePasswordUpdate}>
+                <div className="mb-3">
+                    <label htmlFor="oldPassword" className="form-label">
+                        Stare hasło:
+                    </label>
+                    <input
+                        type="password"
+                        id="oldPassword"
+                        name="oldPassword"
+                        value={passwordData.oldPassword}
+                        onChange={handlePasswordChange}
+                        className="form-control"
+                        required
+                    />
+                </div>
+                <div className="mb-3">
+                    <label htmlFor="newPassword" className="form-label">
+                        Nowe hasło:
+                    </label>
+                    <input
+                        type="password"
+                        id="newPassword"
+                        name="newPassword"
+                        value={passwordData.newPassword}
+                        onChange={handlePasswordChange}
+                        className="form-control"
+                        required
+                    />
+                </div>
+                <button className="btn btn-danger w-100" type="submit">
+                    Zmień hasło
+                </button>
+            </form>
         </div>
     );
 };

@@ -34,4 +34,6 @@ public interface IUserService {
     void invalidateToken(String token);
 
     boolean checkToken(String token);
+
+    void changePassword(String username, String newPassword);
 }

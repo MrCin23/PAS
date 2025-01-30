@@ -9,6 +9,7 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import pl.lodz.p.dto.ChangePasswordDTO;
 import pl.lodz.p.dto.LoginDTO;
 import pl.lodz.p.dto.UuidDTO;
 import pl.lodz.p.exception.WrongPasswordException;
@@ -171,5 +172,23 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.OK).build();
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    }
+
+    @PutMapping("/changePassword")
+    public ResponseEntity<Object> changePassword(@RequestBody @Valid ChangePasswordDTO changePasswordDTO) {
+        try {
+            String token;
+            try {
+                token = clientServiceImplementation.getUserByUsername(new LoginDTO(changePasswordDTO.getUsername(), changePasswordDTO.getOldPassword()));
+                clientServiceImplementation.changePassword(changePasswordDTO.getUsername(), changePasswordDTO.getNewPassword());
+            } catch (WrongPasswordException e) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+            } catch (RuntimeException ex) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No users found");
+            }
+            return ResponseEntity.status(HttpStatus.OK).body(token);
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
+        }
     }
 }
