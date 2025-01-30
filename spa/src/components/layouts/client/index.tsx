@@ -77,7 +77,7 @@ export const ClientLayout = ({ children }: LayoutProps) => {
                                     className="btn btn-outline-light mx-2"
                                     onClick={() => {
                                         clearUser();
-                                        axios.post('api/client/logout', {}, {
+                                        axios.post(`api/client/logout`, {}, {
                                             headers: {
                                                 'Authorization': `Bearer ${token}`,
                                             }
