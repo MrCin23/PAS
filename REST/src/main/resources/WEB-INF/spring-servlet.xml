@@ -41,6 +41,7 @@
     <bean id="userService" class="pl.lodz.p.service.implementation.UserService"/>
     <bean id="filter" class="pl.lodz.p.security.JwtFilter"/>
     <bean id="tokenProvider" class="pl.lodz.p.security.JwtTokenProvider"/>
+    <bean id="jwsProvider" class="pl.lodz.p.security.JwsProvider"/>
     <bean id="customAuthEntryPoint"
           class="pl.lodz.p.controller.CustomAuthenticationEntryPoint"/>
 <!--    -->

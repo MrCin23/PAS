@@ -16,6 +16,8 @@ import pl.lodz.p.exception.DeactivatedUserException;
 import pl.lodz.p.exception.WrongPasswordException;
 import pl.lodz.p.model.user.Client;
 import pl.lodz.p.model.user.User;
+import pl.lodz.p.security.JwsProvider;
+import pl.lodz.p.security.JwtTokenProvider;
 import pl.lodz.p.service.implementation.UserService;
 
 import java.util.List;
@@ -29,6 +31,7 @@ import java.util.Map;
 //@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class UserController {
 
+    private JwsProvider jwsProvider;
     private UserService clientServiceImplementation;
 
     @PostMapping//tested
@@ -62,7 +65,7 @@ public class UserController {
         }
     }
 
-    @GetMapping("/{uuid}")//tested
+    @GetMapping("/{uuid}")
     public ResponseEntity<Object> getUser(@PathVariable("uuid") UuidDTO uuid) {
         try {
             User user;
@@ -71,20 +74,33 @@ public class UserController {
             } catch (RuntimeException ex) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No users found");
             }
-            return ResponseEntity.status(HttpStatus.OK).body(user);
+            return ResponseEntity.status(HttpStatus.OK).header("etag", jwsProvider.generateJws(uuid.getUuid(), user.getUsername())).body(user);
+
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
         }
     }
 
-    @PutMapping("/{uuid}")//fail not tested
-    public ResponseEntity<Object> updateUser(@PathVariable("uuid") UuidDTO uuid, @RequestBody Map<String, Object> fieldsToUpdate, BindingResult bindingResult) {
+    @PutMapping("/{uuid}")
+    public ResponseEntity<Object> updateUser(@PathVariable("uuid") UuidDTO uuid,
+                                             @RequestBody Map<String, Object> fieldsToUpdate,
+                                             @RequestHeader(value = "If-Match", required = false) String ifMatchHeader,
+                                             BindingResult bindingResult) {
         try {
-            if(bindingResult.hasErrors()) {
+            if (bindingResult.hasErrors()) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(bindingResult.getAllErrors());
+            }
+            User user = clientServiceImplementation.getUser(uuid.uuid());
+            System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"+ifMatchHeader+"\n\n\n\n"+
+                    jwsProvider.validateJws(ifMatchHeader, user.getEntityId().getUuid().toString(), user.getUsername()));
+
+            if (ifMatchHeader == null || !jwsProvider.validateJws(ifMatchHeader, user.getEntityId().getUuid().toString(), user.getUsername())) {
+                return ResponseEntity.status(HttpStatus.CONFLICT)
+                        .body("ETag mismatch: Resource has been modified since you last fetched it.");
             }
             clientServiceImplementation.updateUser(uuid.uuid(), fieldsToUpdate);
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body("User with uuid " + uuid.uuid() + " has been updated");
+
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
         }
@@ -146,7 +162,7 @@ public class UserController {
             } catch (RuntimeException ex) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No users matching");
             }
-            return ResponseEntity.status(HttpStatus.OK).body(users);
+            return ResponseEntity.status(HttpStatus.OK).header("etag", jwsProvider.generateJws(users.getEntityId().getUuid().toString(), username) ).body(users);
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
         }

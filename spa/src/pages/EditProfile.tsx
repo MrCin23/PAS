@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import './styles.css';
 import { jwtDecode } from 'jwt-decode';
+import './styles.css';
 
 interface EntityId {
     uuid: string;
@@ -37,6 +37,7 @@ export const EditProfile = () => {
     const [userData, setUserData] = useState<User | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
+    const [etag, setEtag] = useState<string | null>(null); // New state to store the ETag
 
     const [formData, setFormData] = useState({
         firstName: '',
@@ -61,6 +62,7 @@ export const EditProfile = () => {
                         'Authorization': `Bearer ${token}`,
                         'ngrok-skip-browser-warning': '69420',
                     },
+                    // Capture the ETag from the response headers
                 });
 
                 setUserData(response.data);
@@ -69,7 +71,7 @@ export const EditProfile = () => {
                     surname: response.data.surname,
                     emailAddress: response.data.emailAddress,
                 });
-
+                setEtag(response.headers['etag']); // Store ETag
                 setLoading(false);
             } catch (err) {
                 setError(`Nie udało się pobrać danych użytkownika: ${err}`);
@@ -105,6 +107,7 @@ export const EditProfile = () => {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'ngrok-skip-browser-warning': '69420',
+                    'If-Match': etag || '', // Include the stored ETag
                 },
             });
             alert('Dane zostały zaktualizowane!');

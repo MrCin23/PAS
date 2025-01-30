@@ -37,7 +37,6 @@ public class RentService implements IRentService {
     public Rent createRent(RentDTO rentDTO) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
-        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + username);
         Client client = (Client)userRepo.getUserByUsername(username);
         VMachine vm = vmRepo.getVMachineByID(new MongoUUID(rentDTO.getVmId()));
         if(client == null) {
