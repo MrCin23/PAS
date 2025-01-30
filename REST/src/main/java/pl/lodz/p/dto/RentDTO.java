@@ -16,7 +16,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class RentDTO {
     @NotNull(message = "Client UUID cannot be null")
-    private UUID clientId;
+    private String username;
     @NotNull(message = "VM UUID cannot be null")
     private UUID vmId;
     private LocalDateTime startTime;

@@ -3,6 +3,7 @@ package pl.lodz.p.service.implementation;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 import pl.lodz.p.dto.LoginDTO;
 import pl.lodz.p.exception.WrongPasswordException;
@@ -31,6 +32,7 @@ public class UserService implements IUserService, UserDetailsService {
 
     @Override
     public User createUser(User user) {
+        user.setPassword(BCrypt.hashpw(user.getPassword(), BCrypt.gensalt()));
         if(repo.getUserByID(user.getEntityId()) == null) {
             repo.add(user);
             return user;
@@ -96,6 +98,14 @@ public class UserService implements IUserService, UserDetailsService {
         } else {
             throw new WrongPasswordException("Wrong password");
         }
+    }
+
+    @Override
+    public User getUserByUsername(String username) {
+        if(repo.getUsersByUsername(username) == null || repo.getUsersByUsername(username).isEmpty()) {
+            throw new RuntimeException("No users with username " + username + " found");
+        }
+        return repo.getUserByUsername(username);
     }
 
     @Override

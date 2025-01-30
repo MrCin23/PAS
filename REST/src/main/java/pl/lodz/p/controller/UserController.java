@@ -5,11 +5,13 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import pl.lodz.p.dto.LoginDTO;
 import pl.lodz.p.dto.UuidDTO;
+import pl.lodz.p.exception.WrongPasswordException;
 import pl.lodz.p.model.user.Client;
 import pl.lodz.p.model.user.User;
 import pl.lodz.p.service.implementation.UserService;
@@ -27,10 +29,11 @@ public class UserController {
 
     private UserService clientServiceImplementation;
 
+    //FIXME role może nie być ale musi być _clazz xDDDD
     @PostMapping//tested
     public ResponseEntity<Object> createUser(@Valid @RequestBody User user, BindingResult bindingResult) {
         try {
-            if(bindingResult.hasErrors()) {
+            if (bindingResult.hasErrors()) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(bindingResult.getAllErrors());
             }
             try {
@@ -114,16 +117,33 @@ public class UserController {
         }
     }
 
-    @GetMapping("/login")
+    @PostMapping("/login")
     public ResponseEntity<Object> findUser(@RequestBody @Valid LoginDTO loginDTO) {
         try {
             String token;
             try {
                 token = clientServiceImplementation.getUserByUsername(loginDTO);
+            } catch (WrongPasswordException e) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
             } catch (RuntimeException ex) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No users found");
             }
             return ResponseEntity.status(HttpStatus.OK).body(token);
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
+        }
+    }
+
+    @GetMapping("/findClient/{username}")//tested
+    public ResponseEntity<Object> findUser(@PathVariable("username") String username) {
+        try {
+            User users;
+            try {
+                users = clientServiceImplementation.getUserByUsername(username);
+            } catch (RuntimeException ex) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No users matching");
+            }
+            return ResponseEntity.status(HttpStatus.OK).body(users);
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
         }

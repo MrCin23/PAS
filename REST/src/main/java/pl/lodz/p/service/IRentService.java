@@ -19,7 +19,8 @@ public interface IRentService {
 
     Rent getRent(UUID id);
 
-    List<Rent> getClientAllRents(UUID uuid);
+//    List<Rent> getClientAllRents(UUID uuid);
+    List<Rent> getClientAllRents(String authHeader);
 
     List<Rent> getClientActiveRents(UUID uuid);
 

@@ -20,6 +20,7 @@ interface FormData {
     firstName: string;
     surname: string;
     username: string;
+    password: string;
     emailAddress: string;
     role: Role;
     active: string;
@@ -34,6 +35,7 @@ export const CreateUser = () => {
         firstName: '',
         surname: '',
         username: '',
+        password: '',
         emailAddress: '',
         role: Role.client,
         active: true.toString(),
@@ -54,6 +56,9 @@ export const CreateUser = () => {
         }
         if (!formData.username.trim()) {
             errors.username = 'Username is required';
+        }
+        if (!formData.password.trim()) {
+            errors.username = 'Password is required';
         }
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!formData.emailAddress.trim()) {
@@ -111,6 +116,7 @@ export const CreateUser = () => {
                 firstName: '',
                 surname: '',
                 username: '',
+                password: '',
                 emailAddress: '',
                 role: Role.client,
                 active: true.toString(),
@@ -186,6 +192,19 @@ export const CreateUser = () => {
                     </div>
 
                     <div className="mb-3">
+                        <label htmlFor="password" className="form-label">Password</label>
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            value={formData.password}
+                            onChange={handleChange}
+                            className="form-control"
+                        />
+                        {formErrors.password && <div className="text-danger">{formErrors.password}</div>}
+                    </div>
+
+                    <div className="mb-3">
                         <label htmlFor="_clazz" className="form-label">Role</label>
                         <select
                             id="_clazz"
@@ -207,10 +226,11 @@ export const CreateUser = () => {
     }
 
     return (
-        <div className="container" style={{ maxWidth: '400px' }}>
+        <div className="container" style={{maxWidth: '400px'}}>
             <h2 className="mb-4">User Registration</h2>
             {notification && (
-                <div className={`alert ${notification.includes('success') ? 'alert-success' : 'alert-danger'}`} role="alert">
+                <div className={`alert ${notification.includes('success') ? 'alert-success' : 'alert-danger'}`}
+                     role="alert">
                     {notification}
                 </div>
             )}
@@ -265,6 +285,19 @@ export const CreateUser = () => {
                         className="form-control"
                     />
                     {formErrors.emailAddress && <div className="text-danger">{formErrors.emailAddress}</div>}
+                </div>
+
+                <div className="mb-3">
+                    <label htmlFor="password" className="form-label">Password</label>
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        value={formData.password}
+                        onChange={handleChange}
+                        className="form-control"
+                    />
+                    {formErrors.password && <div className="text-danger">{formErrors.password}</div>}
                 </div>
 
                 <button type="submit" className="btn btn-primary w-100">Register</button>

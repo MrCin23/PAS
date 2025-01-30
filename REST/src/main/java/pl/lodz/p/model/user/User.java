@@ -1,5 +1,6 @@
 package pl.lodz.p.model.user;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import jakarta.validation.constraints.Email;
@@ -46,6 +47,7 @@ public abstract class User extends AbstractEntityMgd {
     private String username;
     @BsonProperty("password")
     @NotBlank(message = "Password cannot be blank")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
     @BsonProperty("emailAddress")
     @NotBlank(message = "Email cannot be blank")

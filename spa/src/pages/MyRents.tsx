@@ -64,9 +64,11 @@ export const MyRents = () => {
         const fetchRents = async () => {
             if (currentUser != null) {
                 try {
-                    const response = await axios.get<Rent[]>(`/api/rent/all/client/${currentUser.entityId.uuid}`,
+                    const token = localStorage.getItem("token");
+                    const response = await axios.get<Rent[]>(`/api/rent/all/client`,
                         {
                             headers: {
+                                'Authorization': `Bearer ${token}`,
                                 'ngrok-skip-browser-warning': '69420'
                             }
                         });
@@ -90,9 +92,11 @@ export const MyRents = () => {
         );
         if (!confirmRent) return;
         try {
+            const token = localStorage.getItem("token");
             await axios.put(`/api/rent/end/${rentId}`,
                 {
                     headers: {
+                        'Authorization': `Bearer ${token}`,
                         'ngrok-skip-browser-warning': '69420'
                     }
                 });
@@ -104,8 +108,8 @@ export const MyRents = () => {
             console.error('Error ending rent:', error);
         }
     };
-
-    if (currentUser == null) return <div className="text-center text-white mt-5">Musisz być zalogowany, aby przeglądać tę witrynę!</div>;
+    const token = localStorage.getItem('token');
+    if (token == null) return <div className="text-center text-white mt-5">Musisz być zalogowany, aby przeglądać tę witrynę!</div>;
 
     return (
         <div className="container py-5">

@@ -4,6 +4,8 @@ import './styles.css';
 import {useUserSession } from '../model/UserContext';
 import { useNavigate } from 'react-router-dom';
 import {Pathnames} from "../router/pathnames.ts";
+import {Cookie} from "@mui/icons-material";
+import {jwtDecode} from "jwt-decode";
 /**
  * To na tę chwilę zastępuje nam logowanie się Użytkownika. Po prostu podajemy username i szukamy kogoś o takim username.
  */
@@ -36,45 +38,81 @@ interface User {
     currentRents: number;
 }
 
+interface LoginForm {
+    username: string;
+    password: string;
+}
+
 export const LogInUser = () => {
-    const [username, setUsername] = useState<string>('');
+    const [loginForm, setLoginForm] = useState<LoginForm>({
+        username: '',
+        password: ''
+    });
     const [userData, setUserData] = useState<User | null>(null);
     const [error, setError] = useState<string | null>(null);
     const {setCurrentUser} = useUserSession();
     const navigate = useNavigate();
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setUsername(e.target.value);
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+        const { name, value } = e.target;
+
+        const updatedFormData = { ...loginForm, [name]: value };
+
+        setLoginForm(updatedFormData);
     };
 
     const handleLogIn = async () => {
-        if (!username.trim()) {
+        if (!loginForm.username.trim()) {
             setError('Username is required');
+            setUserData(null);
+            return;
+        }
+        if (!loginForm.password.trim()) {
+            setError('Password is required');
             setUserData(null);
             return;
         }
 
         try {
-            const response = await axios.get<User>(
-                `/api/client/findClient/${username}`,
+            const response = await axios.post<string>(
+                `/api/client/login`,
+                loginForm,
                 {
                     headers: {
                         'ngrok-skip-browser-warning': '69420'
                     }
                 }
             );
-            setUserData(response.data);
-            setCurrentUser(response.data);
-            setError(null);
-            if(response.data != null) {
-                if (response.data.role === "CLIENT") {
+            localStorage.setItem('token', response.data);
+            console.log(response.data);
+            const token = localStorage.getItem('token');
+            if (token) {
+                // Dekodowanie tokenu
+                const decodedToken: any = jwtDecode(token);
+
+                console.log("Decoded Token:", decodedToken);
+
+                // Sprawdzenie roli użytkownika
+                if (decodedToken.role === "CLIENT") {
                     navigate(Pathnames.user.homePage);
-                } else if (response.data.role === "ADMIN") {
+                } else if (decodedToken.role === "ADMIN") {
                     navigate(Pathnames.admin.homePage);
-                } else if (response.data.role === "RESOURCE_MANAGER") {
+                } else if (decodedToken.role === "RESOURCE_MANAGER") {
                     navigate(Pathnames.moderator.homePage);
                 }
             }
+            // setUserData(response.data);
+            // setCurrentUser(response.data);
+            // setError(null);
+            // if(response.data != null) {
+            //     if (response.data.role === "CLIENT") {
+            //         navigate(Pathnames.user.homePage);
+            //     } else if (response.data.role === "ADMIN") {
+            //         navigate(Pathnames.admin.homePage);
+            //     } else if (response.data.role === "RESOURCE_MANAGER") {
+            //         navigate(Pathnames.moderator.homePage);
+            //     }
+            // }
         } catch (err) {
             console.error(err);
             setError('User not found or an error occurred.');
@@ -92,7 +130,18 @@ export const LogInUser = () => {
                     id="username"
                     name="username"
                     placeholder={"Username"}
-                    value={username}
+                    value={loginForm.username}
+                    onChange={handleChange}
+                />
+            </div>
+            <div>
+                {/*<label htmlFor="username">Username</label>*/}
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder={"Password"}
+                    value={loginForm.password}
                     onChange={handleChange}
                 />
             </div>

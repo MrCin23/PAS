@@ -123,8 +123,13 @@ public class RentRepository extends AbstractMongoRepository {
         return rents.find().into(new ArrayList<>());
     }
 
-    public List<Rent> getClientRents(MongoUUID clientId) {
-        Bson filter1 = Filters.eq("client._id", clientId.getUuid());
+//    public List<Rent> getClientRents(MongoUUID clientId) {
+//        Bson filter1 = Filters.eq("client._id", clientId.getUuid());
+//        return rents.find(filter1).into(new ArrayList<>());
+//    }
+
+    public List<Rent> getClientRents(String username) {
+        Bson filter1 = Filters.eq("client.username", username);
         return rents.find(filter1).into(new ArrayList<>());
     }
 

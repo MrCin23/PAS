@@ -1,5 +1,6 @@
 package pl.lodz.p.controller;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -117,20 +118,35 @@ public class RentController {
 
     }
 
-    @GetMapping("/all/client/{uuid}")//not tested
-    public ResponseEntity<Object> getClientAllRents(@PathVariable("uuid") UuidDTO uuid){
+//    @GetMapping("/all/client/{uuid}")//not tested
+//    public ResponseEntity<Object> getClientAllRents(@PathVariable("uuid") UuidDTO uuid){
+//        try {
+//            List<Rent> rents;
+//            try {
+//                rents = rentService.getClientAllRents(uuid.uuid());
+//            } catch (RuntimeException ex) {
+//                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No rents found");
+//            }
+//            return ResponseEntity.status(HttpStatus.OK).body(rents);
+//        } catch (Exception ex) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
+//        }
+//    }
+
+    @GetMapping("/all/client")
+    public ResponseEntity<Object> getClientAllRents(@RequestHeader("Authorization") String authHeader) {
         try {
-            List<Rent> rents;
-            try {
-                rents = rentService.getClientAllRents(uuid.uuid());
-            } catch (RuntimeException ex) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No rents found");
-            }
-            return ResponseEntity.status(HttpStatus.OK).body(rents);
-        } catch (Exception ex) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
+            List<Rent> rents = rentService.getClientAllRents(authHeader);
+            return ResponseEntity.ok(rents);
+        } catch (ExpiredJwtException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token expired");
+        } catch (RuntimeException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
+
 
     @GetMapping("/active/client/{uuid}")//not tested
     public ResponseEntity<Object> getClientActiveRents(@PathVariable("uuid") UuidDTO uuid){

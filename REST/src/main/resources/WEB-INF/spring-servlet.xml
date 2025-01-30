@@ -47,7 +47,12 @@
     <security:http use-expressions="true" create-session="stateless" entry-point-ref="customAuthEntryPoint">
 <!--    <security:http auto-config="true" use-expressions="true" create-session="stateless" entry-point-ref="customAuthEntryPoint">-->
         <security:csrf disabled="true"/>
+        <security:intercept-url pattern="/api/client" method="POST" access="permitAll"/>
         <security:intercept-url pattern="/api/client/login" access="permitAll"/>
+        <security:intercept-url pattern="/api/rent" access="isAuthenticated()"/>
+        <security:intercept-url pattern="/api/rent/active" access="hasRole('RESOURCE_MANAGER')"/>
+        <security:intercept-url pattern="/api/rent/archived" access="hasRole('RESOURCE_MANAGER')"/>
+        <security:intercept-url pattern="/api/rent/all/client/**" access="hasAnyRole('ADMIN')"/>
 <!--        <intercept-url pattern="/auth/register" access="permitAll"/>-->
 <!--        <intercept-url pattern="/admin/**" access="hasRole('ADMIN')"/>-->
         <security:intercept-url pattern="/**" access="isAuthenticated()"/>

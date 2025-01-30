@@ -9,6 +9,7 @@ import pl.lodz.p.model.Rent;
 import pl.lodz.p.model.user.Client;
 import pl.lodz.p.model.VMachine;
 import pl.lodz.p.repository.RentRepository;
+import pl.lodz.p.security.JwtTokenProvider;
 import pl.lodz.p.service.IRentService;
 
 import java.time.LocalDateTime;
@@ -19,12 +20,14 @@ import java.util.UUID;
 @AllArgsConstructor
 public class RentService implements IRentService {
 
+    private final JwtTokenProvider jwtTokenProvider;
     RentRepository repo;
     private final RestTemplate restTemplate;
+    private JwtTokenProvider tokenProvider;
 
     @Override
     public Rent createRent(RentDTO rentDTO) {
-        Client client = getClientById(rentDTO.getClientId());
+        Client client = getClientByUsername(rentDTO.getUsername());
         VMachine vm = getVMachineById(rentDTO.getVmId());
         if(client == null) {
             throw new RuntimeException("Client not found");
@@ -35,7 +38,7 @@ public class RentService implements IRentService {
         if(getVMachineById(rentDTO.getVmId()).isRented() > 0){
             throw new RuntimeException("VMachine already rented");
         }
-        if(getClientById(rentDTO.getClientId()).getCurrentRents()>getClientById(rentDTO.getClientId()).getClientType().getMaxRentedMachines()){
+        if(getClientByUsername(rentDTO.getUsername()).getCurrentRents()>getClientByUsername(rentDTO.getUsername()).getClientType().getMaxRentedMachines()){
             throw new RuntimeException("Client is not permitted to rent more machines: " + client.getCurrentRents() + " > " + client.getClientType().getMaxRentedMachines() +1);
         }
         Rent rent = new Rent(client, vm, rentDTO.getStartTime());
@@ -79,12 +82,27 @@ public class RentService implements IRentService {
         return rent;
     }
 
+//    @Override
+//    public List<Rent> getClientAllRents(UUID uuid) {
+//        List<Rent> allRents = repo.getClientRents(new MongoUUID(uuid));
+//        if(allRents == null || allRents.isEmpty()) {
+//            throw new RuntimeException("Client with UUID:" + uuid + " does not have any rents");
+//        }
+//        return allRents;
+//    }
+
     @Override
-    public List<Rent> getClientAllRents(UUID uuid) {
-        List<Rent> allRents = repo.getClientRents(new MongoUUID(uuid));
-        if(allRents == null || allRents.isEmpty()) {
-            throw new RuntimeException("Client with UUID:" + uuid + " does not have any rents");
+    public List<Rent> getClientAllRents(String authHeader) {
+        String token = authHeader.replace("Bearer ", "");
+
+        String username = jwtTokenProvider.getLogin(token);
+
+        List<Rent> allRents = repo.getClientRents(username);
+
+        if (allRents.isEmpty()) {
+            throw new RuntimeException("Client with username: " + username + " does not have any rents");
         }
+
         return allRents;
     }
 
@@ -135,12 +153,12 @@ public class RentService implements IRentService {
     }
 
     //private helper methods
-    private Client getClientById(UUID clientId) {
-        String url = "http://localhost:8081/REST/api/client/" + clientId;
+    private Client getClientByUsername(String username) {
+        String url = "http://localhost:8081/REST/api/client/findClient" + username;
         try {
             return restTemplate.getForObject(url, Client.class);
         } catch (Exception e) {
-            throw new RuntimeException("Request GET http://localhost:8081/REST/api/client/" + clientId + " failed: " + e);
+            throw new RuntimeException("Request GET http://localhost:8081/REST/api/client/findClient" + username + " failed: " + e);
         }
     }
 

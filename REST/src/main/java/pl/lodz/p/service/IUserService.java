@@ -25,6 +25,8 @@ public interface IUserService {
 
     String getUserByUsername(LoginDTO loginDTO);
 
+    User getUserByUsername(String username);
+
     List<User> getUsersByUsername(String username);
 
     UserDetails loadUserByUsername(String username);
