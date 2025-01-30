@@ -29,7 +29,6 @@ public class UserController {
 
     private UserService clientServiceImplementation;
 
-    //FIXME role może nie być ale musi być _clazz xDDDD
     @PostMapping//tested
     public ResponseEntity<Object> createUser(@Valid @RequestBody User user, BindingResult bindingResult) {
         try {
@@ -165,7 +164,7 @@ public class UserController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<Object> logout(HttpServletRequest request) {
+    public ResponseEntity<Object> logout(HttpServletRequest request) { // to jest chyba git
         String bearerToken = request.getHeader("Authorization");
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
             clientServiceImplementation.invalidateToken(bearerToken.substring(7));

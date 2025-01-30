@@ -44,19 +44,12 @@ public class RentController {
 //    }
 
     @PostMapping
-    public ResponseEntity<Object> createRent(@Valid @RequestBody RentDTO rentDTO,
-                                             BindingResult bindingResult,
-                                             HttpServletRequest request) {
+    public ResponseEntity<Object> createRent(@Valid @RequestBody RentDTO rentDTO, BindingResult bindingResult, HttpServletRequest request) {
         try {
-            String bearerToken = request.getHeader("Authorization");
-
-            Rent pom = rentService.createRent(rentDTO, bearerToken);
-
             if (bindingResult.hasErrors()) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(bindingResult.getAllErrors());
             }
-
-            return ResponseEntity.status(HttpStatus.CREATED).body(pom);
+            return ResponseEntity.status(HttpStatus.CREATED).body(rentService.createRent(rentDTO));
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         } catch (Exception ex) {
@@ -158,7 +151,7 @@ public class RentController {
     @GetMapping("/all/client")
     public ResponseEntity<Object> getClientAllRents(@RequestHeader("Authorization") String authHeader) {
         try {
-            List<Rent> rents = rentService.getClientAllRents(authHeader);
+            List<Rent> rents = rentService.getClientAllRents(authHeader);//todo here
             return ResponseEntity.ok(rents);
         } catch (ExpiredJwtException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token expired");

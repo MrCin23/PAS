@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
-import { useUserSession } from '../model/UserContext';
+// import { useUserSession } from '../model/UserContext';
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap.bundle.min.js'
 import {jwtDecode} from "jwt-decode";
-import {Pathnames} from "../router/pathnames.ts";
+// import {Pathnames} from "../router/pathnames.ts";
 
 enum Role {
     admin = "ADMIN",
@@ -31,7 +31,7 @@ interface FormData {
 
 export const CreateUser = () => {
     const navigate = useNavigate();
-    const { currentUser } = useUserSession();
+    // const { currentUser } = useUserSession();
     const [formData, setFormData] = useState<FormData>({
         _clazz: 'Client',
         firstName: '',
