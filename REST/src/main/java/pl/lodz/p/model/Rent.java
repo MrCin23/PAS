@@ -54,9 +54,15 @@ public class Rent extends AbstractEntityMgd {
         super(uuid);
         this.client = client;
         this.vMachine = vMachine;
-        this.beginTime = beginTime;
-        this.endTime = endTime;
+//        this.beginTime = beginTime;
         this.rentCost = rentCost;
+        beginRent(beginTime);
+        if(endTime == null) {
+            this.endTime = null;
+        }
+        else {
+            endRent(endTime);
+        }
     }
 
     //Methods

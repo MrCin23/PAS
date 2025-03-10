@@ -16,6 +16,6 @@ public class Premium extends ClientType {
 
     @Override
     public String toString() {
-        return "Admin " + this.getClass().getSimpleName();
+        return "Premium " + this.getClass().getSimpleName();
     }
 }

@@ -23,7 +23,7 @@ import java.util.UUID;
         @JsonSubTypes.Type(value = AppleArch.class, name = "applearch"),
         @JsonSubTypes.Type(value = x86.class, name = "x86")
 })
-public class VMachine extends AbstractEntityMgd {
+public abstract class VMachine extends AbstractEntityMgd { //FIXME z jakiegoś powodu nie było tutaj abstract. Możliwe że coś się wywróci
 
     @BsonProperty("CPUNumber")
     @NotNull(message = "CPU number cannot be null")

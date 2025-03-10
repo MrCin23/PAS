@@ -12,6 +12,6 @@ public class Standard extends ClientType{
 
     @Override
     public String toString() {
-        return "Standard" + this.getClass().getSimpleName();
+        return "Standard " + this.getClass().getSimpleName();
     }
 }

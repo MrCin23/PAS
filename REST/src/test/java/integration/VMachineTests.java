@@ -1,3 +1,5 @@
+package integration;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -26,7 +28,7 @@ public class VMachineTests {
         dataInitializer.dropAndCreateVMachine();
         dataInitializer.dropAndCreateClient();
         dataInitializer.initClient();
-//        dataInitializer.initVM();
+        dataInitializer.initVM();
     }
 
 //    @AfterEach
@@ -80,13 +82,6 @@ public class VMachineTests {
 
     @Test
     public void testGetAllVMachines() {
-
-        RestAssured.given()
-                .header("Authorization", "Bearer " + loginManager())
-                .when()
-                .get("/vmachine")
-                .then()
-                .statusCode(404);
         String payloadJson = """
                 {
                     "_clazz": "applearch",

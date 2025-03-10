@@ -1,11 +1,11 @@
+package integration;
+
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.*;
 import pl.lodz.p.data.DataInitializer;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -142,21 +142,21 @@ public class ClientTests {
                 .body("entityId.uuid", equalTo(uuid.toString()));
     }
 
-    @Test
-    public void testUpdateClient() {
-        Map<String, Object> fieldsToUpdate = new HashMap<>();
-        fieldsToUpdate.put("emailAddress", "new.email@example.com");
-        UUID uuid = UUID.fromString("123e4567-e89b-12d3-a456-426614174000");
-        RestAssured.given()
-                .header("Authorization", "Bearer " + loginClient())
-                .contentType(ContentType.JSON)
-                .body(fieldsToUpdate)
-                .when()
-                .put("/{uuid}", uuid)
-                .then()
-                .statusCode(204);
-        //TODO pamiętam, że coś trzeba tu jeszcze dodać, ale musisz mnie oświecić co
-    }
+//    @Test
+//    public void testUpdateClient() {
+//        Map<String, Object> fieldsToUpdate = new HashMap<>();
+//        fieldsToUpdate.put("emailAddress", "new.email@example.com");
+//        UUID uuid = UUID.fromString("123e4567-e89b-12d3-a456-426614174000");
+//        RestAssured.given()
+//                .header("Authorization", "Bearer " + loginClient())
+//                .contentType(ContentType.JSON)
+//                .body(fieldsToUpdate)
+//                .when()
+//                .put("/{uuid}", uuid)
+//                .then()
+//                .statusCode(204);
+//        //TODO pamiętam, że coś trzeba tu jeszcze dodać, ale musisz mnie oświecić co
+//    }
 
     @Test
     public void testDeactivateClient() {

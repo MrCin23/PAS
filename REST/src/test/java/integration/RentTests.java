@@ -1,4 +1,5 @@
-import com.mongodb.client.MongoIterable;
+package integration;
+
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
@@ -8,7 +9,6 @@ import pl.lodz.p.data.DataInitializer;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class RentTests {
@@ -22,7 +22,8 @@ public class RentTests {
         RestAssured.basePath = "/REST/api";
         dataInitializer.dropAndCreateRent();
         dataInitializer.dropAndCreateClient();
-        dataInitializer.initClient();
+//        dataInitializer.initClient();
+        dataInitializer.init();
 //        dataInitializer.init();
     }
 
@@ -131,10 +132,6 @@ public class RentTests {
                 .statusCode(201);
     }
 
-    @Test
-    public void deleteLater() {
-        Assertions.assertTrue(true);
-    }
 
     @Test
     public void testCreateRent() {

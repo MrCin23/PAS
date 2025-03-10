@@ -89,7 +89,6 @@ public abstract class User extends AbstractEntityMgd {
                 "firstName='" + firstName + '\'' +
                 ", surname='" + surname + '\'' +
                 ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
                 ", emailAddress='" + emailAddress + '\'' +
                 ", role=" + role +
                 ", active=" + active +
