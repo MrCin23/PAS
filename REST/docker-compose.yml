@@ -1,4 +1,4 @@
-services:
+tlservices:
   mongo_1:
     build: .
     image: mongocustom:7.0.2
